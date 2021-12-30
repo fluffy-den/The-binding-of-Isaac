@@ -1,8 +1,13 @@
 package gameObjects.Entities;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import gameWorld.GameRoom;
+
+import gameObjects.Entities.EntityTerrain;
+
 import libraries.Vector2;
-import resources.RoomInfos;
-import libraries.StdDraw;
 
 /**
  * @brief Caracteristiques des entites mouvantes
@@ -46,6 +51,14 @@ public abstract class EntityMoving extends Entity {
     }
 
     /**
+     * 
+     * @return
+     */
+    public void addDirEffect(Vector2 powerDir, double power) {
+        this.dir = this.dir.addVector(powerDir.scalarMultiplication(power));
+    }
+
+    /**
      * @brief Renvoie la vitesse de l'entite
      * @return Vitesse (double)
      */
@@ -66,53 +79,53 @@ public abstract class EntityMoving extends Entity {
     /**
      * @brief Deplacement vers le haut
      */
-    public void goUpNext() {
+    public void addDirUp() {
         getDir().addY(1);
     }
 
     /**
      * @brief Deplacment vers le bas
      */
-    public void goDownNext() {
+    public void addDirDown() {
         getDir().addY(-1);
     }
 
     /**
      * @brief Deplacment vers la gauche
      */
-    public void goLeftNext() {
+    public void addDirLeft() {
         getDir().addX(-1);
     }
 
     /**
      * @brief Deplacment vers la droite
      */
-    public void goRightNext() {
+    public void addDirRight() {
         getDir().addX(1);
     }
 
     // Mis à jour
 
     /**
-     * @brief Mis a jours des constantes et de l'image d'une entite mouvante
+     * @brief Met à jour le déplacement de l'entité.
      */
     public void update() {
         Vector2 normalizedDirection = getNormalizedDirection();
         Vector2 positionAfterMoving = getPos().addVector(normalizedDirection);
 
+        /// Colision avec les murs de la salle
         // Sur X
-        if (positionAfterMoving.getX() < RoomInfos.POSITION_MIN_X + this.getSize().getX() / 2.0)
-            positionAfterMoving.setX(RoomInfos.POSITION_MIN_X + this.getSize().getX() / 2.0);
-        if (positionAfterMoving.getX() > RoomInfos.POSITION_MAX_X - this.getSize().getX() / 2.0)
-            positionAfterMoving.setX(RoomInfos.POSITION_MAX_X - this.getSize().getX() / 2.0);
+        if (positionAfterMoving.getX() < GameRoom.MIN_XPOS + this.getSize().getX() / 2.0)
+            positionAfterMoving.setX(GameRoom.MIN_XPOS + this.getSize().getX() / 2.0);
+        if (positionAfterMoving.getX() > GameRoom.MAX_XPOS - this.getSize().getX() / 2.0)
+            positionAfterMoving.setX(GameRoom.MAX_XPOS - this.getSize().getX() / 2.0);
 
         // Sur Y
-        if (positionAfterMoving.getY() < RoomInfos.POSITION_MIN_Y + this.getSize().getY() / 2.0)
-            positionAfterMoving.setY(RoomInfos.POSITION_MIN_Y + this.getSize().getY() / 2.0);
-        if (positionAfterMoving.getY() > RoomInfos.POSITION_MAX_Y - this.getSize().getX() / 2.0)
-            positionAfterMoving.setY(RoomInfos.POSITION_MAX_Y - this.getSize().getX() / 2.0);
-
-        setPos(positionAfterMoving);
+        if (positionAfterMoving.getY() < GameRoom.MIN_YPOS + this.getSize().getY() / 2.0)
+            positionAfterMoving.setY(GameRoom.MIN_YPOS + this.getSize().getY() / 2.0);
+        if (positionAfterMoving.getY() > GameRoom.MAX_YPOS - this.getSize().getX() / 2.0)
+            positionAfterMoving.setY(GameRoom.MAX_YPOS - this.getSize().getX() / 2.0);
+        this.pos = positionAfterMoving;
         this.dir = new Vector2(); // Remise à 0 de la direction
     }
 }

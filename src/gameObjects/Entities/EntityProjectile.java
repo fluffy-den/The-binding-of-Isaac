@@ -1,16 +1,13 @@
-package gameObjects.Projectiles;
-
-import gameObjects.Entities.EntityMoving;
+package gameObjects.Entities;
 
 import libraries.Vector2;
-import libraries.StdDraw;
 
-public abstract class Projectile extends EntityMoving {
+public abstract class EntityProjectile extends EntityMoving {
     protected int damage;
     protected double range;
 
     // Constructor
-    public Projectile(Vector2 pos, Vector2 size, Vector2 dir, double speed, int damage, double range,
+    public EntityProjectile(Vector2 pos, Vector2 size, Vector2 dir, double speed, int damage, double range,
             String imgPath) {
         super(pos, size, dir, speed, imgPath);
         this.damage = damage;
@@ -25,7 +22,7 @@ public abstract class Projectile extends EntityMoving {
         Vector2 normalizedDirection = getNormalizedDirection();
         Vector2 positionAfterMoving = getPos().addVector(normalizedDirection);
         this.range -= positionAfterMoving.distance(this.getPos());
-        setPos(positionAfterMoving);
+        this.pos = positionAfterMoving;
         // Pas de reset de la direction!
     }
 
@@ -39,25 +36,27 @@ public abstract class Projectile extends EntityMoving {
         return true;
     }
 
-    // Dommages
+    /**
+     * 
+     * @return
+     */
     public int getDamage() {
         return this.damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
-    }
-
-    // Portée
-    public double getRange() {
+    /**
+     * 
+     * @return
+     */
+    public double getRemainingRange() {
         return this.range;
     }
 
     /**
-     * @brief Change la portee restante d'un projectile
-     * @param range nouvelle portee
+     * 
+     * @param l
      */
-    public void setRange(double range) {
-        this.range = range;
+    public void onHitLivingObject(EntityLiving l) {
+        l.addDamage(this.damage);
     }
 }

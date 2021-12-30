@@ -14,6 +14,7 @@ public abstract class EntityLiving extends EntityMoving {
         this.health = health;
     }
 
+    // Health
     /**
      * @brief Definit si le monstre est vivant
      * @return True si le monstre est vivant False sinon
@@ -22,13 +23,20 @@ public abstract class EntityLiving extends EntityMoving {
         return this.health > 0;
     }
 
-    // Vie
+    /**
+     * 
+     * @return
+     */
     public int getHealth() {
         return this.health;
     }
 
-    public void setDamage(int damage) {
+    // Damage
+    /**
+     * 
+     * @param damage
+     */
+    public void addDamage(int damage) {
         this.health -= damage;
-        // TODO: Mort
     }
 }

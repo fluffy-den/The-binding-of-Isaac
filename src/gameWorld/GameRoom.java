@@ -1,112 +1,301 @@
 package gameWorld;
 
-import gameObjects.Monsters.*;
 import gameObjects.Projectiles.MonsterProjectile;
 import gameObjects.Projectiles.Tear;
-import gameObjects.Entities.Hero;
+import gameObjects.Terrain.TerrainRock;
+import gameObjects.Traps.TrapPikes;
+import gameObjects.Hero;
+import gameObjects.Entities.EntityItem;
+import gameObjects.Entities.EntityTerrain;
+import gameObjects.Entities.EntityTrap;
+import gameObjects.Items.ItemBloodOfTheMartyr;
+import gameObjects.Items.ItemHalfRedHeart;
+import gameObjects.Items.ItemHeart;
+import gameObjects.Items.ItemJesusJuice;
+import gameObjects.Items.ItemLunch;
+import gameObjects.Items.ItemPentagram;
+import gameObjects.Items.ItemRedHeart;
+import gameObjects.Monsters.MonsterFly;
+import gameObjects.Monsters.MonsterSpider;
+import gameObjects.Entities.EntityMonster;
 
 import libraries.Vector2;
 import libraries.StdDraw;
-import libraries.Utils;
 
-import resources.RoomInfos;
-import resources.ImagePaths;
+import resources.Controls;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class GameRoom {
-    private LinkedList<Monster> monsterList;
-    private LinkedList<Tear> projListHero;
-    private LinkedList<MonsterProjectile> projListMonster;
+    protected LinkedList<EntityMonster> monsterList;
+    protected LinkedList<Tear> projListHero;
+    protected LinkedList<MonsterProjectile> projListMonster;
+    protected LinkedList<EntityItem> itemList;
+    protected LinkedList<EntityTrap> trapList;
+    protected LinkedList<EntityTerrain> terrainList;
+    protected String imgPath;
 
-    // Constructeur
+    public static final double MIN_XPOS = 0.113;
+    public static final double MAX_XPOS = 0.887;
+    public static final double MIN_YPOS = 0.168;
+    public static final double MAX_YPOS = 0.832;
+    public static final int NUM_OF_TILES = 9;
+    public static final Vector2 TILE_SIZE = new Vector2(
+            (MAX_XPOS - MIN_XPOS) / NUM_OF_TILES,
+            (MAX_YPOS - MIN_YPOS) / NUM_OF_TILES);
+    public static final Vector2 CENTER_POS = new Vector2(0.5, 0.5);
+    public static final String DEFAULT_BACKGROUND = "images/DefaultBackground.png";
+
+    /**
+     * 
+     */
     public GameRoom() {
-        this.monsterList = new LinkedList<Monster>();
+        this.monsterList = new LinkedList<EntityMonster>();
         this.projListHero = new LinkedList<Tear>();
         this.projListMonster = new LinkedList<MonsterProjectile>();
-        this.monsterList.add(new Spider(RoomInfos.POSITION_CENTER_OF_ROOM.addVector(new Vector2(0.3, 0.3))));
-        this.monsterList.add(new Fly(RoomInfos.POSITION_CENTER_OF_ROOM.addVector(new Vector2(-0.3, -0.3))));
-        this.monsterList.add(new Fly(RoomInfos.POSITION_CENTER_OF_ROOM.addVector(new Vector2(-0.3, -0.3))));
+        this.itemList = new LinkedList<EntityItem>();
+        this.trapList = new LinkedList<EntityTrap>();
+        this.terrainList = new LinkedList<EntityTerrain>();
+        this.imgPath = DEFAULT_BACKGROUND;
+
+        // TESTS: Items
+        this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(0, 0)));
+        this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(0, 1)));
+        this.itemList.add(new ItemHeart(getPositionFromTile(0, 2)));
+        this.itemList.add(new ItemJesusJuice(getPositionFromTile(0, 3)));
+        this.itemList.add(new ItemLunch(getPositionFromTile(0, 4)));
+        this.itemList.add(new ItemPentagram(getPositionFromTile(0, 5)));
+        this.itemList.add(new ItemRedHeart(getPositionFromTile(0, 6)));
+
+        // TESTS: Pieges
+        this.trapList.add(new TrapPikes(getPositionFromTile(5, 0)));
+
+        // TESTS: Monstres
+        this.monsterList.add(new MonsterFly(getPositionFromTile(5, 3)));
+        this.monsterList.add(new MonsterSpider(getPositionFromTile(5, 5)));
+
+        // TESTS: Rocher
+        this.terrainList.add(new TerrainRock(getPositionFromTile(7, 3)));
     }
 
-    // Projectile: Ajoute
     /**
-     * @brief Ajoute proj a la liste des projectiles des monstres
-     * @param proj projectile lance par un monstre
+     * 
      */
-    public void addMonsterProjectile(MonsterProjectile proj) {
-        if (proj == null)
-            return;
-        this.projListMonster.add(proj);
-    }
-
-    /**
-     * @brief Ajoute proj a la liste des projectiles du hero
-     * @param proj projectile lance par le heros
-     */
-    public void addHeroProjectile(Tear proj) {
-        if (proj == null)
-            return;
-        this.projListHero.add(proj);
-    }
-
-    // Dessin
-    /**
-     * @brief Affiche la zone carte avec un heros sur dessus
-     * @param h Heros a afficher
-     */
-    public void updateAndDraw(Hero h) {
+    public void drawBackground() {
         /// Sol
-        StdDraw.picture(0.5, 0.5, ImagePaths.MAP, 1.0, 1.0, 0);
+        StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY(), this.imgPath, 1.0, 1.0, 0); // Le sol de base
+    }
 
-        /// Monstres
-        for (Monster m : this.monsterList) {
-            if (m.isLiving()) {
-                m.updateAndDraw();
-            } else {
-                this.monsterList.remove(m);
-            }
-        }
-
-        /// Projectiles
-        // Projectiles des monstres
-        for (MonsterProjectile k : this.projListMonster) {
-            if (!k.shouldBeDestroyed()) {
-                k.updateAndDraw();
-                // Hitbox
-                if (Utils.Hitbox.adjacent(k.getPos(), k.getSize(), h.getPos(), h.getSize())) {
-                    // DommagesS
-                }
-            } else {
-                this.projListMonster.remove(k);
-            }
-        }
-
+    /**
+     * 
+     */
+    public void updateAndDrawHeroProjectiles() {
         /// Projectiles du joueur
-        for (Tear k : this.projListHero) {
-            if (!k.shouldBeDestroyed()) {
-                // Hitbox
-                for (Monster m : this.monsterList) {
-                    if (Utils.Hitbox.adjacent(k.getPos(), k.getSize(), m.getPos(), m.getSize())) {
-                        k.monsterHit(m);
-                        this.projListHero.remove(k);
-                        break;
-                    } else {
-                        k.updateAndDraw();
+        int i = 0;
+        while (i < this.projListHero.size()) {
+            Tear e = this.projListHero.get(i);
+            if (e.shouldBeDestroyed()) {
+                this.projListHero.remove(i);
+                --i;
+            } else {
+                for (EntityMonster m : this.monsterList) {
+                    if (e.isAdjacent(m)) {
+                        e.onHitLivingObject(m);
+                        this.projListHero.remove(i);
+                        --i;
+                        if (!m.isLiving()) {
+                            this.monsterList.remove(m);
+                            break;
+                        } else {
+                            m.updateAndDraw();
+                        }
                     }
                 }
+                e.updateAndDraw();
             }
+            ++i;
         }
-
-        /// Murs
-        // TODO
     }
 
-    // Tile Index to position
-    public static Vector2 positionFromTileIndex(int indexX, int indexY) {
+    /**
+     * 
+     * @param h
+     */
+    public void updateAndDrawMonsterProjectiles(Hero h) {
+        /// Projectiles des monstres
+        int i = 0;
+        while (i < this.projListMonster.size()) {
+            MonsterProjectile e = this.projListMonster.get(i);
+            if (e.shouldBeDestroyed()) {
+                this.projListMonster.remove(i);
+                --i;
+            } else {
+                if (e.isAdjacent(h)) {
+                    e.onHitLivingObject(h);
+                    this.projListMonster.remove(i);
+                    --i;
+                }
+                e.updateAndDraw();
+            }
+            ++i;
+        }
+    }
+
+    /**
+     * 
+     * @param h
+     */
+    public void updateAndDrawHeroItems(Hero h) {
+        // Items au sol
+        int i = 0;
+        while (i < this.itemList.size()) {
+            EntityItem e = this.itemList.get(i);
+            if (e.isAdjacent(h)) {
+                e.onHeroItemAction(h);
+                this.itemList.remove(i);
+                --i;
+            } else {
+                e.updateAndDraw();
+            }
+            ++i;
+        }
+    }
+
+    /**
+     * 
+     * @param h
+     */
+    public void updateAndDrawTraps(Hero h) {
+        // On suppose que les pièges ne fonctionnent que sur le Héro
+        for (EntityTrap t : this.trapList) {
+            if (t.isAdjacent(h)) {
+                t.onHeroAdjacency(h);
+            }
+            t.updateAndDraw();
+        }
+    }
+
+    /**
+     * 
+     * @param h
+     */
+    public void updateAndDrawTerrain(Hero h) {
+        // Collisions avec monstres et le hero
+        for (EntityTerrain t : this.terrainList) {
+            if (t.isAdjacent(h)) {
+                t.onLivingAdjacency(h);
+            }
+            for (EntityMonster m : this.monsterList) {
+                if (t.isAdjacent(m)) {
+                    t.onLivingAdjacency(m);
+                }
+            }
+            t.updateAndDraw();
+        }
+    }
+
+    /**
+     * 
+     * @param h
+     */
+    public void updateHeroBombsActions(Hero h) {
+        // Bombes au sol
+
+    }
+
+    /**
+     * 
+     * @param h
+     */
+    public void updateHeroMovementActions(Hero h) {
+        // Déplacement d'Isaac
+        if (StdDraw.isKeyPressed(Controls.goUp)) {
+            h.addDirUp();
+        }
+        if (StdDraw.isKeyPressed(Controls.goDown)) {
+            h.addDirDown();
+        }
+        if (StdDraw.isKeyPressed(Controls.goRight)) {
+            h.addDirRight();
+        }
+        if (StdDraw.isKeyPressed(Controls.goLeft)) {
+            h.addDirLeft();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void updateHeroTearActions(Hero h) {
+        // Tirs d'Isaac
+        if (StdDraw.isKeyPressed(Controls.fireUp)) {
+            Tear t = h.fireTearUp();
+            if (t != null)
+                this.projListHero.add(t);
+        }
+        if (StdDraw.isKeyPressed(Controls.fireDown)) {
+            Tear t = h.fireTearDown();
+            if (t != null)
+                this.projListHero.add(t);
+        }
+        if (StdDraw.isKeyPressed(Controls.fireRight)) {
+            Tear t = h.fireTearRight();
+            if (t != null)
+                this.projListHero.add(t);
+        }
+        if (StdDraw.isKeyPressed(Controls.fireLeft)) {
+            Tear t = h.fireTearLeft();
+            if (t != null)
+                this.projListHero.add(t);
+        }
+    }
+
+    /**
+     * 
+     * @param h
+     *
+     */
+    public void updateAndDrawMonsters(Hero h) {
+        /// Monstres
+        for (EntityMonster m : this.monsterList) {
+            if (m.isAdjacent(h)) {
+                m.onMonsterHeroAdjacency(h);
+                ArrayList<MonsterProjectile> pList = m.monsterFireProjectiles(h);
+                if (pList != null) {
+                    this.projListMonster.addAll(pList);
+                }
+            }
+            m.updateAndDraw();
+        }
+    }
+
+    public void updateAndDraw(Hero h) {
+        this.drawBackground();
+        this.updateHeroMovementActions(h);
+        this.updateHeroTearActions(h);
+        this.updateAndDrawHeroItems(h);
+        this.updateHeroBombsActions(h);
+        this.updateAndDrawTraps(h);
+        this.updateAndDrawMonsters(h);
+        h.update();
+        this.updateAndDrawTerrain(h);
+        this.updateAndDrawHeroProjectiles();
+        this.updateAndDrawMonsterProjectiles(h);
+        h.draw();
+        h.drawHUD();
+    }
+
+    /**
+     * 
+     * @param indexX
+     * @param indexY
+     * @return
+     */
+    public static Vector2 getPositionFromTile(int indexX, int indexY) {
         return new Vector2(
-                RoomInfos.POSITION_MIN_X + indexX * RoomInfos.TILE_SIZE.getX() * 1.5,
-                RoomInfos.POSITION_MIN_Y + indexY * RoomInfos.TILE_SIZE.getY() * 1.5);
+                MIN_XPOS + (indexX + 0.5) * TILE_SIZE.getX(),
+                MIN_YPOS + (indexY + 0.5) * TILE_SIZE.getY());
     }
 
     /// TODO: Cyp3
@@ -135,11 +324,11 @@ public class GameRoom {
     // TODO: 4. Shop
     // TODO: 3. Portes
 
-    /// TODO: Fluffy
-    // TODO: 2. Rochers
-    // TODO: 1. Items
+    // TODO: Fluffy
+    // FAIT: 2. Rochers
+    // FAIT: 1. Items
     // ...
-    // TODO: 5. Projectiles des monstres
+    // FAIT: 5. Projectiles des monstres
     // Projectiles légers (++vitesse --dégats)
     // Projectiles lourds (--vitesse ++dégats)
     // TODO: 6. Quelques boss (7 premiers du jeu)

@@ -1,26 +1,19 @@
 package gameWorld;
 
-import gameObjects.Entities.Hero;
-
-import resources.Controls;
-import resources.RoomInfos;
 import resources.DisplaySettings;
-
 import libraries.StdDraw;
 import libraries.Timer;
 
 public class Game {
-    private GameRoom currentRoom;
-    private Hero hero;
-    private static boolean gameOver;
+    private static GameLevel currentLevel;
+    private static GameState gameState;
     private static long imageNum = 0;
 
-    // Constructeur
-    public Game() {
-        this.hero = new Hero();
-        this.currentRoom = new GameRoom();
-
-        gameOver = false;
+    /**
+     * 
+     */
+    public static void setupAndLoop() {
+        gameState = GameState.RUNNING;
         imageNum = 0;
 
         // Taille du canvas
@@ -31,79 +24,75 @@ public class Game {
         // Activation du double-buffering.
         // https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics
         StdDraw.enableDoubleBuffering();
-    }
 
-    // Boucle du jeu
-    public boolean loop() {
-        Timer.beginTimer();
-        StdDraw.clear(StdDraw.WHITE);
+        // TODO: @cyp3 à changer
+        currentLevel = new GameLevel(new GameRoom());
 
-        /// Hero
-        // Actions de l'utilisateur
-        // Déplacement d'Isaac
-        // TODO: Collision avec les murs, objets statiques, & object à ramasser
-        if (StdDraw.isKeyPressed(Controls.goUp)) {
-            hero.goUpNext();
-        }
-        if (StdDraw.isKeyPressed(Controls.goDown)) {
-            hero.goDownNext();
-        }
-        if (StdDraw.isKeyPressed(Controls.goRight)) {
-            hero.goRightNext();
-        }
-        if (StdDraw.isKeyPressed(Controls.goLeft)) {
-            hero.goLeftNext();
+        // Boucle du jeu
+        while (gameState == GameState.RUNNING) {
+            Timer.beginTimer();
+            StdDraw.clear();
+
+            /// Affichage
+            currentLevel.updateAndDraw();
+
+            imageNum++;
+
+            StdDraw.show();
+            Timer.waitToMaintainConstantFPS();
         }
 
-        // Tirs d'Isaac
-        if (StdDraw.isKeyPressed(Controls.fireUp)) {
-            this.currentRoom.addHeroProjectile(hero.fireTearUp());
-        }
-        if (StdDraw.isKeyPressed(Controls.fireDown)) {
-            this.currentRoom.addHeroProjectile(hero.fireTearDown());
-        }
-        if (StdDraw.isKeyPressed(Controls.fireRight)) {
-            this.currentRoom.addHeroProjectile(hero.fireTearRight());
-        }
-        if (StdDraw.isKeyPressed(Controls.fireLeft)) {
-            this.currentRoom.addHeroProjectile(hero.fireTearLeft());
+        // Fin du jeu
+        // Le joueur a gagné?
+        String imgPath = "";
+        if (gameState == GameState.WIN) {
+            imgPath = "images/Win.jpg";
         }
 
-        /// Modes de triches
-        // TODO: Touches pour activer les modes de triche
+        // Le joueur a perdu?
+        else {
+            imgPath = "Images/Lose.png";
+        }
 
-        /// Affichage
-        this.currentRoom.updateAndDraw(this.hero);
+        // On affiche l'image de fin du jeu pendant 5 secondes
+        long btp = System.currentTimeMillis();
+        long etp = btp;
+        while (etp - btp < 5000) {
+            // On simule une boucle de jeu, afin que l'utilisateur puisse fermer
+            // la fenetre lors de ces 5 secondes
+            Timer.beginTimer();
+            StdDraw.clear(StdDraw.BLACK);
+            StdDraw.picture(0.5, 0.5, imgPath, 1.0, 1.0, 0);
+            StdDraw.show();
+            Timer.waitToMaintainConstantFPS();
+            etp = System.currentTimeMillis();
+        }
 
-        /// Hud
-        this.hero.updateAndDraw();
-        this.hero.drawHUD();
-
-        imageNum++;
-
-        StdDraw.show();
-        Timer.waitToMaintainConstantFPS();
-
-        return !gameOver;
+        // On supprime tout
+        currentLevel = null;
+        gameState = null;
+        imageNum = 0;
     }
 
     /**
-     * @brief Permet de savoir si la partie est finie
-     * @return True si la partie est finie, False sinon
+     * 
+     * @return
      */
-    public static boolean isGameOver() {
-        return gameOver;
-    }
-
-    /**
-     * @brief Met fin a la partie
-     */
-    public static void setGameOver() {
-        gameOver = true;
-    }
-
-    // Nombre d'images
     public static long getImageNum() {
         return imageNum;
+    }
+
+    /**
+     * 
+     */
+    public static GameState getGameState() {
+        return gameState;
+    }
+
+    /**
+     * 
+     */
+    public static void updateGameState(GameState state) {
+        gameState = state;
     }
 }

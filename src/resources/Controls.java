@@ -19,9 +19,6 @@ public class Controls {
 	public static int putBomb1 = Keybinding.keycodeOf(Keybinding.SpecialKeys.MAJ);
 	public static int putBomb2 = Keybinding.keycodeOf('e');
 
-	// Touches: Item
-	public static int takeItem = Keybinding.keycodeOf(' '); // TODO: Trouver la touche espace
-
 	// Touches: Codes de triches
 	public static int cheatInvincibility = Keybinding.keycodeOf('i');
 	public static int cheatSpeed = Keybinding.keycodeOf('l');
