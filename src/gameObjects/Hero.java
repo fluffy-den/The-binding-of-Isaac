@@ -343,6 +343,13 @@ public class Hero extends EntityLiving {
     /**
      * 
      */
+    public void drawCheatHUD() {
+
+    }
+
+    /**
+     * 
+     */
     public void drawHUD() {
         this.drawHealthBar();
         this.drawBombsBar();
