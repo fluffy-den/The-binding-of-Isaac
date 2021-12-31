@@ -4,10 +4,12 @@ import gameObjects.Projectiles.MonsterProjectile;
 import gameObjects.Projectiles.Tear;
 import gameObjects.Terrain.TerrainRock;
 import gameObjects.Traps.TrapPikes;
+import gameObjects.Doors.OpenedDoor;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityItem;
 import gameObjects.Entities.EntityTerrain;
 import gameObjects.Entities.EntityTrap;
+import gameObjects.Entities.EntityDoor;
 import gameObjects.Items.ItemBloodOfTheMartyr;
 import gameObjects.Items.ItemHalfRedHeart;
 import gameObjects.Items.ItemHeart;
@@ -26,6 +28,7 @@ import resources.Controls;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
@@ -33,6 +36,7 @@ public class GameRoom {
     protected LinkedList<MonsterProjectile> projListMonster;
     protected LinkedList<EntityItem> itemList;
     protected LinkedList<EntityTrap> trapList;
+    protected LinkedList<EntityDoor> doorList;
     protected LinkedList<EntityTerrain> terrainList;
     protected String imgPath;
 
@@ -56,11 +60,18 @@ public class GameRoom {
         this.projListMonster = new LinkedList<MonsterProjectile>();
         this.itemList = new LinkedList<EntityItem>();
         this.trapList = new LinkedList<EntityTrap>();
+        this.doorList = new LinkedList<EntityDoor>();
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
+        Grid map = new Grid();
+        //map.Generate();
+        map.Generate(3,1,4,1);
+        System.out.println(map.toString());
+        gridToLinked(map.getGrid());
+        
 
         // TESTS: Items
-        this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(0, 0)));
+        /*this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(0, 0)));
         this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(0, 1)));
         this.itemList.add(new ItemHeart(getPositionFromTile(0, 2)));
         this.itemList.add(new ItemJesusJuice(getPositionFromTile(0, 3)));
@@ -76,7 +87,7 @@ public class GameRoom {
         this.monsterList.add(new MonsterSpider(getPositionFromTile(5, 5)));
 
         // TESTS: Rocher
-        this.terrainList.add(new TerrainRock(getPositionFromTile(7, 3)));
+        this.terrainList.add(new TerrainRock(getPositionFromTile(7, 3)));*/
     }
 
     /**
@@ -169,6 +180,20 @@ public class GameRoom {
     public void updateAndDrawTraps(Hero h) {
         // On suppose que les pièges ne fonctionnent que sur le Héro
         for (EntityTrap t : this.trapList) {
+            if (t.isAdjacent(h)) {
+                t.onHeroAdjacency(h);
+            }
+            t.updateAndDraw();
+        }
+    }
+
+    /**
+     * 
+     * @param h
+     */
+    public void updateAndDrawDoors(Hero h) {
+        // On suppose que les pièges ne fonctionnent que sur le Héro
+        for (EntityDoor t : this.doorList) {
             if (t.isAdjacent(h)) {
                 t.onHeroAdjacency(h);
             }
@@ -277,6 +302,7 @@ public class GameRoom {
         this.updateAndDrawHeroItems(h);
         this.updateHeroBombsActions(h);
         this.updateAndDrawTraps(h);
+        this.updateAndDrawDoors(h);
         this.updateAndDrawMonsters(h);
         h.update();
         this.updateAndDrawTerrain(h);
@@ -296,6 +322,72 @@ public class GameRoom {
         return new Vector2(
                 MIN_XPOS + (indexX + 0.5) * TILE_SIZE.getX(),
                 MIN_YPOS + (indexY + 0.5) * TILE_SIZE.getY());
+    }
+
+    public void gridToLinked(String[][] Grid) { // (ArrayList<Monster>)
+        Random random = new Random();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (Grid[i][j] != null) {
+                    switch (Grid[i][j]) {
+                        case "D": // door
+                            this.doorList.add(new OpenedDoor(getPositionFromTile(i, j)));
+                            break;
+                        case "B": // Boss
+                            // TODO Ajouter Boss
+                            break;
+                        case "M": // Fly or Spider
+                            int rdm = random.nextInt(2);
+                            if (rdm == 0) {
+                                this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+                            } else {
+                                this.monsterList.add(new MonsterFly(getPositionFromTile(i, j)));
+                            }
+                            break;
+                        case "I": // Item
+                            switch (random.nextInt(7)) {
+                                case 0:
+                                    this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(i, j)));
+                                    break;
+                                case 1:
+                                    this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(i, j)));
+                                    break;
+                                case 2:
+                                    this.itemList.add(new ItemHeart(getPositionFromTile(i, j)));
+                                    break;
+                                case 3:
+                                    this.itemList.add(new ItemJesusJuice(getPositionFromTile(i, j)));
+                                    break;
+                                case 4:
+                                    this.itemList.add(new ItemLunch(getPositionFromTile(i, j)));
+                                    break;
+                                case 5:
+                                    this.itemList.add(new ItemPentagram(getPositionFromTile(i, j)));
+                                    break;
+                                case 6:
+                                    this.itemList.add(new ItemRedHeart(getPositionFromTile(i, j)));
+                                    break;
+                                default:
+                                    assert (false);
+                                    break;
+
+                            }
+                            break;
+                        case "O": // Obstacle
+                            int rdm2 = random.nextInt(2);
+                            if (rdm2 == 0) {
+                                this.trapList.add(new TrapPikes(getPositionFromTile(i, j)));
+                            } else {
+                                this.terrainList.add(new TerrainRock(getPositionFromTile(i, j)));
+                            }
+                            break;
+                        default:// Nothing
+                            assert (false);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     /// TODO: Cyp3
