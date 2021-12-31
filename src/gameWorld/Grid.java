@@ -1,23 +1,30 @@
 package gameWorld;
 
-import libraries.Vector2;
-
-import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ * 
+ */
 public class Grid {
     private String[][] Grid;
 
+    /**
+     * 
+     */
     public Grid() {
         this.Grid = new String[9][9];
     }
 
+    /**
+     * 
+     * @return
+     */
     public String[][] getGrid() {
         return this.Grid;
     }
 
     /**
-     * Génération des portes suplémentaires
+     * @brief Génération des portes suplémentaires
      * 
      * @param nbdoor nombre de portes suplémentaires
      */
@@ -123,6 +130,9 @@ public class Grid {
 
     }
 
+    /**
+     * 
+     */
     public String toString() {
         String s = "";
         for (int i = 0; i < 9; i++) {
@@ -139,32 +149,33 @@ public class Grid {
     }
 
     /*
-    public void gridToLinked() { // (ArrayList<Monster>)
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (this.Grid[i][j] != null) {
-                    switch (this.Grid[i][j]) {
-                        case "D": // door
-                            this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-                            break;
-                        case "B": // Boss
-                            this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-                            break;
-                        case "M": // Fly or Spider
-                            this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-                            break;
-                        case "I": // Item
-                            this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-                            break;
-                        case "O": // Obstacle
-                            this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-                            break;
-                        default:// Nothing
-                            assert (false);
-                            break;
-                    }
-                }
-            }
-        }
-    }*/
+     * public void gridToLinked() { // (ArrayList<Monster>)
+     * for (int i = 0; i < 9; i++) {
+     * for (int j = 0; j < 9; j++) {
+     * if (this.Grid[i][j] != null) {
+     * switch (this.Grid[i][j]) {
+     * case "D": // door
+     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+     * break;
+     * case "B": // Boss
+     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+     * break;
+     * case "M": // Fly or Spider
+     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+     * break;
+     * case "I": // Item
+     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+     * break;
+     * case "O": // Obstacle
+     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+     * break;
+     * default:// Nothing
+     * assert (false);
+     * break;
+     * }
+     * }
+     * }
+     * }
+     * }
+     */
 }

@@ -64,30 +64,31 @@ public class GameRoom {
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
         Grid map = new Grid();
-        //map.Generate();
-        map.Generate(3,1,4,1);
+        // map.Generate();
+        map.Generate(3, 1, 4, 1);
         System.out.println(map.toString());
         gridToLinked(map.getGrid());
-        
 
         // TESTS: Items
-        /*this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(0, 0)));
-        this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(0, 1)));
-        this.itemList.add(new ItemHeart(getPositionFromTile(0, 2)));
-        this.itemList.add(new ItemJesusJuice(getPositionFromTile(0, 3)));
-        this.itemList.add(new ItemLunch(getPositionFromTile(0, 4)));
-        this.itemList.add(new ItemPentagram(getPositionFromTile(0, 5)));
-        this.itemList.add(new ItemRedHeart(getPositionFromTile(0, 6)));
-
-        // TESTS: Pieges
-        this.trapList.add(new TrapPikes(getPositionFromTile(5, 0)));
-
-        // TESTS: Monstres
-        this.monsterList.add(new MonsterFly(getPositionFromTile(5, 3)));
-        this.monsterList.add(new MonsterSpider(getPositionFromTile(5, 5)));
-
-        // TESTS: Rocher
-        this.terrainList.add(new TerrainRock(getPositionFromTile(7, 3)));*/
+        /*
+         * this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(0, 0)));
+         * this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(0, 1)));
+         * this.itemList.add(new ItemHeart(getPositionFromTile(0, 2)));
+         * this.itemList.add(new ItemJesusJuice(getPositionFromTile(0, 3)));
+         * this.itemList.add(new ItemLunch(getPositionFromTile(0, 4)));
+         * this.itemList.add(new ItemPentagram(getPositionFromTile(0, 5)));
+         * this.itemList.add(new ItemRedHeart(getPositionFromTile(0, 6)));
+         * 
+         * // TESTS: Pieges
+         * this.trapList.add(new TrapPikes(getPositionFromTile(5, 0)));
+         * 
+         * // TESTS: Monstres
+         * this.monsterList.add(new MonsterFly(getPositionFromTile(5, 3)));
+         * this.monsterList.add(new MonsterSpider(getPositionFromTile(5, 5)));
+         * 
+         * // TESTS: Rocher
+         * this.terrainList.add(new TerrainRock(getPositionFromTile(7, 3)));
+         */
     }
 
     /**
@@ -324,6 +325,10 @@ public class GameRoom {
                 MIN_YPOS + (indexY + 0.5) * TILE_SIZE.getY());
     }
 
+    /**
+     * 
+     * @param Grid
+     */
     public void gridToLinked(String[][] Grid) { // (ArrayList<Monster>)
         Random random = new Random();
         for (int i = 0; i < 9; i++) {

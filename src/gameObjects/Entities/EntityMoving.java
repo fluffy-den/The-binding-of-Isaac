@@ -1,11 +1,6 @@
 package gameObjects.Entities;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import gameWorld.GameRoom;
-
-import gameObjects.Entities.EntityTerrain;
 
 import libraries.Vector2;
 
