@@ -1,27 +1,37 @@
 package gameObjects.Entities;
 
 import gameObjects.Hero;
-import gameWorld.Game;
+import gameObjects.Doors.DoorPlacement;
+
 import gameWorld.GameRoom;
+
 import libraries.Vector2;
 
 /**
  * 
  */
 public abstract class EntityDoor extends Entity {
-    private double reloadSpeed;
-    private long lastHitFrame;
+    // Adjacent & bouton vers le haut
+    private DoorPlacement placement;
+    private GameRoom room;
+    private boolean isOpened;
 
     /**
      * 
      * @param pos
-     * @param size
      * @param imgPath
+     * @param doorPlacement
      */
-    public EntityDoor(Vector2 pos, String imgPath) {
+    public EntityDoor(Vector2 pos, String imgPath, DoorPlacement doorPlacement) {
         super(pos, GameRoom.TILE_SIZE, imgPath);
-        this.reloadSpeed = 0.025;
-        this.lastHitFrame = 0;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public GameRoom getRoom() {
+        return this.room;
     }
 
     /**
@@ -29,23 +39,31 @@ public abstract class EntityDoor extends Entity {
      * @param h
      */
     public void onHeroAdjacency(Hero h) {
-        long elapsed = Game.getImageNum() - this.lastHitFrame;
-        if (elapsed * this.reloadSpeed >= 1) {
+        if (this.isOpened) {
+            switch (this.placement) {
+                case DOOR_UP: {
 
-            Vector2 hpos = h.getPos();
-            double minX = this.pos.getX() - this.size.getX();
-            double maxX = this.pos.getX() + this.size.getX();
-            double minY = this.pos.getY() - this.size.getY();
-            double maxY = this.pos.getY() + this.size.getY();
+                    break;
+                }
 
-            // Le hero est-il dans cet objet?
-            if (hpos.getX() >= minX && hpos.getX() <= maxX
-                    && hpos.getY() >= minY && hpos.getY() <= maxY) {
-                Vector2 newPos = this.pos.subVector(hpos).scalarMultiplication(0.5);
-                h.setPos(hpos.subVector(newPos));
+                case DOOR_DOWN: {
+
+                    break;
+                }
+
+                case DOOR_LEFT: {
+
+                    break;
+                }
+
+                case DOOR_RIGHT: {
+
+                    break;
+                }
+
+                default:
+                    assert (false);
             }
-
-            this.lastHitFrame = Game.getImageNum();
         }
     }
 }

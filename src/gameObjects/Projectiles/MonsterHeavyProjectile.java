@@ -13,7 +13,7 @@ public class MonsterHeavyProjectile extends MonsterProjectile {
     public static final double SPEED = 0.006;
     public static final double RANGE = 1.0;
     public static final int DAMAGE = 2;
-    public static final String IMGPATH = ""; // TODO: à trouver
+    public static final String IMGPATH = "images/MonsterBall.png"; // TODO: à trouver
 
     /**
      * 

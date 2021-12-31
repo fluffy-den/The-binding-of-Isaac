@@ -4,7 +4,6 @@ import gameObjects.Projectiles.MonsterProjectile;
 import gameObjects.Projectiles.Tear;
 import gameObjects.Terrain.TerrainRock;
 import gameObjects.Traps.TrapPikes;
-import gameObjects.Doors.OpenedDoor;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityItem;
 import gameObjects.Entities.EntityTerrain;
@@ -63,32 +62,7 @@ public class GameRoom {
         this.doorList = new LinkedList<EntityDoor>();
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
-        Grid map = new Grid();
-        // map.Generate();
-        map.Generate(3, 1, 4, 1);
-        System.out.println(map.toString());
-        gridToLinked(map.getGrid());
-
-        // TESTS: Items
-        /*
-         * this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(0, 0)));
-         * this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(0, 1)));
-         * this.itemList.add(new ItemHeart(getPositionFromTile(0, 2)));
-         * this.itemList.add(new ItemJesusJuice(getPositionFromTile(0, 3)));
-         * this.itemList.add(new ItemLunch(getPositionFromTile(0, 4)));
-         * this.itemList.add(new ItemPentagram(getPositionFromTile(0, 5)));
-         * this.itemList.add(new ItemRedHeart(getPositionFromTile(0, 6)));
-         * 
-         * // TESTS: Pieges
-         * this.trapList.add(new TrapPikes(getPositionFromTile(5, 0)));
-         * 
-         * // TESTS: Monstres
-         * this.monsterList.add(new MonsterFly(getPositionFromTile(5, 3)));
-         * this.monsterList.add(new MonsterSpider(getPositionFromTile(5, 5)));
-         * 
-         * // TESTS: Rocher
-         * this.terrainList.add(new TerrainRock(getPositionFromTile(7, 3)));
-         */
+        generateGameRoom(1, 1, 4, 0);
     }
 
     /**
@@ -325,6 +299,12 @@ public class GameRoom {
                 MIN_YPOS + (indexY + 0.5) * TILE_SIZE.getY());
     }
 
+    public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
+        Grid map = new Grid();
+        map.Generate(difficulty, type, xydoor, nbdoor);
+        gridToLinked(map.getGrid());
+    }
+
     /**
      * 
      * @param Grid
@@ -336,7 +316,7 @@ public class GameRoom {
                 if (Grid[i][j] != null) {
                     switch (Grid[i][j]) {
                         case "D": // door
-                            this.doorList.add(new OpenedDoor(getPositionFromTile(i, j)));
+                            // TODO this.doorList.add(new Door(getPositionFromTile(i, j)));
                             break;
                         case "B": // Boss
                             // TODO Ajouter Boss
@@ -431,6 +411,6 @@ public class GameRoom {
     // TODO: 6. Quelques boss (7 premiers du jeu)
     // : ->
     // TODO: 7. Quelques monstres
-    // TODO: 4. Pièges (Piques (timing / switch de textures), Trous)
+    // FAIT: 4. Pièges (Piques (timing / switch de textures), Trous)
     // TODO: 3. Bombes qui détruits les rochers (Animation d'explosions)
 }

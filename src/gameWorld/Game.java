@@ -5,16 +5,18 @@ import libraries.StdDraw;
 import libraries.Timer;
 
 public class Game {
-    private static GameLevel currentLevel;
-    private static GameState gameState;
-    private static long imageNum = 0;
+    private static GameLevel LEVEL;
+    private static GameState STATE;
+    private static long IMAGE_NUM;
+
+    public static final boolean ALLOW_CHEAT = false;
 
     /**
      * 
      */
     public static void setupAndLoop() {
-        gameState = GameState.RUNNING;
-        imageNum = 0;
+        STATE = GameState.RUNNING;
+        IMAGE_NUM = 0;
 
         // Taille du canvas
         StdDraw.setCanvasSize(
@@ -26,17 +28,17 @@ public class Game {
         StdDraw.enableDoubleBuffering();
 
         // TODO: @cyp3 à changer
-        currentLevel = new GameLevel(new GameRoom());
+        LEVEL = new GameLevel(new GameRoom());
 
         // Boucle du jeu
-        while (gameState == GameState.RUNNING) {
+        while (STATE == GameState.RUNNING) {
             Timer.beginTimer();
             StdDraw.clear();
 
             /// Affichage
-            currentLevel.updateAndDraw();
+            LEVEL.updateAndDraw();
 
-            imageNum++;
+            IMAGE_NUM++;
 
             StdDraw.show();
             Timer.waitToMaintainConstantFPS();
@@ -45,7 +47,7 @@ public class Game {
         // Fin du jeu
         // Le joueur a gagné?
         String imgPath = "";
-        if (gameState == GameState.WIN) {
+        if (STATE == GameState.WIN) {
             imgPath = "images/Win.jpg";
         }
 
@@ -69,9 +71,9 @@ public class Game {
         }
 
         // On supprime tout
-        currentLevel = null;
-        gameState = null;
-        imageNum = 0;
+        LEVEL = null;
+        STATE = null;
+        IMAGE_NUM = 0;
     }
 
     /**
@@ -79,20 +81,20 @@ public class Game {
      * @return
      */
     public static long getImageNum() {
-        return imageNum;
+        return IMAGE_NUM;
     }
 
     /**
      * 
      */
     public static GameState getGameState() {
-        return gameState;
+        return STATE;
     }
 
     /**
      * 
      */
     public static void updateGameState(GameState state) {
-        gameState = state;
+        STATE = state;
     }
 }

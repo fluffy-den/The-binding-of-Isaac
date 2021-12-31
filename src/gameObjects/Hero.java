@@ -37,7 +37,9 @@ public class Hero extends EntityLiving {
     public static final double TEAR_RELOAD_SPEED = 0.05;
     public static final int TEAR_STARTING_DAMAGE = 1;
 
-    // Constructeur
+    /**
+     * 
+     */
     public Hero() {
         super(GameRoom.CENTER_POS,
                 SIZE,
@@ -193,6 +195,52 @@ public class Hero extends EntityLiving {
         dir.addX(1);
         return new Tear(this.getPos(), dir.addVector(this.dir.scalarMultiplication(ON_TEAR_EFFECT_POWER)),
                 this.tearSpeed, this.tearDamage, this.tearRange);
+    }
+
+    // Coins
+    /**
+     * 
+     * @param count
+     * @return
+     */
+    public int addCoins(int count) {
+        this.nCoins += count;
+        return this.nCoins;
+    }
+
+    /**
+     * 
+     * @param count
+     * @return
+     */
+    public int remCoins(int count) {
+        this.nCoins -= count;
+        return this.nCoins;
+    }
+
+    // Bombs
+    /**
+     * 
+     * @return
+     */
+    public int getBombCount() {
+        return this.nBombs;
+    }
+
+    /**
+     * 
+     */
+    public int addBomb() {
+        this.nBombs++;
+        return this.nBombs;
+    }
+
+    /**
+     * 
+     */
+    public int remBomb() {
+        this.nBombs--;
+        return this.nBombs;
     }
 
     // HUDs
