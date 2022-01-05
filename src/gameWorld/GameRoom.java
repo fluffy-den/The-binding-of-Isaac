@@ -259,11 +259,6 @@ public class GameRoom {
         if (StdDraw.isKeyPressed(Controls.cheatKillAll)) {
             this.monsterList.clear();
         }
-
-        /// Donne des pièces à Isaac
-        if (StdDraw.isKeyPressed(Controls.cheatGold)) {
-            h.addCoins(10);
-        }
     }
 
     /**

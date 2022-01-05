@@ -3,6 +3,7 @@ package gameObjects;
 import gameWorld.Game;
 import gameWorld.GameRoom;
 import gameWorld.GameState;
+import gameWorld.GameCounter;
 
 import java.awt.Font;
 
@@ -12,12 +13,11 @@ import gameObjects.Projectiles.Tear;
 import libraries.StdDraw;
 import libraries.Vector2;
 import resources.Controls;
+import resources.DisplaySettings;
 
 public class Hero extends EntityLiving {
     private double tearRange;
     private double tearSpeed;
-    private double tearReloadSpeed;
-    private long lastTearFrame;
     private int tearDamage;
     private int nBombs;
     private int nCoins;
@@ -25,6 +25,11 @@ public class Hero extends EntityLiving {
     private boolean cheatInvincible;
     private boolean cheatSpeed;
     private boolean cheatDamage;
+    private GameCounter tearReloadSpeed;
+    private GameCounter cheatInvincibleCounter;
+    private GameCounter cheatSpeedCounter;
+    private GameCounter cheatDamageCounter;
+    private GameCounter cheatCoinCounter;
 
     // Isaac
     public static final Vector2 SIZE = GameRoom.TILE_SIZE.scalarMultiplication(0.7);
@@ -41,6 +46,10 @@ public class Hero extends EntityLiving {
     public static final double TEAR_RELOAD_SPEED = 0.05;
     public static final int TEAR_STARTING_DAMAGE = 1;
 
+    // Key Toggle Ignore step
+    public static final double TOGGLE_IGNORE_STEP = 0.05;
+    // On peut changer les modes de cheat seulement entre chaques secondes
+
     /**
      * 
      */
@@ -53,11 +62,10 @@ public class Hero extends EntityLiving {
                 IMGPATH);
         this.tearRange = TEAR_RANGE;
         this.tearSpeed = TEAR_SPEED;
-        this.tearReloadSpeed = TEAR_RELOAD_SPEED;
+        this.tearReloadSpeed = new GameCounter(TEAR_RELOAD_SPEED);
         this.maxHPs = STARTING_HP;
 
         // Larme
-        this.lastTearFrame = 0;
         this.tearDamage = TEAR_STARTING_DAMAGE;
 
         // Inventaire
@@ -66,8 +74,12 @@ public class Hero extends EntityLiving {
 
         // Triche
         this.cheatInvincible = false;
+        this.cheatInvincibleCounter = new GameCounter(TOGGLE_IGNORE_STEP);
         this.cheatSpeed = false;
+        this.cheatSpeedCounter = new GameCounter(TOGGLE_IGNORE_STEP);
         this.cheatDamage = false;
+        this.cheatDamageCounter = new GameCounter(TOGGLE_IGNORE_STEP);
+        this.cheatCoinCounter = new GameCounter(TOGGLE_IGNORE_STEP);
     }
 
     // HP
@@ -121,12 +133,7 @@ public class Hero extends EntityLiving {
      * @return True si on peut tirer False sinon
      */
     public boolean isReloaded() {
-        long elapsed = Game.getImageNum() - this.lastTearFrame;
-        if (elapsed * this.tearReloadSpeed >= 1) {
-            this.lastTearFrame = Game.getImageNum();
-            return true;
-        }
-        return false;
+        return this.tearReloadSpeed.isFinished();
     }
 
     /**
@@ -150,8 +157,7 @@ public class Hero extends EntityLiving {
     }
 
     public double addTearReloadSpeed(double reloadSpeed) {
-        this.tearReloadSpeed += reloadSpeed;
-        return this.tearReloadSpeed;
+        return this.tearReloadSpeed.addStep(reloadSpeed);
     }
 
     /**
@@ -326,7 +332,7 @@ public class Hero extends EntityLiving {
      */
     public void drawTearReloadSpeedHUD() {
         Vector2 pos = new Vector2(0.040, 1 - 0.033 * 5);
-        StdDraw.textLeft(pos.getX(), pos.getY(), "Reload: " + Double.toString(this.tearReloadSpeed));
+        StdDraw.textLeft(pos.getX(), pos.getY(), "Reload: " + Double.toString(this.tearReloadSpeed.getStep()));
     }
 
     /**
@@ -396,7 +402,7 @@ public class Hero extends EntityLiving {
     }
 
     // Triche
-    public static double CHEAT_OF_SPEED = 0.25;
+    public static double CHEAT_OF_SPEED = 0.025;
     public static int CHEAT_OF_DAMAGE = Integer.MAX_VALUE / 2;
 
     /**
@@ -404,11 +410,11 @@ public class Hero extends EntityLiving {
      */
     public void updateCheatActions() {
         // Invincible
-        if (StdDraw.isKeyPressed(Controls.cheatInvincibility))
+        if (StdDraw.isKeyPressed(Controls.cheatInvincibility) && this.cheatInvincibleCounter.isFinished())
             this.cheatInvincible ^= true;
 
         // Rapidite
-        if (StdDraw.isKeyPressed(Controls.cheatSpeed)) {
+        if (StdDraw.isKeyPressed(Controls.cheatSpeed) && this.cheatSpeedCounter.isFinished()) {
             if (this.cheatSpeed == false) {
                 this.speed += CHEAT_OF_SPEED;
                 this.cheatSpeed = true;
@@ -419,7 +425,7 @@ public class Hero extends EntityLiving {
         }
 
         // Puissance
-        if (StdDraw.isKeyPressed(Controls.cheatOneShot)) {
+        if (StdDraw.isKeyPressed(Controls.cheatOneShot) && this.cheatDamageCounter.isFinished()) {
             if (this.cheatDamage == false) {
                 this.tearDamage += CHEAT_OF_DAMAGE;
                 this.cheatDamage = true;
@@ -428,16 +434,33 @@ public class Hero extends EntityLiving {
                 this.cheatDamage = false;
             }
         }
+
+        // Pièces
+        if (StdDraw.isKeyPressed(Controls.cheatGold) && this.cheatCoinCounter.isFinished()) {
+            this.addCoins(10);
+        }
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isCheatInvincibleEnabled() {
         return this.cheatInvincible;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isCheatSpeedEnabled() {
         return this.cheatSpeed;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isCheatPowerEnabled() {
         return this.cheatDamage;
     }
