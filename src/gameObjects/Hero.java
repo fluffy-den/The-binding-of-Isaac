@@ -11,6 +11,7 @@ import gameObjects.Projectiles.Tear;
 
 import libraries.StdDraw;
 import libraries.Vector2;
+import resources.Controls;
 
 public class Hero extends EntityLiving {
     private double tearRange;
@@ -21,6 +22,9 @@ public class Hero extends EntityLiving {
     private int nBombs;
     private int nCoins;
     private int maxHPs;
+    private boolean cheatInvincible;
+    private boolean cheatSpeed;
+    private boolean cheatDamage;
 
     // Isaac
     public static final Vector2 SIZE = GameRoom.TILE_SIZE.scalarMultiplication(0.7);
@@ -59,6 +63,11 @@ public class Hero extends EntityLiving {
         // Inventaire
         this.nBombs = 0;
         this.nCoins = 0;
+
+        // Triche
+        this.cheatInvincible = false;
+        this.cheatSpeed = false;
+        this.cheatDamage = false;
     }
 
     // HP
@@ -254,7 +263,7 @@ public class Hero extends EntityLiving {
      * 
      */
     public void drawHealthBar() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.033);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 1);
         Vector2 size = new Vector2(0.03, 0.03);
         // 1 coeur = 2 pts de vie
         int nCoeurs = this.maxHPs / 2;
@@ -287,14 +296,10 @@ public class Hero extends EntityLiving {
      * 
      */
     public void drawBombsBar() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.066);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 2);
         Vector2 size = new Vector2(0.03, 0.03);
-        Font font = new Font("Arial", Font.BOLD, 11);
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.setFont(font);
         StdDraw.picture(pos.getX(), pos.getY(), IMGPATH_HUD_BOMB, size.getX(), size.getY());
         StdDraw.textLeft(pos.getX() + size.getX(), pos.getY(), Integer.toString(this.nBombs));
-        StdDraw.setPenColor();
 
     }
 
@@ -302,58 +307,139 @@ public class Hero extends EntityLiving {
      * 
      */
     public void drawCoinsBar() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.099);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 3);
         Vector2 size = new Vector2(0.03, 0.03);
-        Font font = new Font("Arial", Font.BOLD, 11);
-        StdDraw.setPenColor(StdDraw.WHITE);
-        StdDraw.setFont(font);
         StdDraw.picture(pos.getX(), pos.getY(), IMGPATH_HUD_COINS, size.getX(), size.getY());
         StdDraw.textLeft(pos.getX() + size.getX(), pos.getY(), Integer.toString(this.nCoins));
-        StdDraw.setPenColor();
     }
 
     /**
      * 
      */
     public void drawTearRangeHUD() {
-
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 4);
+        StdDraw.textLeft(pos.getX(), pos.getY(), "Range: " + Double.toString(this.tearRange));
     }
 
     /**
      * 
      */
     public void drawTearReloadSpeedHUD() {
-
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 5);
+        StdDraw.textLeft(pos.getX(), pos.getY(), "Reload: " + Double.toString(this.tearReloadSpeed));
     }
 
     /**
      * 
      */
     public void drawTearDamageHUD() {
-
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 6);
+        StdDraw.textLeft(pos.getX(), pos.getY(), "Damage: " + Double.toString(this.tearDamage));
     }
 
     /**
      * 
      */
     public void drawSpeedHUD() {
-
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 7);
+        StdDraw.textLeft(pos.getX(), pos.getY(), "Speed: " + Double.toString(this.speed));
     }
 
     /**
      * 
      */
-    public void drawCheatHUD() {
+    public void drawCheatInvincibilityHUD() {
+        if (this.cheatInvincible) {
+            Vector2 pos = new Vector2(1 - 0.040, 1 - 0.033 * 5);
+            StdDraw.textRight(pos.getX(), pos.getY(), "Invincibility: Cheat");
+        }
+    }
 
+    /**
+     * 
+     */
+    public void drawCheatSpeedHUD() {
+        if (this.cheatSpeed) {
+            Vector2 pos = new Vector2(1 - 0.040, 1 - 0.033 * 6);
+            StdDraw.textRight(pos.getX(), pos.getY(), "Speed: Cheat");
+        }
+    }
+
+    /**
+     * 
+     */
+    public void drawCheatDamageHUD() {
+        if (this.cheatDamage) {
+            Vector2 pos = new Vector2(1 - 0.040, 1 - 0.033 * 7);
+            StdDraw.textRight(pos.getX(), pos.getY(), "Damage: Cheat");
+        }
     }
 
     /**
      * 
      */
     public void drawHUD() {
+        Font font = new Font("Arial", Font.BOLD, 11);
+        StdDraw.setFont(font);
+        StdDraw.setPenColor(StdDraw.WHITE);
         this.drawHealthBar();
         this.drawBombsBar();
         this.drawCoinsBar();
+        this.drawTearRangeHUD();
+        this.drawTearReloadSpeedHUD();
+        this.drawTearDamageHUD();
+        this.drawSpeedHUD();
+        this.drawCheatInvincibilityHUD();
+        this.drawCheatSpeedHUD();
+        this.drawCheatDamageHUD();
+        StdDraw.setPenColor();
+    }
+
+    // Triche
+    public static double CHEAT_OF_SPEED = 0.25;
+    public static int CHEAT_OF_DAMAGE = Integer.MAX_VALUE / 2;
+
+    /**
+     * 
+     */
+    public void updateCheatActions() {
+        // Invincible
+        if (StdDraw.isKeyPressed(Controls.cheatInvincibility))
+            this.cheatInvincible ^= true;
+
+        // Rapidite
+        if (StdDraw.isKeyPressed(Controls.cheatSpeed)) {
+            if (this.cheatSpeed == false) {
+                this.speed += CHEAT_OF_SPEED;
+                this.cheatSpeed = true;
+            } else {
+                this.speed -= CHEAT_OF_SPEED;
+                this.cheatSpeed = false;
+            }
+        }
+
+        // Puissance
+        if (StdDraw.isKeyPressed(Controls.cheatOneShot)) {
+            if (this.cheatDamage == false) {
+                this.tearDamage += CHEAT_OF_DAMAGE;
+                this.cheatDamage = true;
+            } else {
+                this.tearDamage -= CHEAT_OF_DAMAGE;
+                this.cheatDamage = false;
+            }
+        }
+    }
+
+    public boolean isCheatInvincibleEnabled() {
+        return this.cheatInvincible;
+    }
+
+    public boolean isCheatSpeedEnabled() {
+        return this.cheatSpeed;
+    }
+
+    public boolean isCheatPowerEnabled() {
+        return this.cheatDamage;
     }
 
     // Damage
@@ -361,8 +447,10 @@ public class Hero extends EntityLiving {
      * 
      */
     public void addDamage(int damage) {
-        this.health -= damage;
-        if (this.health <= 0)
-            Game.updateGameState(GameState.LOST);
+        if (!this.cheatInvincible) {
+            this.health -= damage;
+            if (this.health <= 0)
+                Game.updateGameState(GameState.LOST);
+        }
     }
 }
