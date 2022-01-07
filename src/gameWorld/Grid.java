@@ -66,7 +66,7 @@ public class Grid {
      * 
      * @param difficulty int entre 1 et 10
      * @param type       1 = salle normal / 2 = Boss / 3 = Shop
-     * @param xydoor     Coordonnées de la porte d'entrée Nord 4, Ouest 36, Est 44,
+     * @param xydoor     Coordonnées de la porte d'entrée Nord 04, Ouest 36, Est 44,
      *                   Sud 76
      * @param nbdoor     Nombre de portes suplémentaires
      */
@@ -108,8 +108,8 @@ public class Grid {
             }
 
             // Items
-            int item = random.nextInt(3);
-            for (int i = 0; i < item; i++) {
+            int rdm = random.nextInt(4);
+            for (int i = 0; i < rdm; i++) {
                 int co = random.nextInt(81);
                 while (this.Grid[co / 9][co % 9] != null) {
                     co = random.nextInt(81);
@@ -148,34 +148,4 @@ public class Grid {
         return s;
     }
 
-    /*
-     * public void gridToLinked() { // (ArrayList<Monster>)
-     * for (int i = 0; i < 9; i++) {
-     * for (int j = 0; j < 9; j++) {
-     * if (this.Grid[i][j] != null) {
-     * switch (this.Grid[i][j]) {
-     * case "D": // door
-     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-     * break;
-     * case "B": // Boss
-     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-     * break;
-     * case "M": // Fly or Spider
-     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-     * break;
-     * case "I": // Item
-     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-     * break;
-     * case "O": // Obstacle
-     * this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
-     * break;
-     * default:// Nothing
-     * assert (false);
-     * break;
-     * }
-     * }
-     * }
-     * }
-     * }
-     */
 }

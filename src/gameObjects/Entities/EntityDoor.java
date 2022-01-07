@@ -1,7 +1,6 @@
 package gameObjects.Entities;
 
 import gameObjects.Hero;
-import gameObjects.Doors.DoorPlacement;
 
 import gameWorld.GameRoom;
 
@@ -12,58 +11,37 @@ import libraries.Vector2;
  */
 public abstract class EntityDoor extends Entity {
     // Adjacent & bouton vers le haut
-    private DoorPlacement placement;
-    private GameRoom room;
     private boolean isOpened;
+    private boolean isKeyLocked;
+    private boolean isSecret;
 
     /**
      * 
-     * @param pos
-     * @param imgPath
-     * @param doorPlacement
+     * @param pos         Position de la porte
+     * @param imgPath     Image de la porte
+     * @param isOpened    True si ouverte false sinon
+     * @param isKeyLocked True si fermée false sinon
+     * @param isSecret    True si sectète false sinon
      */
-    public EntityDoor(Vector2 pos, String imgPath, DoorPlacement doorPlacement) {
+    public EntityDoor(Vector2 pos, String imgPath, boolean isOpened, boolean isKeyLocked,
+            boolean isSecret) {
         super(pos, GameRoom.TILE_SIZE, imgPath);
-    }
-
-    /**
-     * 
-     * @return
-     */
-    public GameRoom getRoom() {
-        return this.room;
+        this.isOpened = isOpened;
+        this.isKeyLocked = isKeyLocked;
+        this.isSecret = isSecret;
     }
 
     /**
      * 
      * @param h
      */
-    public void onHeroAdjacency(Hero h) {
-        if (this.isOpened) {
-            switch (this.placement) {
-                case DOOR_UP: {
-
-                    break;
-                }
-
-                case DOOR_DOWN: {
-
-                    break;
-                }
-
-                case DOOR_LEFT: {
-
-                    break;
-                }
-
-                case DOOR_RIGHT: {
-
-                    break;
-                }
-
-                default:
-                    assert (false);
-            }
+    public boolean onHeroAdjacency(Hero h) {
+        if (this.isKeyLocked) {
+            // TODO si le heros a une clé ouvrir et en retirer une
         }
+        if (this.isOpened) {
+            return true;
+        }
+        return false;
     }
 }

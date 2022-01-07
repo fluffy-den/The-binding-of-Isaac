@@ -1,31 +1,52 @@
 package gameWorld;
 
+import gameWorld.GameLevel;
+import gameObjects.Doors.*;
+import gameObjects.Entities.EntityDoor;
+
 import java.util.Random;
+import libraries.Vector2;
 
 public class GameMap {
-    public static GameRoom curent;
-    public static GameMap Nord;
-    public static GameMap Sud;
-    public static GameMap Est;
-    public static GameMap Ouest;
+    public GameRoom curent;
+    public Vector2 co;
 
-    public GameMap(int difficulty, int type, int xydoor, int nbdoor) {
+    /**
+     * Cree une GameRoom suivant les paramètes suivants
+     * 
+     * @param difficulty Difficulté du niveau
+     * @param type       Type de salle (voir Grid)
+     * @param xydoor     Coordonnes de la porte d'entrée
+     * @param nbdoor     Nombre de portes à ajouter sur une grille
+     */
+    public GameMap(int difficulty, int type, int xydoor, int nbdoor, Vector2 co) {
         curent = new GameRoom();
         curent.generateGameRoom(difficulty, type, xydoor, nbdoor);
-        relation(difficulty, type, xydoor, nbdoor);
+        this.co = co;
     }
 
-    public void relation(int difficulty, int type, int xydoor, int nbdoor) {
-        if (nbdoor > 0) {
-            Random random = new Random();
-            int rdm = random.nextInt(4);
-            int[] co = { 4, 36, 44, 76 };
-            for (int i = 0; i < nbdoor; ++i) {
-                if (curent.doorList.get(i).getPos() == GameRoom.getPositionFromTile(0, 4)
-                        && (xydoor != co[i])) {
-                    Nord = new GameMap(difficulty + random.nextInt(2), type, 4, nbdoor - random.nextInt(nbdoor));
-                }
+    /**
+     * Donne la liste des vecteurs positions des portes qui viennent d'être mises
+     * 
+     * @param xydoor Coordonnées de la porte d'entrée (case de 1 à 81)
+     * @param nbDoor Nombre de portes placées
+     */
+    public void PositionDoors(int xydoor, int nbDoor) {
+        Vector2[] coDoor = new Vector2[nbDoor];
+        int tmp = 0;
+        for (int i = 0; i < curent.doorList.size(); i++) {
+            if (curent.doorList.get(i).getPos() != GameRoom.getPositionFromTile(xydoor / 9, xydoor % 9)) {
+                coDoor[tmp] = curent.doorList.get(i).getPos();
+                tmp++;
             }
         }
+    }
+
+    public Vector2 getCo() {
+        return this.co;
+    }
+
+    public GameRoom GetRoom() {
+        return this.curent;
     }
 }

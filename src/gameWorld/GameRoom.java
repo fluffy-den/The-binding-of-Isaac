@@ -5,20 +5,27 @@ import gameObjects.Projectiles.Tear;
 import gameObjects.Terrain.TerrainRock;
 import gameObjects.Traps.TrapPikes;
 import gameObjects.Hero;
+import gameObjects.Doors.OpenedDoor;
 import gameObjects.Entities.EntityItem;
 import gameObjects.Entities.EntityTerrain;
 import gameObjects.Entities.EntityTrap;
 import gameObjects.Entities.EntityDoor;
 import gameObjects.Items.ItemBloodOfTheMartyr;
+import gameObjects.Items.ItemCricketHead;
 import gameObjects.Items.ItemHalfRedHeart;
 import gameObjects.Items.ItemHeart;
 import gameObjects.Items.ItemJesusJuice;
 import gameObjects.Items.ItemLunch;
+import gameObjects.Items.ItemMagicMushroom;
+import gameObjects.Items.ItemNickel;
 import gameObjects.Items.ItemPentagram;
 import gameObjects.Items.ItemRedHeart;
+import gameObjects.Items.ItemStigmata;
 import gameObjects.Monsters.MonsterFly;
 import gameObjects.Monsters.MonsterSpider;
 import gameObjects.Entities.EntityMonster;
+
+import gameWorld.GameLevel;
 
 import libraries.Vector2;
 import libraries.StdDraw;
@@ -62,7 +69,7 @@ public class GameRoom {
         this.doorList = new LinkedList<EntityDoor>();
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
-        generateGameRoom(1, 1, 4, 0);
+        // generateGameRoom(1, 1, 4, 0);
     }
 
     /**
@@ -166,14 +173,33 @@ public class GameRoom {
      * 
      * @param h
      */
-    public void updateAndDrawDoors(Hero h) {
-        // On suppose que les pièges ne fonctionnent que sur le Héro
+    public String updateAndDrawDoors(Hero h) {
+        // On suppose que les portes ne fonctionnent que sur le Héro
+
         for (EntityDoor t : this.doorList) {
-            if (t.isAdjacent(h)) {
-                t.onHeroAdjacency(h);
+            if (monsterList.isEmpty()) {
+                if (t.isAdjacent(h)) {
+                    if (t.onHeroAdjacency(h)) {
+                        Vector2 vec = new Vector2(t.getPos());
+                        if (vec.getX() == 0.5) {
+                            if (vec.getY() == 0.86) {
+                                return ("top");
+                            } else {// 0.14
+                                return "bottom";
+                            }
+                        } else {// y = 0.5
+                            if (vec.getX() == 0.1) {
+                                return "left";
+                            } else {// 0.9
+                                return "right";
+                            }
+                        }
+                    }
+                }
             }
             t.updateAndDraw();
         }
+        return null;
     }
 
     /**
@@ -277,7 +303,6 @@ public class GameRoom {
         this.updateAndDrawHeroItems(h);
         this.updateHeroBombsActions(h);
         this.updateAndDrawTraps(h);
-        this.updateAndDrawDoors(h);
         this.updateAndDrawMonsters(h);
         h.update();
         this.updateAndDrawTerrain(h);
@@ -314,9 +339,24 @@ public class GameRoom {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 if (Grid[i][j] != null) {
+                    Vector2 p = getPositionFromTile(i, j);
                     switch (Grid[i][j]) {
                         case "D": // door
-                            // TODO this.doorList.add(new Door(getPositionFromTile(i, j)));
+                            // TODO Portes Complexes
+                            if (j == 4) {
+                                if (i == 0) {
+                                    this.doorList.add(new OpenedDoor(new Vector2(0.5, 0.86)));
+                                } else {
+                                    this.doorList.add(new OpenedDoor(new Vector2(0.5, 0.14)));
+                                }
+                            } else {
+                                if (j == 0) {
+                                    this.doorList.add(new OpenedDoor(new Vector2(0.1, 0.5)));
+                                } else {
+                                    this.doorList.add(new OpenedDoor(new Vector2(0.9, 0.5)));
+                                }
+                            }
+
                             break;
                         case "B": // Boss
                             // TODO Ajouter Boss
@@ -324,46 +364,66 @@ public class GameRoom {
                         case "M": // Fly or Spider
                             int rdm = random.nextInt(2);
                             if (rdm == 0) {
-                                this.monsterList.add(new MonsterSpider(getPositionFromTile(i, j)));
+                                this.monsterList.add(new MonsterSpider(p));
                             } else {
-                                this.monsterList.add(new MonsterFly(getPositionFromTile(i, j)));
+                                this.monsterList.add(new MonsterFly(p));
                             }
                             break;
                         case "I": // Item
-                            switch (random.nextInt(7)) {
-                                case 0:
-                                    this.itemList.add(new ItemBloodOfTheMartyr(getPositionFromTile(i, j)));
-                                    break;
-                                case 1:
-                                    this.itemList.add(new ItemHalfRedHeart(getPositionFromTile(i, j)));
-                                    break;
-                                case 2:
-                                    this.itemList.add(new ItemHeart(getPositionFromTile(i, j)));
-                                    break;
-                                case 3:
-                                    this.itemList.add(new ItemJesusJuice(getPositionFromTile(i, j)));
-                                    break;
-                                case 4:
-                                    this.itemList.add(new ItemLunch(getPositionFromTile(i, j)));
-                                    break;
-                                case 5:
-                                    this.itemList.add(new ItemPentagram(getPositionFromTile(i, j)));
-                                    break;
-                                case 6:
-                                    this.itemList.add(new ItemRedHeart(getPositionFromTile(i, j)));
-                                    break;
-                                default:
-                                    assert (false);
-                                    break;
 
+                            int prob = random.nextInt(5);
+
+                            if (prob == 4) {
+                                int rdm2 = random.nextInt(7);
+                                switch (rdm2) {
+                                    case 0, 1:
+                                        this.itemList.add(new ItemHalfRedHeart(p));
+                                        break;
+                                    case 2:
+                                        this.itemList.add(new ItemHeart(p));
+                                        break;
+                                    default:
+                                        this.itemList.add(new ItemNickel(p));
+                                        break;
+                                }
+                            } else {
+                                int rdm2 = random.nextInt(7);
+                                switch (rdm2) {
+
+                                    case 0:
+                                        this.itemList.add(new ItemBloodOfTheMartyr(p));
+                                        break;
+                                    case 1:
+                                        this.itemList.add(new ItemJesusJuice(p));
+                                        break;
+                                    case 2:
+                                        this.itemList.add(new ItemLunch(p));
+                                        break;
+                                    case 3:
+                                        this.itemList.add(new ItemRedHeart(p)); //
+                                        break;
+                                    case 4:
+                                        this.itemList.add(new ItemCricketHead(p));
+                                        break;
+                                    case 5:
+                                        this.itemList.add(new ItemStigmata(p));
+                                        break;
+                                    case 6:
+                                        this.itemList.add(new ItemMagicMushroom(p)); // Ultra méga rare
+                                        break;
+                                    default:
+                                        assert (false);
+                                        break;
+
+                                }
                             }
                             break;
                         case "O": // Obstacle
                             int rdm2 = random.nextInt(2);
                             if (rdm2 == 0) {
-                                this.trapList.add(new TrapPikes(getPositionFromTile(i, j)));
+                                this.trapList.add(new TrapPikes(p));
                             } else {
-                                this.terrainList.add(new TerrainRock(getPositionFromTile(i, j)));
+                                this.terrainList.add(new TerrainRock(p));
                             }
                             break;
                         default:// Nothing
@@ -371,6 +431,20 @@ public class GameRoom {
                             break;
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Retire une port à une position donnée
+     * 
+     * @param vec Position de la porte à retirer
+     */
+    public void removeDoor(Vector2 vec) {
+        for (int i = 0; i < doorList.size(); i++) {
+            if (doorList.get(i).getPos() == vec) {
+                doorList.remove(i);
+                return;
             }
         }
     }
