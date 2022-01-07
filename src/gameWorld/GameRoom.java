@@ -279,6 +279,16 @@ public class GameRoom {
 
     /**
      * 
+     */
+    public void updateCheatActions(Hero h) {
+        /// Tue tous les monstres
+        if (StdDraw.isKeyPressed(Controls.cheatKillAll)) {
+            this.monsterList.clear();
+        }
+    }
+
+    /**
+     * 
      * @param h
      *
      */
@@ -297,6 +307,8 @@ public class GameRoom {
     }
 
     public void updateAndDraw(Hero h) {
+        this.updateCheatActions(h);
+        h.updateCheatActions();
         this.drawBackground();
         this.updateHeroMovementActions(h);
         this.updateHeroTearActions(h);
@@ -310,6 +322,7 @@ public class GameRoom {
         this.updateAndDrawMonsterProjectiles(h);
         h.draw();
         h.drawHUD();
+
     }
 
     /**
