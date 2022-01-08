@@ -23,11 +23,11 @@ public class GameLevel {
         this.level = new ArrayList<GameMap>();
         this.hero = new Hero();
         level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0)));
-        level.add(new GameMap(1, 1, 76, 0, new Vector2(0, 1))); // Salle de départ
+        CreatingClassicRoom(1, 76, 3, level.get(0).getCo());
         this.currentCord = level.get(0).getCo();
 
         for (int i = 0; i < level.size(); i++) {
-            System.out.println(level.get(i).getCo());
+            System.out.println("Pièce " + i + " en " + level.get(i).getCo());
         }
         this.currentRoom = getSpeRoom(this.currentCord);
     }
@@ -40,7 +40,8 @@ public class GameLevel {
      */
     private GameRoom getSpeRoom(Vector2 vec) {
         for (int i = 0; i < this.level.size(); i++) {
-            if (level.get(i).getCo().getX() == vec.getX() && level.get(i).getCo().getY() == vec.getY()) {
+            Vector2 tmp = level.get(i).getCo();
+            if (tmp.getX() == vec.getX() && tmp.getY() == vec.getY()) {
                 return level.get(i).GetRoom();
             }
         }
@@ -65,37 +66,39 @@ public class GameLevel {
         int d = random.nextInt(2); // increase difficulty
         int nbD;
         if (nbRoomRest > 3) {
-            nbD = random.nextInt(4); // Door numbers
+            nbD = 1 + random.nextInt(3); // Door numbers
             nbRoomRest -= nbD;
         } else {
             nbD = nbRoomRest;
             nbRoomRest = 0;
         }
-        Vector2 pos = new Vector2(MotherPos.getX(), MotherPos.getY());
+        Vector2 pos = new Vector2(MotherPos);
         switch (EntrancePos) {
             case 4:
-                pos.addVector(new Vector2(0, 1));
+                pos.addY(-1);
                 break;
             case 36:
-                pos.addVector(new Vector2(0, -1));
+                pos.addX(1);
                 break;
             case 44:
-                pos.addVector(new Vector2(1, 0));
+                pos.addX(-1);
                 break;
             case 76:
-                pos.addVector(new Vector2(-1, 0));
+                pos.addY(1);
                 break;
 
         }
-
         if (getSpeRoom(pos) != null) {
+            System.out.println("Pas de création en" + pos);
             return;
         }
-
+        System.out.println("Création en" + pos);
         GameMap map = new GameMap(difficulty + d, 1, EntrancePos, nbD, pos);
         if (nbD > 0) {
             for (int i = 0; i < nbD; i++) {
-                CreatingClassicRoom(difficulty + d, posToInt(map.GetRoom().doorList.get(i).getPos()), nbRoomRest, pos);
+                System.out.println(posToInt(map.GetRoom().doorList.get(i).getPos()));
+                CreatingClassicRoom(difficulty + d, posToInt(map.GetRoom().doorList.get(i).getPos()), nbRoomRest / nbD,
+                        pos);
             }
         }
         level.add(map);
@@ -104,15 +107,15 @@ public class GameLevel {
     public int posToInt(Vector2 vec) {
         if (vec.getX() == 0.5) {
             if (vec.getY() == 0.86) {
-                return 4;
-            } else {// 0.14
                 return 76;
+            } else {// 0.14
+                return 4;
             }
         } else {// y = 0.5
             if (vec.getX() == 0.1) {
-                return 36;
-            } else {// 0.9
                 return 44;
+            } else {// 0.9
+                return 36;
             }
         }
 
@@ -123,26 +126,34 @@ public class GameLevel {
         switch (s) {
             case "top":
                 vec.addY(1);
-                setRoom(vec);
+                if (setRoom(vec)) {
+                    hero.setPos(new Vector2(0.5, 0.1));
+                }
                 break;
             case "bottom":
                 vec.addY(-1);
-                setRoom(vec);
+                if (setRoom(vec)) {
+                    hero.setPos(new Vector2(0.5, 0.8));
+                }
                 break;
             case "right":
                 vec.addX(1);
-                setRoom(vec);
+                if (setRoom(vec)) {
+                    hero.setPos(new Vector2(0.1, 0.5));
+                }
                 break;
             case "left":
                 vec.addX(-1);
-                setRoom(vec);
+                if (setRoom(vec)) {
+                    hero.setPos(new Vector2(0.9, 0.5));
+                }
                 break;
             default:
                 assert (false);
         }
     }
 
-    public void setRoom(Vector2 vec) {
+    public boolean setRoom(Vector2 vec) {
         long elapsed = Game.getImageNum() - this.lastTPFrame;
         if (elapsed * 0.025 >= 1) {
             this.lastTPFrame = Game.getImageNum();
@@ -151,7 +162,9 @@ public class GameLevel {
                 System.out.println("Téléportation en " + vec);
                 this.currentRoom = g;
                 this.currentCord = vec;
+                return true;
             }
         }
+        return false;
     }
 }

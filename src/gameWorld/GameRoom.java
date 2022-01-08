@@ -180,19 +180,20 @@ public class GameRoom {
             if (monsterList.isEmpty()) {
                 if (t.isAdjacent(h)) {
                     if (t.onHeroAdjacency(h)) {
-                        if (StdDraw.isKeyPressed(Controls.goDown) || StdDraw.isKeyPressed(Controls.goLeft)
-                                || StdDraw.isKeyPressed(Controls.goRight) || StdDraw.isKeyPressed(Controls.goUp)) {
-                            Vector2 vec = new Vector2(t.getPos());
-                            if (vec.getX() == 0.5) {
-                                if (vec.getY() == 0.86) {
-                                    return ("top");
-                                } else {// 0.14
+                        Vector2 vec = new Vector2(t.getPos());
+                        if (vec.getX() == 0.5) {
+                            if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
+                                return ("top");
+                            } else {// 0.14
+                                if (StdDraw.isKeyPressed(Controls.goDown)) {
                                     return "bottom";
                                 }
-                            } else {// y = 0.5
-                                if (vec.getX() == 0.1) {
-                                    return "left";
-                                } else {// 0.9
+                            }
+                        } else {// y = 0.5
+                            if (vec.getX() == 0.1 && StdDraw.isKeyPressed(Controls.goLeft)) {
+                                return "left";
+                            } else {// 0.9
+                                if (StdDraw.isKeyPressed(Controls.goRight)) {
                                     return "right";
                                 }
                             }
