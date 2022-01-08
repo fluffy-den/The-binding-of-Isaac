@@ -180,18 +180,21 @@ public class GameRoom {
             if (monsterList.isEmpty()) {
                 if (t.isAdjacent(h)) {
                     if (t.onHeroAdjacency(h)) {
-                        Vector2 vec = new Vector2(t.getPos());
-                        if (vec.getX() == 0.5) {
-                            if (vec.getY() == 0.86) {
-                                return ("top");
-                            } else {// 0.14
-                                return "bottom";
-                            }
-                        } else {// y = 0.5
-                            if (vec.getX() == 0.1) {
-                                return "left";
-                            } else {// 0.9
-                                return "right";
+                        if (StdDraw.isKeyPressed(Controls.goDown) || StdDraw.isKeyPressed(Controls.goLeft)
+                                || StdDraw.isKeyPressed(Controls.goRight) || StdDraw.isKeyPressed(Controls.goUp)) {
+                            Vector2 vec = new Vector2(t.getPos());
+                            if (vec.getX() == 0.5) {
+                                if (vec.getY() == 0.86) {
+                                    return ("top");
+                                } else {// 0.14
+                                    return "bottom";
+                                }
+                            } else {// y = 0.5
+                                if (vec.getX() == 0.1) {
+                                    return "left";
+                                } else {// 0.9
+                                    return "right";
+                                }
                             }
                         }
                     }

@@ -22,9 +22,9 @@ public class GameLevel {
     public GameLevel(int nbRooms) {
         this.level = new ArrayList<GameMap>();
         this.hero = new Hero();
-        level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0))); // Salle de départ
+        level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0)));
+        level.add(new GameMap(1, 1, 76, 0, new Vector2(0, 1))); // Salle de départ
         this.currentCord = level.get(0).getCo();
-        CreatingClassicRoom(1, 76, 0, new Vector2(0, 1));
 
         for (int i = 0; i < level.size(); i++) {
             System.out.println(level.get(i).getCo());
@@ -56,7 +56,6 @@ public class GameLevel {
 
         String s = this.currentRoom.updateAndDrawDoors(this.hero);
         if (s != null) {
-            System.out.println("Ancien en " + this.currentCord);
             ChangeMap(s);
         }
     }
@@ -125,6 +124,7 @@ public class GameLevel {
             case "top":
                 vec.addY(1);
                 setRoom(vec);
+                break;
             case "bottom":
                 vec.addY(-1);
                 setRoom(vec);
@@ -151,7 +151,6 @@ public class GameLevel {
                 System.out.println("Téléportation en " + vec);
                 this.currentRoom = g;
                 this.currentCord = vec;
-                System.out.println("Nouveau en " + this.currentCord);
             }
         }
     }
