@@ -1,12 +1,19 @@
 package gameWorld;
 
 import java.lang.System.Logger.Level;
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
-import gameObjects.Hero;
-import gameWorld.GameMap;
+import libraries.StdDraw;
+
 import libraries.Vector2;
+import resources.Controls;
+import gameObjects.Hero;
+import gameObjects.Entities.EntityDoor;
+
+import gameWorld.GameMap;
 
 public class GameLevel {
     private Hero hero;
@@ -23,12 +30,9 @@ public class GameLevel {
         this.level = new ArrayList<GameMap>();
         this.hero = new Hero();
         level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0)));
-        CreatingClassicRoom(1, 76, 3, level.get(0).getCo());
+        CreatingClassicRoom(1, 76, 15, level.get(0).getCo());
         this.currentCord = level.get(0).getCo();
-
-        for (int i = 0; i < level.size(); i++) {
-            System.out.println("Pièce " + i + " en " + level.get(i).getCo());
-        }
+        delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
     }
 
@@ -54,7 +58,6 @@ public class GameLevel {
      */
     public void updateAndDraw() {
         this.currentRoom.updateAndDraw(this.hero);
-
         String s = this.currentRoom.updateAndDrawDoors(this.hero);
         if (s != null) {
             ChangeMap(s);
@@ -94,14 +97,44 @@ public class GameLevel {
         }
         System.out.println("Création en" + pos);
         GameMap map = new GameMap(difficulty + d, 1, EntrancePos, nbD, pos);
+        level.add(map);
         if (nbD > 0) {
             for (int i = 0; i < nbD; i++) {
-                System.out.println(posToInt(map.GetRoom().doorList.get(i).getPos()));
                 CreatingClassicRoom(difficulty + d, posToInt(map.GetRoom().doorList.get(i).getPos()), nbRoomRest / nbD,
                         pos);
             }
         }
-        level.add(map);
+    }
+
+    public void delUselessDoors() {
+        for (int i = 1; i < this.level.size(); i++) {
+            GameMap map = this.level.get(i);
+            Vector2 mapPos = map.getCo();
+            LinkedList<EntityDoor> doorL = map.GetRoom().doorList;
+            for (int d = 0; d < doorL.size(); d++) {
+                int xy = posToInt(doorL.get(d).getPos());
+                Vector2 tmp = new Vector2(mapPos);
+                switch (xy) {
+                    case 4:
+                        tmp.addY(-1);
+                        break;
+                    case 36:
+                        tmp.addX(1);
+                        break;
+                    case 44:
+                        tmp.addX(-1);
+                        break;
+                    case 76:
+                        tmp.addY(1);
+                        break;
+                }
+                if (getSpeRoom(tmp) == null) {
+                    System.out.println("Map " + mapPos + " Cord :" + doorL.get(d).getPos());
+                    doorL.remove(d);
+                    d--;
+                }
+            }
+        }
     }
 
     public int posToInt(Vector2 vec) {
@@ -159,7 +192,6 @@ public class GameLevel {
             this.lastTPFrame = Game.getImageNum();
             GameRoom g = getSpeRoom(vec);
             if (g != null) {
-                System.out.println("Téléportation en " + vec);
                 this.currentRoom = g;
                 this.currentCord = vec;
                 return true;
