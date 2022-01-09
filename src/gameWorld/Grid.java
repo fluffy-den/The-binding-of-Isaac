@@ -9,15 +9,15 @@ public class Grid {
     private String[][] Grid;
 
     /**
-     * 
+     * Création d'une grille de jeu 9 * 9
      */
     public Grid() {
         this.Grid = new String[9][9];
     }
 
     /**
-     * 
-     * @return
+     * Récupération d'une grille (tableau String)
+     * @return La grille
      */
     public String[][] getGrid() {
         return this.Grid;
@@ -131,7 +131,8 @@ public class Grid {
     }
 
     /**
-     * 
+     * Fonction pour développeurs
+     * Premet d'afficher la grille dans la console
      */
     public String toString() {
         String s = "";

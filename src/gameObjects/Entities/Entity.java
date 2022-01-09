@@ -12,6 +12,8 @@ public abstract class Entity {
     protected Vector2 pos;
     protected Vector2 size;
     protected String imgPath;
+    private int rotation;
+    
 
     // Constructeur
     /**
@@ -24,6 +26,7 @@ public abstract class Entity {
         this.pos = pos;
         this.size = size;
         this.imgPath = imgPath;
+        this.rotation = 0;
     }
 
     // Position
@@ -50,6 +53,21 @@ public abstract class Entity {
      */
     public Vector2 getSize() {
         return this.size;
+    }
+
+    /**
+     * Définit un degré de rotation (Principalement portes)
+     * @param rotation
+     */
+    public void setRotation(int rotation){
+        this.rotation = rotation;
+    }
+    /**
+     * Récupère le degré de rotation d'une entitée
+     * @return degré de rotation
+     */
+    public int getRotation(){
+        return this.rotation;
     }
 
     // Emplacement de l'image
@@ -82,7 +100,7 @@ public abstract class Entity {
      */
     public void draw() {
         StdDraw.picture(getPos().getX(), getPos().getY(), getImgPath(), getSize().getX(), getSize().getY(),
-                0);
+                this.rotation);
     }
 
     /**

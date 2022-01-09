@@ -170,8 +170,9 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param h
+     * Affiche les portes et vérifie si le heros peut changer de GameRoom
+     * @param h Le heros
+     * @return L'emplacement de la salle si nécessaire, null sinon
      */
     public String updateAndDrawDoors(Hero h) {
         // On suppose que les portes ne fonctionnent que sur le Héro
@@ -348,10 +349,10 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param Grid
+     * Utilise le tableau généré par Grid pour générer une game room
+     * @param Grid Tableau de positionnement des "objets"
      */
-    public void gridToLinked(String[][] Grid) { // (ArrayList<Monster>)
+    public void gridToLinked(String[][] Grid) {
         Random random = new Random();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
@@ -362,15 +363,23 @@ public class GameRoom {
                             // TODO Portes Complexes
                             if (j == 4) {
                                 if (i == 0) {
-                                    this.doorList.add(new OpenedDoor(new Vector2(0.5, 0.86)));
+                                    OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.86));
+                                    d.setRotation(0);
+                                    this.doorList.add(d);
                                 } else {
-                                    this.doorList.add(new OpenedDoor(new Vector2(0.5, 0.14)));
+                                    OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.14));
+                                    d.setRotation(180);
+                                    this.doorList.add(d);
                                 }
                             } else {
                                 if (j == 0) {
-                                    this.doorList.add(new OpenedDoor(new Vector2(0.1, 0.5)));
+                                    OpenedDoor d = new OpenedDoor(new Vector2(0.1, 0.5));
+                                    d.setRotation(90);
+                                    this.doorList.add(d);
                                 } else {
-                                    this.doorList.add(new OpenedDoor(new Vector2(0.9, 0.5)));
+                                    OpenedDoor d = new OpenedDoor(new Vector2(0.9, 0.5));
+                                    d.setRotation(270);
+                                    this.doorList.add(d);
                                 }
                             }
 
@@ -390,14 +399,14 @@ public class GameRoom {
 
                             int prob = random.nextInt(5);
 
-                            if (prob == 4) {
+                            if (prob != 4) {
                                 int rdm2 = random.nextInt(7);
                                 switch (rdm2) {
                                     case 0, 1:
-                                        this.itemList.add(new ItemHalfRedHeart(p));
+                                        this.itemList.add(new ItemHalfRedHeart(p)); // Régénération de 0.5 coeur
                                         break;
                                     case 2:
-                                        this.itemList.add(new ItemHeart(p));
+                                        this.itemList.add(new ItemHeart(p)); // Régénération complette + donc de 1 coeur
                                         break;
                                     default:
                                         this.itemList.add(new ItemNickel(p));
@@ -417,7 +426,7 @@ public class GameRoom {
                                         this.itemList.add(new ItemLunch(p));
                                         break;
                                     case 3:
-                                        this.itemList.add(new ItemRedHeart(p)); //
+                                        this.itemList.add(new ItemRedHeart(p));
                                         break;
                                     case 4:
                                         this.itemList.add(new ItemCricketHead(p));
@@ -426,7 +435,7 @@ public class GameRoom {
                                         this.itemList.add(new ItemStigmata(p));
                                         break;
                                     case 6:
-                                        this.itemList.add(new ItemMagicMushroom(p)); // Ultra méga rare
+                                        this.itemList.add(new ItemMagicMushroom(p));
                                         break;
                                     default:
                                         assert (false);
@@ -436,15 +445,12 @@ public class GameRoom {
                             }
                             break;
                         case "O": // Obstacle
-                            int rdm2 = random.nextInt(2);
-                            if (rdm2 == 0) {
+                            int rdm2 = random.nextInt(3);
+                            if (rdm2 == 0) { // 1 chance sur 3 d'avoir des "pointes"
                                 this.trapList.add(new TrapPikes(p));
                             } else {
                                 this.terrainList.add(new TerrainRock(p));
                             }
-                            break;
-                        default:// Nothing
-                            assert (false);
                             break;
                     }
                 }

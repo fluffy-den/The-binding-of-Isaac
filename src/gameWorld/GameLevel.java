@@ -23,14 +23,14 @@ public class GameLevel {
     private long lastTPFrame;
 
     /**
-     * 
-     * @param startingRoom
+     * Création d'un niveau complet
+     * @param nbRooms Nombre de salle classique maximum du niveau
      */
     public GameLevel(int nbRooms) {
         this.level = new ArrayList<GameMap>();
         this.hero = new Hero();
         level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0)));
-        CreatingClassicRoom(1, 76, 15, level.get(0).getCo());
+        creatingClassicRoom(1, 76, 15, level.get(0).getCo());
         this.currentCord = level.get(0).getCo();
         delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
@@ -53,8 +53,7 @@ public class GameLevel {
     }
 
     /**
-     * 
-     * @param h
+     * Affiche la salle et change de GameMap si besoin
      */
     public void updateAndDraw() {
         this.currentRoom.updateAndDraw(this.hero);
@@ -64,7 +63,15 @@ public class GameLevel {
         }
     }
 
-    public void CreatingClassicRoom(int difficulty, int EntrancePos, int nbRoomRest, Vector2 MotherPos) {
+    /**
+     * Création d'une sale de jeu dite "classique"
+     * En opposion aux salles de boss / shop / spawn
+     * @param difficulty difficulté de la salle
+     * @param EntrancePos Coordonnées de la porte d'entrée
+     * @param nbRoomRest Nombre maxium de salles qui peuvent être crées
+     * @param MotherPos Coordonnées de la salle précédente sur le level
+     */
+    public void creatingClassicRoom(int difficulty, int EntrancePos, int nbRoomRest, Vector2 MotherPos) {
         Random random = new Random();
         int d = random.nextInt(2); // increase difficulty
         int nbD;
@@ -92,20 +99,21 @@ public class GameLevel {
 
         }
         if (getSpeRoom(pos) != null) {
-            System.out.println("Pas de création en" + pos);
             return;
         }
-        System.out.println("Création en" + pos);
         GameMap map = new GameMap(difficulty + d, 1, EntrancePos, nbD, pos);
         level.add(map);
         if (nbD > 0) {
             for (int i = 0; i < nbD; i++) {
-                CreatingClassicRoom(difficulty + d, posToInt(map.GetRoom().doorList.get(i).getPos()), nbRoomRest / nbD,
+                creatingClassicRoom(difficulty + d, posToInt(map.GetRoom().doorList.get(i).getPos()), nbRoomRest / nbD,
                         pos);
             }
         }
     }
 
+    /**
+     * Suprimes du level les portes générées qui ne mènent à rien
+     */
     public void delUselessDoors() {
         for (int i = 1; i < this.level.size(); i++) {
             GameMap map = this.level.get(i);
@@ -137,6 +145,11 @@ public class GameLevel {
         }
     }
 
+    /**
+     * Convertis les coordonnées Vectoriels d'une portes en coordonnées "linéaires"
+     * @param vec Vecteur coordonnées
+     * @return Coordonnées linéaires
+     */
     public int posToInt(Vector2 vec) {
         if (vec.getX() == 0.5) {
             if (vec.getY() == 0.86) {
@@ -154,6 +167,10 @@ public class GameLevel {
 
     }
 
+    /**
+     * Charge une GameMap après le passage d'un héros par une porte
+     * @param s Emplacement de la GameMpa par rapport à la précédente
+     */
     public void ChangeMap(String s) {
         Vector2 vec = new Vector2(this.currentCord);
         switch (s) {
@@ -186,6 +203,11 @@ public class GameLevel {
         }
     }
 
+    /**
+     * Verifie si le heros peut passer une porte et change de GameRoom
+     * @param vec Emplacement de la GameRoom sur un level
+     * @return True si le heros à changé de GameRoom, false sinon
+     */
     public boolean setRoom(Vector2 vec) {
         long elapsed = Game.getImageNum() - this.lastTPFrame;
         if (elapsed * 0.025 >= 1) {
