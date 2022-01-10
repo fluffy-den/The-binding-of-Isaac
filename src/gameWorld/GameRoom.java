@@ -171,6 +171,7 @@ public class GameRoom {
 
     /**
      * Affiche les portes et vérifie si le heros peut changer de GameRoom
+     * 
      * @param h Le heros
      * @return L'emplacement de la salle si nécessaire, null sinon
      */
@@ -350,6 +351,7 @@ public class GameRoom {
 
     /**
      * Utilise le tableau généré par Grid pour générer une game room
+     * 
      * @param Grid Tableau de positionnement des "objets"
      */
     public void gridToLinked(String[][] Grid) {
@@ -510,4 +512,5 @@ public class GameRoom {
     // TODO: 7. Quelques monstres
     // FAIT: 4. Pièges (Piques (timing / switch de textures), Trous)
     // TODO: 3. Bombes qui détruits les rochers (Animation d'explosions)
+    // TODO: Clés
 }
