@@ -24,6 +24,7 @@ public class GameLevel {
 
     /**
      * Création d'un niveau complet
+     * 
      * @param nbRooms Nombre de salle classique maximum du niveau
      */
     public GameLevel(int nbRooms) {
@@ -66,10 +67,11 @@ public class GameLevel {
     /**
      * Création d'une sale de jeu dite "classique"
      * En opposion aux salles de boss / shop / spawn
-     * @param difficulty difficulté de la salle
+     * 
+     * @param difficulty  difficulté de la salle
      * @param EntrancePos Coordonnées de la porte d'entrée
-     * @param nbRoomRest Nombre maxium de salles qui peuvent être crées
-     * @param MotherPos Coordonnées de la salle précédente sur le level
+     * @param nbRoomRest  Nombre maxium de salles qui peuvent être crées
+     * @param MotherPos   Coordonnées de la salle précédente sur le level
      */
     public void creatingClassicRoom(int difficulty, int EntrancePos, int nbRoomRest, Vector2 MotherPos) {
         Random random = new Random();
@@ -146,7 +148,8 @@ public class GameLevel {
     }
 
     /**
-     * Convertis les coordonnées Vectoriels d'une portes en coordonnées "linéaires"
+     * @brief Converti les coordonnées Vectoriels d'une portes en coordonnées
+     *        "linéaires"
      * @param vec Vecteur coordonnées
      * @return Coordonnées linéaires
      */
@@ -169,6 +172,7 @@ public class GameLevel {
 
     /**
      * Charge une GameMap après le passage d'un héros par une porte
+     * 
      * @param s Emplacement de la GameMpa par rapport à la précédente
      */
     public void ChangeMap(String s) {
@@ -205,6 +209,7 @@ public class GameLevel {
 
     /**
      * Verifie si le heros peut passer une porte et change de GameRoom
+     * 
      * @param vec Emplacement de la GameRoom sur un level
      * @return True si le heros à changé de GameRoom, false sinon
      */
