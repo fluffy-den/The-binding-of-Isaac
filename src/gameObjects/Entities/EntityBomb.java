@@ -33,7 +33,7 @@ public class EntityBomb extends Entity {
      * @return
      */
     public boolean isTimerOver() {
-        long tp = Game.getImageNum();
+        long tp = Game.getImageNum(); // TODO: GameCounter
         long elapsed = tp - this.lasttp;
         this.timer -= elapsed;
         if (this.timer > 0)

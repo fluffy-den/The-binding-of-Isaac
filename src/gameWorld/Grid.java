@@ -17,6 +17,7 @@ public class Grid {
 
     /**
      * Récupération d'une grille (tableau String)
+     * 
      * @return La grille
      */
     public String[][] getGrid() {
@@ -127,7 +128,6 @@ public class Grid {
             }
         }
         // TODO Verifier qu'aucune case à 4 rocher autour d'elle
-
     }
 
     /**

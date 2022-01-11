@@ -180,6 +180,7 @@ public class GameRoom {
 
         for (EntityDoor t : this.doorList) {
             if (monsterList.isEmpty()) {
+                t.setImgPath("images/OpenedDoor.png");
                 if (t.isAdjacent(h)) {
                     if (t.onHeroAdjacency(h)) {
                         Vector2 vec = new Vector2(t.getPos());
@@ -367,19 +368,23 @@ public class GameRoom {
                                 if (i == 0) {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.86));
                                     d.setRotation(0);
+                                    d.setImgPath("images/ClosedDoor.png");
                                     this.doorList.add(d);
                                 } else {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.14));
                                     d.setRotation(180);
+                                    d.setImgPath("images/ClosedDoor.png");
                                     this.doorList.add(d);
                                 }
                             } else {
                                 if (j == 0) {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.1, 0.5));
                                     d.setRotation(90);
+                                    d.setImgPath("images/ClosedDoor.png");
                                     this.doorList.add(d);
                                 } else {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.9, 0.5));
+                                    d.setImgPath("images/ClosedDoor.png");
                                     d.setRotation(270);
                                     this.doorList.add(d);
                                 }
@@ -447,11 +452,14 @@ public class GameRoom {
                             }
                             break;
                         case "O": // Obstacle
-                            int rdm2 = random.nextInt(3);
-                            if (rdm2 == 0) { // 1 chance sur 3 d'avoir des "pointes"
-                                this.trapList.add(new TrapPikes(p));
-                            } else {
-                                this.terrainList.add(new TerrainRock(p));
+                            if ((j != 4 || (i != 0 && i != 8)) && (i != 4 || (j != 8 && j != 0))) {
+
+                                int rdm2 = random.nextInt(3);
+                                if (rdm2 == 0) { // 1 chance sur 3 d'avoir des "pointes"
+                                    this.trapList.add(new TrapPikes(p));
+                                } else {
+                                    this.terrainList.add(new TerrainRock(p));
+                                }
                             }
                             break;
                     }

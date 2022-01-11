@@ -12,6 +12,7 @@ import libraries.Vector2;
 import resources.Controls;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityDoor;
+import gameObjects.Doors.BossDoor;
 
 import gameWorld.GameMap;
 
@@ -225,5 +226,34 @@ public class GameLevel {
             }
         }
         return false;
+    }
+
+    public void setBossRoom(int bossLevel) {
+        Random random = new Random();
+        int i = random.nextInt(this.level.size() + 1);
+        while (true) {
+            Vector2 pos = this.level.get(i).getCo();
+            pos.addX(1);
+            if (getSpeRoom(pos) == null) {
+                this.level.add(new GameMap(bossLevel, 2, 36, 0, pos));
+                this.level.get(i).GetRoom().doorList.add(new BossDoor(new Vector2(0.9, 0.5)));
+            } else {
+                pos.addX(-2);
+                if (getSpeRoom(pos) == null) {
+                    this.level.add(new GameMap(bossLevel, 2, 44, 0, pos));
+                } else {
+                    pos.addX(1);
+                    pos.addY(1);
+                    if (getSpeRoom(pos) == null) {
+                        this.level.add(new GameMap(bossLevel, 2, 4, 0, pos));
+                    } else {
+                        pos.addY(-2);
+                        if (getSpeRoom(pos) == null) {
+                            this.level.add(new GameMap(bossLevel, 2, 76, 0, pos));
+                        }
+                    }
+                }
+            }
+        }
     }
 }

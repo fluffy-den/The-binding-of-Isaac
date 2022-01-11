@@ -12,11 +12,12 @@ public class GameMap {
     public Vector2 co;
 
     /**
-     * Cree une GameRoom suivant les paramètes suivants
+     * @brief Cree une GameRoom suivant les paramètes suivants
      * 
      * @param difficulty Difficulté du niveau
      * @param type       Type de salle (voir Grid)
-     * @param xydoor     Coordonnes de la porte d'entrée
+     * @param xydoor     Coordonnées de la porte d'entrée Nord 04, Ouest 36, Est 44,
+     *                   Sud 76
      * @param nbdoor     Nombre de portes à ajouter sur une grille
      */
     public GameMap(int difficulty, int type, int xydoor, int nbdoor, Vector2 co) {
@@ -26,7 +27,8 @@ public class GameMap {
     }
 
     /**
-     * Donne la liste des vecteurs positions des portes qui viennent d'être mises
+     * @brief Donne la liste des vecteurs positions des portes qui viennent d'être
+     *        mises
      * 
      * @param xydoor Coordonnées de la porte d'entrée (case de 1 à 81)
      * @param nbDoor Nombre de portes placées
