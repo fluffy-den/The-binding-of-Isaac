@@ -1,31 +1,34 @@
 package gameObjects.Entities;
 
-import gameWorld.Game;
+import gameWorld.GameCounter;
+import gameWorld.GameRoom;
 import libraries.Vector2;
-import resources.DisplaySettings;
 
 public class EntityBomb extends Entity {
+    public static final Vector2 SIZE = GameRoom.TILE_SIZE.scalarMultiplication(0.5);
+    public static final Vector2 EXPLOSION_SIZE = GameRoom.TILE_SIZE;
+    public static final int EXPLOSION_RANGE = 2;
+    public static final int EXPLOSION_DAMAGE = 20;
+    public static final double EXPLOSION_DURATION = 0.25; // En images/s
     public static final String IMGPATH = "images/Bomb.png";
 
-    private int range; // En tiles (touche horizontalement et verticalement les rochers et entités
-                       // vivantes)
+    private GameCounter counter; // Le temps que met la bombe à exploser (en images)
+
     private int damage;
-    private long timer; // En cycles par secondes
-    private long lasttp;
+    private int range;
 
     /**
      * 
      * @param pos
-     * @param size
      * @param range
+     * @param damage
      * @param damagesOnLiving
      */
-    public EntityBomb(Vector2 pos, Vector2 size, int range, int damages, long timer) {
-        super(pos, size, IMGPATH);
-        this.range = range;
-        this.damage = damages;
-        this.timer = timer * DisplaySettings.FRAME_PER_SECOND;
-        this.lasttp = Game.getImageNum();
+    public EntityBomb(Vector2 pos) {
+        super(pos, SIZE, IMGPATH);
+        this.counter = new GameCounter(0.25); // Drop de bombe toutes les 10 images
+        this.range = EXPLOSION_RANGE;
+        this.damage = EXPLOSION_DAMAGE;
     }
 
     /**
@@ -33,12 +36,25 @@ public class EntityBomb extends Entity {
      * @return
      */
     public boolean isTimerOver() {
-        long tp = Game.getImageNum(); // TODO: GameCounter
-        long elapsed = tp - this.lasttp;
-        this.timer -= elapsed;
-        if (this.timer > 0)
-            return true;
-        this.lasttp = tp;
-        return false;
+        return this.counter.isFinished();
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public EntityExplosion explode() {
+        // On cree une nouvelle entite pour pouvoir l'afficher le temps voulu
+        return new EntityExplosion(new Vector2(this.pos), GameRoom.TILE_SIZE.scalarMultiplication(range),
+                EXPLOSION_DURATION);
+    }
+
+    /// Dommages
+    /**
+     * 
+     * @param l
+     */
+    public void addDamage(EntityLiving l) {
+        l.addDamage(this.damage);
     }
 }

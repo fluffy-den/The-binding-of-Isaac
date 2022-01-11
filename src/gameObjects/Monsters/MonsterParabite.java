@@ -1,5 +1,9 @@
 package gameObjects.Monsters;
 
-public class MonsterParabite {
+import gameObjects.Entities.EntityMonster;
+import libraries.Vector2;
+
+public class MonsterParabite extends EntityMonster {
+    public static final String IMGPATH = "images/Parabite.png";
 
 }

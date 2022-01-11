@@ -10,12 +10,14 @@ import libraries.Vector2;
 public abstract class EntityMoving extends Entity {
     protected Vector2 dir; // Direction seulement pour les intités dynamiques
     protected double speed;
+    protected boolean flying;
 
     // Constructeur
-    public EntityMoving(Vector2 pos, Vector2 size, Vector2 dir, double speed, String imgPath) {
+    public EntityMoving(Vector2 pos, Vector2 size, Vector2 dir, double speed, boolean flying, String imgPath) {
         super(pos, size, imgPath);
         this.dir = dir;
         this.speed = speed;
+        this.flying = flying;
 
     }
 

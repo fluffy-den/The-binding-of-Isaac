@@ -15,6 +15,10 @@ public abstract class EntityTerrain extends Entity {
      * 
      */
     public void onLivingAdjacency(EntityLiving living) {
+        // On ignore les entités volantes
+        if (living.flying)
+            return;
+
         double authorizedOverlap = GameRoom.TILE_SIZE.getX() / 1000;
 
         // Deplacement sur X

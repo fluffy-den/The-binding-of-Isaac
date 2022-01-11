@@ -9,7 +9,7 @@ public abstract class EntityProjectile extends EntityMoving {
     // Constructor
     public EntityProjectile(Vector2 pos, Vector2 size, Vector2 dir, double speed, int damage, double range,
             String imgPath) {
-        super(pos, size, dir, speed, imgPath);
+        super(pos, size, dir, speed, true, imgPath);
         this.damage = damage;
         this.range = range;
     }

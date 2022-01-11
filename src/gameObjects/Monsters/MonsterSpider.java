@@ -16,14 +16,14 @@ public class MonsterSpider extends EntityMonster {
     public static final String IMGPATH = "images/Spider.png";
 
     /**
-     * @brief
      * 
-     * @param pos Coordonnees
+     * @param pos
      */
     public MonsterSpider(Vector2 pos) {
         super(pos,
                 SIZE,
                 SPEED,
+                false,
                 HP,
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,

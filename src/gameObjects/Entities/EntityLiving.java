@@ -9,8 +9,9 @@ public abstract class EntityLiving extends EntityMoving {
     protected int health;
 
     // Constructeur
-    public EntityLiving(Vector2 pos, Vector2 size, Vector2 dir, double speed, int health, String imgPath) {
-        super(pos, size, dir, speed, imgPath);
+    public EntityLiving(Vector2 pos, Vector2 size, Vector2 dir, double speed, boolean flying, int health,
+            String imgPath) {
+        super(pos, size, dir, speed, flying, imgPath);
         this.health = health;
     }
 

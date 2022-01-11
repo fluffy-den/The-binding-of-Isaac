@@ -1,5 +1,7 @@
 package gameObjects.Monsters;
 
-public class MonsterConjoinedFaty {
+import gameObjects.Entities.EntityMonster;
 
+public class MonsterConjoinedFaty extends EntityMonster {
+    public static final String IMGPATH = "images/ConjoinedFaty.png";
 }

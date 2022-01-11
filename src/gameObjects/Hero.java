@@ -9,11 +9,12 @@ import java.awt.Font;
 
 import gameObjects.Entities.EntityLiving;
 import gameObjects.Projectiles.Tear;
+import gameObjects.Entities.Entity;
+import gameObjects.Entities.EntityBomb;
 
 import libraries.StdDraw;
 import libraries.Vector2;
 import resources.Controls;
-import resources.DisplaySettings;
 
 public class Hero extends EntityLiving {
     private double tearRange;
@@ -21,6 +22,7 @@ public class Hero extends EntityLiving {
     private int tearDamage;
     private int nBombs;
     private int nCoins;
+    private int nKeys;
     private int maxHPs;
     private boolean cheatInvincible;
     private boolean cheatSpeed;
@@ -58,6 +60,7 @@ public class Hero extends EntityLiving {
                 SIZE,
                 new Vector2(),
                 SPEED,
+                false,
                 STARTING_HP,
                 IMGPATH);
         this.tearRange = TEAR_RANGE;
@@ -71,6 +74,7 @@ public class Hero extends EntityLiving {
         // Inventaire
         this.nBombs = 0;
         this.nCoins = 0;
+        this.nKeys = 0;
 
         // Triche
         this.cheatInvincible = false;
@@ -80,6 +84,38 @@ public class Hero extends EntityLiving {
         this.cheatDamage = false;
         this.cheatDamageCounter = new GameCounter(TOGGLE_IGNORE_STEP);
         this.cheatCoinCounter = new GameCounter(TOGGLE_IGNORE_STEP);
+    }
+
+    // Keys
+    /**
+     * 
+     * @return
+     */
+    public int getNumKeys() {
+        return this.nKeys;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public void addKey() {
+        ++this.nKeys;
+    }
+
+    /**
+     * @brief Fonction qui verifie si le joueur possede au moins une clef et la
+     *        supprime si c'est le cas
+     * 
+     * @return True si le joueur possedait une clef (Autorise l'ouverture d'une
+     *         porte fermee)
+     *         False sinon
+     */
+    public boolean remKey() {
+        if (this.nKeys <= 0)
+            return false;
+        --this.nKeys;
+        return true;
     }
 
     // HP
@@ -252,10 +288,13 @@ public class Hero extends EntityLiving {
 
     /**
      * 
+     * @return
      */
-    public int remBomb() {
-        this.nBombs--;
-        return this.nBombs;
+    public EntityBomb deployBomb() {
+        if (this.nBombs <= 0)
+            return null;
+        --this.nBombs;
+        return new EntityBomb(this.pos);
     }
 
     // HUDs

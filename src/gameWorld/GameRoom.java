@@ -9,7 +9,10 @@ import gameObjects.Doors.OpenedDoor;
 import gameObjects.Entities.EntityItem;
 import gameObjects.Entities.EntityTerrain;
 import gameObjects.Entities.EntityTrap;
+import gameObjects.Entities.Entity;
+import gameObjects.Entities.EntityBomb;
 import gameObjects.Entities.EntityDoor;
+import gameObjects.Entities.EntityExplosion;
 import gameObjects.Items.ItemBloodOfTheMartyr;
 import gameObjects.Items.ItemCricketHead;
 import gameObjects.Items.ItemHalfRedHeart;
@@ -24,8 +27,6 @@ import gameObjects.Items.ItemStigmata;
 import gameObjects.Monsters.MonsterFly;
 import gameObjects.Monsters.MonsterSpider;
 import gameObjects.Entities.EntityMonster;
-
-import gameWorld.GameLevel;
 
 import libraries.Vector2;
 import libraries.StdDraw;
@@ -43,8 +44,11 @@ public class GameRoom {
     protected LinkedList<EntityItem> itemList;
     protected LinkedList<EntityTrap> trapList;
     protected LinkedList<EntityDoor> doorList;
+    protected LinkedList<EntityBomb> bombList;
+    private LinkedList<EntityExplosion> explList;
     protected LinkedList<EntityTerrain> terrainList;
     protected String imgPath;
+    private GameCounter bombReloadSpeed;
 
     public static final double MIN_XPOS = 0.113;
     public static final double MAX_XPOS = 0.887;
@@ -67,8 +71,11 @@ public class GameRoom {
         this.itemList = new LinkedList<EntityItem>();
         this.trapList = new LinkedList<EntityTrap>();
         this.doorList = new LinkedList<EntityDoor>();
+        this.bombList = new LinkedList<EntityBomb>();
+        this.explList = new LinkedList<EntityExplosion>();
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
+        this.bombReloadSpeed = new GameCounter(0.25);
         // generateGameRoom(1, 1, 4, 0);
     }
 
@@ -140,7 +147,7 @@ public class GameRoom {
      * @param h
      */
     public void updateAndDrawHeroItems(Hero h) {
-        // Items au sol
+        /// Items au sol
         int i = 0;
         while (i < this.itemList.size()) {
             EntityItem e = this.itemList.get(i);
@@ -160,7 +167,7 @@ public class GameRoom {
      * @param h
      */
     public void updateAndDrawTraps(Hero h) {
-        // On suppose que les pièges ne fonctionnent que sur le Héro
+        /// Trap
         for (EntityTrap t : this.trapList) {
             if (t.isAdjacent(h)) {
                 t.onHeroAdjacency(h);
@@ -176,7 +183,7 @@ public class GameRoom {
      * @return L'emplacement de la salle si nécessaire, null sinon
      */
     public String updateAndDrawDoors(Hero h) {
-        // On suppose que les portes ne fonctionnent que sur le Héro
+        /// Les portes ne fonctionnent que sur le heor
 
         for (EntityDoor t : this.doorList) {
             if (monsterList.isEmpty()) {
@@ -214,16 +221,21 @@ public class GameRoom {
      * @param h
      */
     public void updateAndDrawTerrain(Hero h) {
-        // Collisions avec monstres et le hero
+        /// Collision
         for (EntityTerrain t : this.terrainList) {
+            // Avec le hero
             if (t.isAdjacent(h)) {
                 t.onLivingAdjacency(h);
             }
+
+            // Avec les monstres
             for (EntityMonster m : this.monsterList) {
                 if (t.isAdjacent(m)) {
                     t.onLivingAdjacency(m);
                 }
             }
+
+            // Mise à jour et dessin
             t.updateAndDraw();
         }
     }
@@ -233,8 +245,64 @@ public class GameRoom {
      * @param h
      */
     public void updateHeroBombsActions(Hero h) {
-        // Bombes au sol
+        // Drop bomb
+        if ((StdDraw.isKeyPressed(Controls.putBomb1) || StdDraw.isKeyPressed(Controls.putBomb2))
+                && this.bombReloadSpeed.isFinished()) {
+            this.bombList.add(h.deployBomb());
+        }
 
+        // Bombes
+        int i = 0;
+        while (i < this.bombList.size()) {
+            EntityBomb b = this.bombList.get(i);
+            if (b.isTimerOver()) {
+                // On cree une explosion
+                EntityExplosion e = b.explode();
+                this.explList.add(e);
+
+                // Adjacence avec le hero?
+                if (h.isAdjacent(e)) {
+                    b.addDamage(h);
+                }
+
+                // Adjacence avec les monstres?
+                for (EntityMonster m : this.monsterList) {
+                    if (m.isAdjacent(e))
+                        b.addDamage(m);
+                }
+
+                // Adjacence avec le terrain?
+                int j = 0;
+                while (j < this.terrainList.size()) {
+                    EntityTerrain t = this.terrainList.get(j);
+                    if (t.isAdjacent(e)) {
+                        // TODO: Drop item?
+                        this.terrainList.remove(j);
+                        --j;
+                    }
+
+                    ++j;
+                }
+
+                // On supprime la bombe
+                this.bombList.remove(i);
+                --i;
+            }
+            ++i;
+        }
+
+        // Explosions
+        i = 0;
+        while (i < this.explList.size()) {
+            EntityExplosion e = this.explList.get(i);
+            if (e.isFinished()) {
+                this.explList.remove(i);
+                --i;
+            } else {
+                e.updateAndDraw();
+            }
+            ++i;
+        }
     }
 
     /**
@@ -301,7 +369,14 @@ public class GameRoom {
      */
     public void updateAndDrawMonsters(Hero h) {
         /// Monstres
-        for (EntityMonster m : this.monsterList) {
+        int i = 0;
+        while (i < this.monsterList.size()) {
+            EntityMonster m = this.monsterList.get(i);
+            if (!m.isLiving()) {
+                this.monsterList.remove(i);
+                // TODO: Drop items
+                --i;
+            }
             if (m.isAdjacent(h)) {
                 m.onMonsterHeroAdjacency(h);
                 ArrayList<MonsterProjectile> pList = m.monsterFireProjectiles(h);
@@ -310,6 +385,7 @@ public class GameRoom {
                 }
             }
             m.updateAndDraw();
+            ++i;
         }
     }
 
@@ -520,5 +596,4 @@ public class GameRoom {
     // TODO: 7. Quelques monstres
     // FAIT: 4. Pièges (Piques (timing / switch de textures), Trous)
     // TODO: 3. Bombes qui détruits les rochers (Animation d'explosions)
-    // TODO: Clés
 }

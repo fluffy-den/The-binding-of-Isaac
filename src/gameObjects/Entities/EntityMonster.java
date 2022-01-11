@@ -25,13 +25,13 @@ public abstract class EntityMonster extends EntityLiving {
      * @param meleeEffectDamage
      * @param imgPath
      */
-    public EntityMonster(Vector2 pos, Vector2 size, double speed, int health, int meleeDamage, double meleeEffectPower,
-            double meleeReloadSpeed,
-            String imgPath) {
+    public EntityMonster(Vector2 pos, Vector2 size, double speed, boolean flying, int health, int meleeDamage,
+            double meleeEffectPower, double meleeReloadSpeed, String imgPath) {
         super(pos,
                 size,
                 new Vector2(),
                 speed,
+                flying,
                 health,
                 imgPath);
         this.meleeDamage = meleeDamage;
