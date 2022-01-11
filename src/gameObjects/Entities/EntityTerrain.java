@@ -1,7 +1,10 @@
 package gameObjects.Entities;
 
 import gameWorld.GameRoom;
+
 import libraries.Vector2;
+
+import java.util.ArrayList;
 
 public abstract class EntityTerrain extends Entity {
     /**
@@ -53,6 +56,13 @@ public abstract class EntityTerrain extends Entity {
 
         // Nouvelle position
         living.setPos(new Vector2(newX, newY));
+    }
 
+    /**
+     * 
+     */
+    public ArrayList<EntityItem> dropLoot() {
+        // TODO: @cypri3 Loot d'un EntityTerrain?
+        return null;
     }
 }

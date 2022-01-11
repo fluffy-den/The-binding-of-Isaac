@@ -5,6 +5,9 @@ import gameWorld.GameRoom;
 
 import libraries.Vector2;
 
+/**
+ * 
+ */
 public class MonsterBlicker extends EntityMonster {
     public static final Vector2 SIZE = GameRoom.TILE_SIZE.scalarMultiplication(0.75)
             .vectorMultiplication(new Vector2(1.0, 0.7));

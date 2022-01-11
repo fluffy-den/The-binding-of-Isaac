@@ -256,7 +256,7 @@ public class GameRoom {
         while (i < this.bombList.size()) {
             EntityBomb b = this.bombList.get(i);
             if (b.isTimerOver()) {
-                // On cree une explosion
+                // Creation de l'explosion
                 EntityExplosion e = b.explode();
                 this.explList.add(e);
 
@@ -276,15 +276,14 @@ public class GameRoom {
                 while (j < this.terrainList.size()) {
                     EntityTerrain t = this.terrainList.get(j);
                     if (t.isAdjacent(e)) {
-                        // TODO: Drop item?
+                        this.itemList.addAll(t.dropLoot());
                         this.terrainList.remove(j);
                         --j;
                     }
-
                     ++j;
                 }
 
-                // On supprime la bombe
+                // Suppression de la bombe
                 this.bombList.remove(i);
                 --i;
             }
@@ -374,12 +373,12 @@ public class GameRoom {
             EntityMonster m = this.monsterList.get(i);
             if (!m.isLiving()) {
                 this.monsterList.remove(i);
-                // TODO: Drop items
+                this.itemList.addAll(m.dropLoot());
                 --i;
             }
             if (m.isAdjacent(h)) {
                 m.onMonsterHeroAdjacency(h);
-                ArrayList<MonsterProjectile> pList = m.monsterFireProjectiles(h);
+                ArrayList<MonsterProjectile> pList = m.fireProjectiles(h);
                 if (pList != null) {
                     this.projListMonster.addAll(pList);
                 }
@@ -585,15 +584,7 @@ public class GameRoom {
     // TODO: 3. Portes
 
     // TODO: Fluffy
-    // FAIT: 2. Rochers
-    // FAIT: 1. Items
-    // ...
-    // FAIT: 5. Projectiles des monstres
-    // Projectiles légers (++vitesse --dégats)
-    // Projectiles lourds (--vitesse ++dégats)
+    // TODO: IA (Berserk, Bounding, Random)
     // TODO: 6. Quelques boss (7 premiers du jeu)
-    // : ->
     // TODO: 7. Quelques monstres
-    // FAIT: 4. Pièges (Piques (timing / switch de textures), Trous)
-    // TODO: 3. Bombes qui détruits les rochers (Animation d'explosions)
 }

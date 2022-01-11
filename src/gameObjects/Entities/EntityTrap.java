@@ -2,6 +2,7 @@ package gameObjects.Entities;
 
 import gameObjects.Hero;
 import gameWorld.Game;
+import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 import libraries.Vector2;
 
@@ -10,8 +11,7 @@ import libraries.Vector2;
  */
 public abstract class EntityTrap extends Entity {
     private int damage;
-    private double reloadSpeed;
-    private long lastHitFrame;
+    private GameCounter counter;
 
     /**
      * 
@@ -23,8 +23,7 @@ public abstract class EntityTrap extends Entity {
     public EntityTrap(Vector2 pos, int damage, String imgPath) {
         super(pos, GameRoom.TILE_SIZE, imgPath);
         this.damage = damage;
-        this.reloadSpeed = 0.025;
-        this.lastHitFrame = 0;
+        this.counter = new GameCounter(0.025);
     }
 
     /**
@@ -32,8 +31,7 @@ public abstract class EntityTrap extends Entity {
      * @param h
      */
     public void onHeroAdjacency(Hero h) {
-        long elapsed = Game.getImageNum() - this.lastHitFrame;
-        if (elapsed * this.reloadSpeed >= 1) {
+        if (this.counter.isFinished()) {
             h.addDamage(this.damage);
 
             Vector2 hpos = h.getPos();
@@ -48,8 +46,6 @@ public abstract class EntityTrap extends Entity {
                 Vector2 newPos = this.pos.subVector(hpos).scalarMultiplication(0.5);
                 h.setPos(hpos.subVector(newPos));
             }
-
-            this.lastHitFrame = Game.getImageNum();
         }
     }
 }
