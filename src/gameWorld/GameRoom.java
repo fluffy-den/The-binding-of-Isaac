@@ -62,7 +62,6 @@ public class GameRoom {
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
         this.bombReloadSpeed = new GameCounter(0.25);
-        // generateGameRoom(1, 1, 4, 0);
     }
 
     /// Dessin et mise à jour
@@ -171,7 +170,7 @@ public class GameRoom {
      */
     public String updateAndDrawDoors(Hero h) {
         /// Les portes ne fonctionnent que sur le heor
-        boolean tmpS = DoorSkin;
+        boolean tmpS = DoorSkin; //Dis si le skin de la porte à été changé
         for (EntityDoor t : this.doorList) {
             if (monsterList.isEmpty()) {
                 if (tmpS) {
@@ -181,6 +180,9 @@ public class GameRoom {
                 }
                 if (t.isAdjacent(h)) {
                     if (t.onHeroAdjacency(h)) {
+                        if(t.getImgPath() == "images/KeyLockedDoor.png"){
+                            t.setImgPath("images/OpenedDoor.png");
+                        }
                         Vector2 vec = new Vector2(t.getPos());
                         if (vec.getX() == 0.5) {
                             if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {

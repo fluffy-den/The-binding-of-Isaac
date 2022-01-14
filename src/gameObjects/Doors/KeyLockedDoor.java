@@ -5,7 +5,7 @@ import gameObjects.Entities.EntityDoor;
 import libraries.Vector2;
 
 public class KeyLockedDoor extends EntityDoor {
-    public static final String IMGPATH = "images/OpenedDoor.png";
+    public static final String IMGPATH = "images/KeyLockedDoor.png";
 
     /**
      * Créé une porte fermée à clé
