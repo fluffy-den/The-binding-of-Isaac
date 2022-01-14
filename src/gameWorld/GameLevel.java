@@ -13,6 +13,7 @@ import resources.Controls;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityDoor;
 import gameObjects.Doors.BossDoor;
+import gameObjects.Doors.ShopDoor;
 
 import gameWorld.GameMap;
 
@@ -36,7 +37,8 @@ public class GameLevel {
         this.currentCord = level.get(0).getCo();
         delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
-        setBossRoom(0);
+        setSpecialRoom(4,2);
+        setSpecialRoom(0,3);
     }
 
     /**
@@ -229,17 +231,28 @@ public class GameLevel {
         return false;
     }
 
-    public void setBossRoom(int bossLevel) {
+    /**
+     * Permet de générer une salle speciale aléatoirement sur le level
+     * @param bossLevel (0 à 5) Si un boss est présent
+     * @param type 2 Boss / 3 Shop
+     */
+    public void setSpecialRoom(int bossLevel, int type) {
         Boolean b = false;
         Random random = new Random();
         int i = random.nextInt(this.level.size() + 1);
+        EntityDoor d;
+        if(type == 2){
+            d = new BossDoor(new Vector2(0.5, 0.86));
+        }else{
+            d = new ShopDoor(new Vector2(0.5, 0.86));
+        }
         while (b == false) {
             Vector2 pos = new Vector2(this.level.get(i).getCo());
             pos.addX(1);
             if (getSpeRoom(pos) == null) {
                 System.out.println(pos);
-                this.level.add(new GameMap(bossLevel, 2, 36, 0, pos));
-                BossDoor d = new BossDoor(new Vector2(0.9, 0.5));
+                this.level.add(new GameMap(bossLevel, type, 36, 0, pos));
+                d.setPos(new Vector2(0.9, 0.5));
                 d.setRotation(270);
                 this.level.get(i).GetRoom().doorList.add(d);
                 b = true;
@@ -247,8 +260,8 @@ public class GameLevel {
                 pos.addX(-2);
                 if (getSpeRoom(pos) == null) {
                     System.out.println(pos);
-                    this.level.add(new GameMap(bossLevel, 2, 44, 0, pos));
-                    BossDoor d = new BossDoor(new Vector2(0.1, 0.5));
+                    this.level.add(new GameMap(bossLevel, type, 44, 0, pos));
+                    d.setPos(new Vector2(0.1, 0.5));
                     d.setRotation(90);
                     this.level.get(i).GetRoom().doorList.add(d);
                     b = true;
@@ -257,15 +270,15 @@ public class GameLevel {
                     pos.addY(1);
                     if (getSpeRoom(pos) == null) {
                         System.out.println(pos);
-                        this.level.add(new GameMap(bossLevel, 2, 76, 0, pos));
-                        this.level.get(i).GetRoom().doorList.add(new BossDoor(new Vector2(0.5, 0.86)));
+                        this.level.add(new GameMap(bossLevel, type, 76, 0, pos));
+                        this.level.get(i).GetRoom().doorList.add(d);
                         b = true;
                     } else {
                         pos.addY(-2);
                         if (getSpeRoom(pos) == null) {
                             System.out.println(pos);
-                            this.level.add(new GameMap(bossLevel, 2, 4, 0, pos));
-                            BossDoor d = new BossDoor(new Vector2(0.5, 0.14));
+                            this.level.add(new GameMap(bossLevel, type, 4, 0, pos));
+                            d.setPos(new Vector2(0.5, 0.14));
                             d.setRotation(180);
                             this.level.get(i).GetRoom().doorList.add(d);
                             b = true;
@@ -274,8 +287,8 @@ public class GameLevel {
                 }
             }
             if (b) {
-                System.out.println(pos + " " + this.level.get(i).getCo());
-                getSpeRoom(pos).addBoss(bossLevel);
+                if(type == 2)
+                    getSpeRoom(pos).addBoss(bossLevel);
                 return;
             }
         }

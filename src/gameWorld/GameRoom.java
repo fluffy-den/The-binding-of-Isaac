@@ -452,11 +452,16 @@ public class GameRoom {
     }
 
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
-        Grid map = new Grid();
+        GameGrid map = new GameGrid();
         map.Generate(difficulty, type, xydoor, nbdoor);
         gridToLinked(map.getGrid());
     }
 
+    /**
+     * Ajoute une boss au milieu de la salle
+     * 
+     * @param BossLevel Niveau du boss (0 à 4)
+     */
     public void addBoss(int BossLevel) {
         Vector2 p = getPositionFromTile(4, 4);
         switch (BossLevel) {
@@ -474,6 +479,8 @@ public class GameRoom {
                 break;
             case 4:
                 this.monsterList.add(new BossSatan(p));
+                break;
+            default:
                 break;
         }
     }
@@ -531,20 +538,20 @@ public class GameRoom {
                             int prob = random.nextInt(5);
 
                             if (prob != 4) {
-                                int rdm2 = random.nextInt(7);
+                                int rdm2 = random.nextInt(11);
                                 switch (rdm2) {
-                                    case 0, 1:
+                                    case 0, 1, 2:
                                         this.itemList.add(new ItemHalfRedHeart(p)); // Régénération de 0.5 coeur
                                         break;
-                                    case 2:
-                                        this.itemList.add(new ItemHeart(p)); // Régénération complette + donc de 1 coeur
+                                    case 3:
+                                        this.itemList.add(new ItemHeart(p)); // Régénération complette + don de 1 coeur
                                         break;
                                     default:
                                         this.itemList.add(new ItemNickel(p));
                                         break;
                                 }
                             } else {
-                                int rdm2 = random.nextInt(7);
+                                int rdm2 = random.nextInt(8);
                                 switch (rdm2) {
 
                                     case 0:
@@ -568,8 +575,8 @@ public class GameRoom {
                                     case 6:
                                         this.itemList.add(new ItemMagicMushroom(p));
                                         break;
-                                    default:
-                                        assert (false);
+                                    case 7:
+                                        this.itemList.add(new ItemPentagram(p));
                                         break;
 
                                 }

@@ -15,7 +15,7 @@ public class GameMap {
      * @brief Cree une GameRoom suivant les paramètes suivants
      * 
      * @param difficulty Difficulté du niveau
-     * @param type       Type de salle (voir Grid)
+     * @param type       1 = salle normal / 2 = Boss / 3 = Shop
      * @param xydoor     Coordonnées de la porte d'entrée Nord 04, Ouest 36, Est 44,
      *                   Sud 76
      * @param nbdoor     Nombre de portes à ajouter sur une grille
