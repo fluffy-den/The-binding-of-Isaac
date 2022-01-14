@@ -21,7 +21,6 @@ import gameObjects.Items.ItemJesusJuice;
 import gameObjects.Items.ItemLunch;
 import gameObjects.Items.ItemMagicMushroom;
 import gameObjects.Items.ItemNickel;
-import gameObjects.Items.ItemPentagram;
 import gameObjects.Items.ItemRedHeart;
 import gameObjects.Items.ItemStigmata;
 import gameObjects.Monsters.MonsterFly;
@@ -34,6 +33,7 @@ import libraries.StdDraw;
 
 import resources.Controls;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -63,6 +63,7 @@ public class GameRoom {
     public static final Vector2 CENTER_POS = new Vector2(0.5, 0.5);
     public static final String DEFAULT_BACKGROUND = "images/DefaultBackground.png";
 
+    /// Constructeur
     /**
      * 
      */
@@ -81,6 +82,7 @@ public class GameRoom {
         // generateGameRoom(1, 1, 4, 0);
     }
 
+    /// Dessin et mise à jour
     /**
      * 
      */
@@ -413,6 +415,7 @@ public class GameRoom {
 
     }
 
+    /// Tile <=> Position
     /**
      * 
      * @param indexX
@@ -423,6 +426,29 @@ public class GameRoom {
         return new Vector2(
                 MIN_XPOS + (indexX + 0.5) * TILE_SIZE.getX(),
                 MIN_YPOS + (indexY + 0.5) * TILE_SIZE.getY());
+    }
+
+    /**
+     * 
+     */
+    public static int getTileXIndex(Vector2 p) {
+        double x = p.getX() - MIN_XPOS;
+        return (int) Math.ceil(x / TILE_SIZE.getX());
+    }
+
+    /**
+     * 
+     * @param e
+     * @return
+     */
+    public static int getTileYIndex(Vector2 p) {
+        double y = p.getY() - MIN_YPOS;
+        return (int) Math.ceil(y / TILE_SIZE.getY());
+    }
+
+    /// Terrain
+    public List<EntityTerrain> getTerrainList() {
+        return this.terrainList;
     }
 
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {

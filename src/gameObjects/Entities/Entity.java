@@ -13,7 +13,6 @@ public abstract class Entity {
     protected Vector2 size;
     protected String imgPath;
     private int rotation;
-    
 
     // Constructeur
     /**
@@ -57,16 +56,19 @@ public abstract class Entity {
 
     /**
      * Définit un degré de rotation (Principalement portes)
+     * 
      * @param rotation
      */
-    public void setRotation(int rotation){
+    public void setRotation(int rotation) {
         this.rotation = rotation;
     }
+
     /**
      * Récupère le degré de rotation d'une entitée
+     * 
      * @return degré de rotation
      */
-    public int getRotation(){
+    public int getRotation() {
         return this.rotation;
     }
 

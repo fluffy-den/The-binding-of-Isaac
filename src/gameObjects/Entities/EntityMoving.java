@@ -21,6 +21,15 @@ public abstract class EntityMoving extends Entity {
 
     }
 
+    // Vole
+    /**
+     * 
+     * @return
+     */
+    public boolean isFlying() {
+        return this.flying;
+    }
+
     /**
      * @brief Renvoie la direction de l'entite (deplacement)
      * @return Vecteur de direction (deplacement)
@@ -106,6 +115,7 @@ public abstract class EntityMoving extends Entity {
     /**
      * @brief Met à jour le déplacement de l'entité.
      */
+    @Override
     public void update() {
         Vector2 normalizedDirection = getNormalizedDirection();
         Vector2 positionAfterMoving = getPos().addVector(normalizedDirection);
