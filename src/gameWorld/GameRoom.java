@@ -426,7 +426,7 @@ public class GameRoom {
     }
 
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
-        Grid map = new Grid();
+        GameGrid map = new GameGrid();
         map.Generate(difficulty, type, xydoor, nbdoor);
         gridToLinked(map.getGrid());
     }

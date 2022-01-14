@@ -5,7 +5,7 @@ import gameObjects.Entities.EntityDoor;
 import libraries.Vector2;
 
 public class ShopDoor extends EntityDoor {
-    public static final String IMGPATH = "images/BossDoor.png";
+    public static final String IMGPATH = "images/ShopDoor.png";
 
     /**
      * Créé une porte ouverte (dite classique)

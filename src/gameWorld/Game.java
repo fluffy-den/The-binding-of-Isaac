@@ -28,7 +28,7 @@ public class Game {
         StdDraw.enableDoubleBuffering();
 
         // TODO: @cyp3 à changer
-        LEVEL = new GameLevel(3);
+        LEVEL = new GameLevel(10);
 
         // Boucle du jeu
         while (STATE == GameState.RUNNING) {
