@@ -27,6 +27,7 @@ import gameObjects.Items.ItemStigmata;
 import gameObjects.Monsters.MonsterFly;
 import gameObjects.Monsters.MonsterSpider;
 import gameObjects.Entities.EntityMonster;
+import gameObjects.Bosses.*;
 
 import libraries.Vector2;
 import libraries.StdDraw;
@@ -49,6 +50,7 @@ public class GameRoom {
     protected LinkedList<EntityTerrain> terrainList;
     protected String imgPath;
     private GameCounter bombReloadSpeed;
+    private boolean DoorSkin = true; // Dit le un changement de skin à été fait
 
     public static final double MIN_XPOS = 0.113;
     public static final double MAX_XPOS = 0.887;
@@ -184,10 +186,14 @@ public class GameRoom {
      */
     public String updateAndDrawDoors(Hero h) {
         /// Les portes ne fonctionnent que sur le heor
-
+        boolean tmpS = DoorSkin;
         for (EntityDoor t : this.doorList) {
             if (monsterList.isEmpty()) {
-                t.setImgPath("images/OpenedDoor.png");
+                if (tmpS) {
+                    if (t.getImgPath() == "images/ClosedDoor.png")
+                        t.setImgPath("images/OpenedDoor.png");
+                    DoorSkin = false;
+                }
                 if (t.isAdjacent(h)) {
                     if (t.onHeroAdjacency(h)) {
                         Vector2 vec = new Vector2(t.getPos());
@@ -425,6 +431,27 @@ public class GameRoom {
         gridToLinked(map.getGrid());
     }
 
+    public void addBoss(int BossLevel) {
+        Vector2 p = getPositionFromTile(4, 4);
+        switch (BossLevel) {
+            case 0:
+                this.monsterList.add(new BossDarkOne(p));
+                break;
+            case 1:
+                this.monsterList.add(new BossDukeOfFlies(p));
+                break;
+            case 2:
+                this.monsterList.add(new BossMegaFaty(p));
+                break;
+            case 3:
+                this.monsterList.add(new BossTheHusk(p));
+                break;
+            case 4:
+                this.monsterList.add(new BossSatan(p));
+                break;
+        }
+    }
+
     /**
      * Utilise le tableau généré par Grid pour générer une game room
      * 
@@ -442,32 +469,28 @@ public class GameRoom {
                             if (j == 4) {
                                 if (i == 0) {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.86));
-                                    d.setRotation(0);
-                                    d.setImgPath("images/ClosedDoor.png");
                                     this.doorList.add(d);
                                 } else {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.14));
                                     d.setRotation(180);
-                                    d.setImgPath("images/ClosedDoor.png");
                                     this.doorList.add(d);
                                 }
                             } else {
                                 if (j == 0) {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.1, 0.5));
                                     d.setRotation(90);
-                                    d.setImgPath("images/ClosedDoor.png");
                                     this.doorList.add(d);
                                 } else {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.9, 0.5));
-                                    d.setImgPath("images/ClosedDoor.png");
                                     d.setRotation(270);
                                     this.doorList.add(d);
                                 }
                             }
 
                             break;
-                        case "B": // Boss
-                            // TODO Ajouter Boss
+                        case "B": // Emplacement réservé
+                            // On ne fais pas apparaitre le boss ici pour laisser le choix du boss au
+                            // developpeur
                             break;
                         case "M": // Fly or Spider
                             int rdm = random.nextInt(2);
@@ -582,6 +605,10 @@ public class GameRoom {
     // : -> Nombre de salle maximum en fonction de la difficulté
     // TODO: 4. Shop
     // TODO: 3. Portes
+
+    // TODO Images
+    // TODO Shop
+    // TODO Clés
 
     // TODO: Fluffy
     // TODO: IA (Berserk, Bounding, Random)

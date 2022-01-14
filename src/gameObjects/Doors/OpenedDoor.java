@@ -5,7 +5,8 @@ import gameObjects.Entities.EntityDoor;
 import libraries.Vector2;
 
 public class OpenedDoor extends EntityDoor {
-    public static final String IMGPATH = "images/OpenedDoor.png";
+    public static final String IMGPATH = "images/ClosedDoor.png"; // Ces portes sont ouvertes lorsqu'il n'y a pas de
+                                                                  // monstres dans une salle
 
     /**
      * Créé une porte ouverte (dite classique)

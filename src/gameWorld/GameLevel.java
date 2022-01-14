@@ -36,6 +36,7 @@ public class GameLevel {
         this.currentCord = level.get(0).getCo();
         delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
+        setBossRoom(0);
     }
 
     /**
@@ -229,30 +230,53 @@ public class GameLevel {
     }
 
     public void setBossRoom(int bossLevel) {
+        Boolean b = false;
         Random random = new Random();
         int i = random.nextInt(this.level.size() + 1);
-        while (true) {
-            Vector2 pos = this.level.get(i).getCo();
+        while (b == false) {
+            Vector2 pos = new Vector2(this.level.get(i).getCo());
             pos.addX(1);
             if (getSpeRoom(pos) == null) {
+                System.out.println(pos);
                 this.level.add(new GameMap(bossLevel, 2, 36, 0, pos));
-                this.level.get(i).GetRoom().doorList.add(new BossDoor(new Vector2(0.9, 0.5)));
+                BossDoor d = new BossDoor(new Vector2(0.9, 0.5));
+                d.setRotation(270);
+                this.level.get(i).GetRoom().doorList.add(d);
+                b = true;
             } else {
                 pos.addX(-2);
                 if (getSpeRoom(pos) == null) {
+                    System.out.println(pos);
                     this.level.add(new GameMap(bossLevel, 2, 44, 0, pos));
+                    BossDoor d = new BossDoor(new Vector2(0.1, 0.5));
+                    d.setRotation(90);
+                    this.level.get(i).GetRoom().doorList.add(d);
+                    b = true;
                 } else {
                     pos.addX(1);
                     pos.addY(1);
                     if (getSpeRoom(pos) == null) {
-                        this.level.add(new GameMap(bossLevel, 2, 4, 0, pos));
+                        System.out.println(pos);
+                        this.level.add(new GameMap(bossLevel, 2, 76, 0, pos));
+                        this.level.get(i).GetRoom().doorList.add(new BossDoor(new Vector2(0.5, 0.86)));
+                        b = true;
                     } else {
                         pos.addY(-2);
                         if (getSpeRoom(pos) == null) {
-                            this.level.add(new GameMap(bossLevel, 2, 76, 0, pos));
+                            System.out.println(pos);
+                            this.level.add(new GameMap(bossLevel, 2, 4, 0, pos));
+                            BossDoor d = new BossDoor(new Vector2(0.5, 0.14));
+                            d.setRotation(180);
+                            this.level.get(i).GetRoom().doorList.add(d);
+                            b = true;
                         }
                     }
                 }
+            }
+            if (b) {
+                System.out.println(pos + " " + this.level.get(i).getCo());
+                getSpeRoom(pos).addBoss(bossLevel);
+                return;
             }
         }
     }
