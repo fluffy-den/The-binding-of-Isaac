@@ -3,6 +3,7 @@ package gameObjects.Entities;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
+import resources.Utils;
 import libraries.StdDraw;
 
 /**
@@ -120,20 +121,6 @@ public abstract class Entity {
      * @return
      */
     public boolean isAdjacent(Entity e) {
-        double authorizedOverlap = GameRoom.TILE_SIZE.getX() / 1000;
-
-        boolean tooFarL = this.getPos().getX() + (this.getSize().getX() / 2) < authorizedOverlap + e.getPos().getX()
-                - (e.getSize().getX() / 2);
-        boolean tooFarB = this.getPos().getY() + (this.getSize().getY() / 2) < authorizedOverlap + e.getPos().getY()
-                - (e.getSize().getY() / 2);
-        boolean tooFarR = this.getPos().getX() - (this.getSize().getX() / 2) + authorizedOverlap > e.getPos().getX()
-                + (e.getSize().getX() / 2);
-        boolean tooFarA = this.getPos().getY() - (this.getSize().getY() / 2) + authorizedOverlap > e.getPos().getY()
-                + (e.getSize().getY() / 2);
-
-        if (tooFarL || tooFarR || tooFarA || tooFarB) {
-            return false;
-        }
-        return true;
+        return Utils.isAdjacent(this.pos, this.size, e.pos, e.size);
     }
 }

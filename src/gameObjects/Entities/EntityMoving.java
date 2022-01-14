@@ -111,7 +111,6 @@ public abstract class EntityMoving extends Entity {
     }
 
     // Mis à jour
-
     /**
      * @brief Met à jour le déplacement de l'entité.
      */
@@ -135,4 +134,5 @@ public abstract class EntityMoving extends Entity {
         this.pos = positionAfterMoving;
         this.dir = new Vector2(); // Remise à 0 de la direction
     }
+
 }
