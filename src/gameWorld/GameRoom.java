@@ -451,10 +451,21 @@ public class GameRoom {
     }
 
     /// Terrain
+    /**
+     * 
+     * @return
+     */
     public List<EntityTerrain> getTerrainList() {
         return this.terrainList;
     }
 
+    /**
+     * 
+     * @param difficulty
+     * @param type
+     * @param xydoor
+     * @param nbdoor
+     */
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
         GameGrid map = new GameGrid();
         map.Generate(difficulty, type, xydoor, nbdoor);
