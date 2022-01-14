@@ -1,39 +1,22 @@
 package gameWorld;
 
-import gameObjects.Projectiles.MonsterProjectile;
-import gameObjects.Projectiles.Tear;
-import gameObjects.Terrain.TerrainRock;
-import gameObjects.Traps.TrapPikes;
-import gameObjects.Hero;
-import gameObjects.Doors.OpenedDoor;
-import gameObjects.Entities.EntityItem;
-import gameObjects.Entities.EntityTerrain;
-import gameObjects.Entities.EntityTrap;
-import gameObjects.Entities.Entity;
-import gameObjects.Entities.EntityBomb;
-import gameObjects.Entities.EntityDoor;
-import gameObjects.Entities.EntityExplosion;
-import gameObjects.Items.ItemBloodOfTheMartyr;
-import gameObjects.Items.ItemCricketHead;
-import gameObjects.Items.ItemHalfRedHeart;
-import gameObjects.Items.ItemHeart;
-import gameObjects.Items.ItemJesusJuice;
-import gameObjects.Items.ItemLunch;
-import gameObjects.Items.ItemMagicMushroom;
-import gameObjects.Items.ItemNickel;
-import gameObjects.Items.ItemPentagram;
-import gameObjects.Items.ItemRedHeart;
-import gameObjects.Items.ItemStigmata;
-import gameObjects.Monsters.MonsterFly;
-import gameObjects.Monsters.MonsterSpider;
-import gameObjects.Entities.EntityMonster;
+import gameObjects.*;
+import gameObjects.Entities.*;
+import gameObjects.Items.*;
+import gameObjects.Projectiles.*;
 import gameObjects.Bosses.*;
+import gameObjects.Doors.*;
+import gameObjects.Terrain.*;
+import gameObjects.Traps.*;
+import gameObjects.Monsters.*;
 
 import libraries.Vector2;
 import libraries.StdDraw;
 
 import resources.Controls;
+import resources.Utils;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -63,6 +46,7 @@ public class GameRoom {
     public static final Vector2 CENTER_POS = new Vector2(0.5, 0.5);
     public static final String DEFAULT_BACKGROUND = "images/DefaultBackground.png";
 
+    /// Constructeur
     /**
      * 
      */
@@ -80,6 +64,7 @@ public class GameRoom {
         this.bombReloadSpeed = new GameCounter(0.25);
     }
 
+    /// Dessin et mise à jour
     /**
      * 
      */
@@ -415,6 +400,7 @@ public class GameRoom {
 
     }
 
+    /// Tile <=> Position
     /**
      * 
      * @param indexX
@@ -425,6 +411,50 @@ public class GameRoom {
         return new Vector2(
                 MIN_XPOS + (indexX + 0.5) * TILE_SIZE.getX(),
                 MIN_YPOS + (indexY + 0.5) * TILE_SIZE.getY());
+    }
+
+    /**
+     * 
+     */
+    public static int getTileXIndex(Vector2 p) {
+        double x = p.getX() - MIN_XPOS;
+        return (int) Math.ceil(x / TILE_SIZE.getX());
+    }
+
+    /**
+     * 
+     * @param e
+     * @return
+     */
+    public static int getTileYIndex(Vector2 p) {
+        double y = p.getY() - MIN_YPOS;
+        return (int) Math.ceil(y / TILE_SIZE.getY());
+    }
+
+    /**
+     * 
+     * @param e
+     * @return
+     */
+    public static boolean isPlaceCorrect(Vector2 p, Vector2 s, List<EntityTerrain> obstacles) {
+        if (p.getX() - s.getX() < MIN_XPOS)
+            return false;
+        if (p.getX() + s.getX() > MAX_XPOS)
+            return false;
+        if (p.getY() - s.getY() < MIN_YPOS)
+            return false;
+        if (p.getY() + s.getY() > MAX_YPOS)
+            return false;
+        for (Entity t : obstacles) {
+            if (Utils.isAdjacent(p, s, t.getPos(), t.getSize()))
+                return false;
+        }
+        return true;
+    }
+
+    /// Terrain
+    public List<EntityTerrain> getTerrainList() {
+        return this.terrainList;
     }
 
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
@@ -590,9 +620,8 @@ public class GameRoom {
     }
 
     /// TODO: Cyp3
-    // TODO: 1. Une grille (X, Y) où l'on peut placer, monstres, items (ArrayList?)
-    // TODO: 2. Fonction qui convertie une grille en une salle
-    // TODO: 5. Classe IA qui contient la méthode prochaine direction
+    // FAIT: 1. Une grille (X, Y) où l'on peut placer, monstres, items (ArrayList?)
+    // FAIT: 2. Fonction qui convertie une grille en une salle
     // : -> IA: Berserk (suit tout le temps le joueur)
     // : -> IA: Random (direction aléatoire tout le temps)
     // : -> IA:
@@ -606,21 +635,22 @@ public class GameRoom {
 
     // Vérifier que toutes les portes sont reliés S1(L <=> R)S2
 
-    // TODO: 6. Classe qui génère un niveau entier, dont la difficulté augmente en
+    // FAIT: 6. Classe qui génère un niveau entier, dont la difficulté augmente en
     // fonction des niveaux
     // : -> Retrouve sa maman fin, c'est un objet
     // : -> Sinon lui roule dessus -> c'est la fin aussi
     // : -> Easter Egg, maman morte -> Fin
     // : -> Nombre de salle maximum en fonction de la difficulté
     // TODO: 4. Shop
-    // TODO: 3. Portes
+    // FAIT: 3. Portes
 
-    // TODO Images
+    // FAIT Images
     // TODO Shop
     // TODO Clés
 
-    // TODO: Fluffy
+    /// TODO: Fluffy
     // TODO: IA (Berserk, Bounding, Random)
     // TODO: 6. Quelques boss (7 premiers du jeu)
     // TODO: 7. Quelques monstres
+    // TODO: IA
 }
