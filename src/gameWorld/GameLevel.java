@@ -13,6 +13,7 @@ import resources.Controls;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityDoor;
 import gameObjects.Doors.BossDoor;
+import gameObjects.Doors.KeyLockedDoor;
 import gameObjects.Doors.ShopDoor;
 
 import gameWorld.GameMap;
@@ -23,6 +24,7 @@ public class GameLevel {
     private Vector2 currentCord;
     private ArrayList<GameMap> level;
     private long lastTPFrame;
+    private ArrayList<GameRoom> alreadyExplore;
 
     /**
      * Création d'un niveau complet
@@ -37,8 +39,11 @@ public class GameLevel {
         this.currentCord = level.get(0).getCo();
         delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
-        setSpecialRoom(4,2);
-        setSpecialRoom(0,3);
+        this.alreadyExplore = new ArrayList<GameRoom>();
+        setKeyNDoors(0,0,new Vector2(0,0));
+        setSpecialRoom(4, 2);
+        setSpecialRoom(0, 3);
+        print();
     }
 
     /**
@@ -233,24 +238,24 @@ public class GameLevel {
 
     /**
      * Permet de générer une salle speciale aléatoirement sur le level
+     * 
      * @param bossLevel (0 à 5) Si un boss est présent
-     * @param type 2 Boss / 3 Shop
+     * @param type      2 Boss / 3 Shop
      */
     public void setSpecialRoom(int bossLevel, int type) {
         Boolean b = false;
         Random random = new Random();
-        int i = random.nextInt(this.level.size() + 1);
+        int i = random.nextInt(this.level.size());
         EntityDoor d;
-        if(type == 2){
+        if (type == 2) {
             d = new BossDoor(new Vector2(0.5, 0.86));
-        }else{
+        } else {
             d = new ShopDoor(new Vector2(0.5, 0.86));
         }
         while (b == false) {
             Vector2 pos = new Vector2(this.level.get(i).getCo());
             pos.addX(1);
             if (getSpeRoom(pos) == null) {
-                System.out.println(pos);
                 this.level.add(new GameMap(bossLevel, type, 36, 0, pos));
                 d.setPos(new Vector2(0.9, 0.5));
                 d.setRotation(270);
@@ -259,7 +264,6 @@ public class GameLevel {
             } else {
                 pos.addX(-2);
                 if (getSpeRoom(pos) == null) {
-                    System.out.println(pos);
                     this.level.add(new GameMap(bossLevel, type, 44, 0, pos));
                     d.setPos(new Vector2(0.1, 0.5));
                     d.setRotation(90);
@@ -269,14 +273,12 @@ public class GameLevel {
                     pos.addX(1);
                     pos.addY(1);
                     if (getSpeRoom(pos) == null) {
-                        System.out.println(pos);
                         this.level.add(new GameMap(bossLevel, type, 76, 0, pos));
                         this.level.get(i).GetRoom().doorList.add(d);
                         b = true;
                     } else {
                         pos.addY(-2);
                         if (getSpeRoom(pos) == null) {
-                            System.out.println(pos);
                             this.level.add(new GameMap(bossLevel, type, 4, 0, pos));
                             d.setPos(new Vector2(0.5, 0.14));
                             d.setRotation(180);
@@ -287,10 +289,93 @@ public class GameLevel {
                 }
             }
             if (b) {
-                if(type == 2)
+                if (type == 2)
                     getSpeRoom(pos).addBoss(bossLevel);
                 return;
             }
         }
+    }
+
+    /**
+     * 
+     * @param nbK    Nombre de clés à placer
+     * @param nbDSet Nombre de portes fermées déjà placées
+     */
+    public void setKeyNDoors(int nbK, int nbDSet, Vector2 currentC) {
+        GameRoom current = getSpeRoom(currentC);
+        if (this.alreadyExplore.contains(current)) {
+            return;
+        } else {
+            this.alreadyExplore.add(current);
+            Random random = new Random();
+            if (nbK < 3) {
+                int rdm = random.nextInt(6);
+                if (rdm < 3) {
+                    // TODO addKey
+                }
+                nbK++;
+            }
+            if (nbK > 0 && (current.doorList.size() > 1)) {
+                int rdm = random.nextInt(6);
+                if (rdm < 4) {
+                    for (int i = 0; i < current.doorList.size(); i++) {
+                        EntityDoor d = current.doorList.get(i);
+                        Vector2 vec = d.getPos();
+                        Vector2 tmp = new Vector2(currentC);
+                        if (vec.getX() == 0.5) {
+                            if (vec.getY() == 0.86) {
+                                tmp.addY(1);
+                            } else { // 0.14
+                                tmp.addY(-1);
+                            }
+                        } else {// y = 0.5
+                            if (vec.getX() == 0.1) {
+                                tmp.addX(-1);
+                            } else {// 0.9
+                                tmp.addX(1);
+
+                            }
+                        }
+                        if (alreadyExplore.contains(getSpeRoom(tmp)) == false) {
+                            current.doorList.add(new KeyLockedDoor(current.doorList.get(i).getPos()));
+                            current.doorList.remove(i);
+                            nbDSet++;
+                            i = 5;
+                        }
+                    }
+                }
+            }
+            for (EntityDoor d : current.doorList) {
+                Vector2 vec = d.getPos();
+                Vector2 tmp = new Vector2(currentC);
+                if (vec.getX() == 0.5) {
+                    if (vec.getY() == 0.86) {
+                        tmp.addY(1);
+                    } else { // 0.14
+                        tmp.addY(-1);
+                    }
+                } else {// y = 0.5
+                    if (vec.getX() == 0.1) {
+                        tmp.addX(-1);
+                    } else {// 0.9
+                        tmp.addX(1);
+
+                    }
+                }
+                if (alreadyExplore.contains(getSpeRoom(tmp)) == false && nbDSet < 3) {
+                    Vector2 vec2 = new Vector2(tmp);
+                    setKeyNDoors(nbK, nbDSet, vec2);
+                }
+            }
+            // TODO recursif
+        }
+    }
+
+    public void print() {
+        /*
+         * for (GameMap g : this.level) {
+         * System.out.println(g.getCo());
+         * }
+         */
     }
 }

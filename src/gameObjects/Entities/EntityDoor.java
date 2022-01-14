@@ -38,7 +38,10 @@ public abstract class EntityDoor extends Entity {
      */
     public boolean onHeroAdjacency(Hero h) {
         if (this.isKeyLocked) {
-            // TODO si le heros a une clé ouvrir et en retirer une
+            if(h.remKey()){
+                this.isKeyLocked = false;
+                this.isOpened = true;
+            }
         }
         if (this.isOpened) {
             return true;
