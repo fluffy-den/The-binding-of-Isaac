@@ -65,15 +65,6 @@ public abstract class EntityMonster extends EntityLiving {
     public ArrayList<MonsterProjectile> fireProjectiles(Hero h) {
         return null;
     }
-
-    /**
-     * 
-     */
-    public ArrayList<EntityItem> dropLoot() {
-        // TODO: @cypri3 Loot de chaques monstres
-        return null;
-    }
-
     // IA
     /**
      * 

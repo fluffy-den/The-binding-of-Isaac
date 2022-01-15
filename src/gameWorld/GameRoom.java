@@ -368,8 +368,9 @@ public class GameRoom {
         while (i < this.monsterList.size()) {
             EntityMonster m = this.monsterList.get(i);
             if (!m.isLiving()) {
+                lootMob(monsterList.get(i).getPos(), 3);
+                System.out.println("monsterList.get(i).getPos()");
                 this.monsterList.remove(i);
-                this.itemList.addAll(m.dropLoot());
                 --i;
             }
             if (m.isAdjacent(h)) {
@@ -563,53 +564,7 @@ public class GameRoom {
                             }
                             break;
                         case "I": // Item
-
-                            int prob = random.nextInt(5);
-
-                            if (prob != 4) {
-                                int rdm2 = random.nextInt(11);
-                                switch (rdm2) {
-                                    case 0, 1, 2:
-                                        this.itemList.add(new ItemHalfRedHeart(p)); // Régénération de 0.5 coeur
-                                        break;
-                                    case 3:
-                                        this.itemList.add(new ItemHeart(p)); // Régénération complette + don de 1 coeur
-                                        break;
-                                    default:
-                                        this.itemList.add(new ItemNickel(p));
-                                        break;
-                                }
-                            } else {
-                                int rdm2 = random.nextInt(8);
-                                switch (rdm2) {
-
-                                    case 0:
-                                        this.itemList.add(new ItemBloodOfTheMartyr(p));
-                                        break;
-                                    case 1:
-                                        this.itemList.add(new ItemJesusJuice(p));
-                                        break;
-                                    case 2:
-                                        this.itemList.add(new ItemLunch(p));
-                                        break;
-                                    case 3:
-                                        this.itemList.add(new ItemRedHeart(p));
-                                        break;
-                                    case 4:
-                                        this.itemList.add(new ItemCricketHead(p));
-                                        break;
-                                    case 5:
-                                        this.itemList.add(new ItemStigmata(p));
-                                        break;
-                                    case 6:
-                                        this.itemList.add(new ItemMagicMushroom(p));
-                                        break;
-                                    case 7:
-                                        this.itemList.add(new ItemPentagram(p));
-                                        break;
-
-                                }
-                            }
+                            this.itemList.add(choixItem(p));
                             break;
                         case "O": // Obstacle
                             if ((j != 4 || (i != 0 && i != 8)) && (i != 4 || (j != 8 && j != 0))) {
@@ -645,11 +600,82 @@ public class GameRoom {
     /**
      * Remplace un item par une clé
      */
-    public void addKey(){
-        Vector2 vec = new Vector2(this.itemList.getFirst().getPos());
-        this.itemList.removeFirst();
-        this.itemList.addFirst(new ItemKey(vec));
+    public void addKey() {
+        if (itemList.size() > 0) {
 
+            Vector2 vec = new Vector2(this.itemList.getFirst().getPos());
+            this.itemList.addFirst(new ItemKey(vec));
+            this.itemList.remove(1);
+        }
+    }
+
+    /**
+     * ¨Pose un item sur le lieu de mort d'un mostre
+     * 
+     * @param vec Coordonnées de la mort
+     * @param nb  Nombre d'items en fonctione du monstre
+     */
+    public void lootMob(Vector2 vec, int nb) {
+        Random random = new Random();
+        System.out.println(" vec" + vec);
+        for (int i = 0; i < nb; i++) {
+            int x = random.nextInt(11);
+            int y = random.nextInt(11);
+            Vector2 rdm = new Vector2(vec);
+            rdm.addX((x - 5) * 0.002);
+            rdm.addY((y - 5) * 0.002);
+            itemList.add(choixItem(vec));
+        }
+    }
+
+    public EntityItem choixItem(Vector2 p) {
+        EntityItem e = new ItemNickel(p);
+        Random random = new Random();
+        int prob = random.nextInt(5);
+        if (prob != 4) {
+            int rdm2 = random.nextInt(11);
+            switch (rdm2) {
+                case 0, 1, 2:
+                    e = new ItemHalfRedHeart(p); // Régénération de 0.5 coeur
+                    break;
+                case 3:
+                    e = new ItemHeart(p); // Régénération complette + don de 1 coeur
+                    break;
+                default:
+                    e = new ItemNickel(p);
+                    break;
+            }
+        } else {
+            int rdm2 = random.nextInt(8);
+            switch (rdm2) {
+                case 0:
+                    e = new ItemBloodOfTheMartyr(p);
+                    break;
+                case 1:
+                    e = new ItemJesusJuice(p);
+                    break;
+                case 2:
+                    e = new ItemLunch(p);
+                    break;
+                case 3:
+                    e = new ItemRedHeart(p);
+                    break;
+                case 4:
+                    e = new ItemCricketHead(p);
+                    break;
+                case 5:
+                    e = new ItemStigmata(p);
+                    break;
+                case 6:
+                    e = new ItemMagicMushroom(p);
+                    break;
+                case 7:
+                    e = new ItemPentagram(p);
+                    break;
+
+            }
+        }
+        return e;
     }
 
     /// TODO: Cyp3
@@ -674,12 +700,13 @@ public class GameRoom {
     // : -> Sinon lui roule dessus -> c'est la fin aussi
     // : -> Easter Egg, maman morte -> Fin
     // : -> Nombre de salle maximum en fonction de la difficulté
-    // TODO: 4. Shop
     // FAIT: 3. Portes
 
     // FAIT Images
     // TODO Shop
-    // TODO Clés
+    // Fait Clés
+    // TODO Trapes Level
+    // TODO loots moob
 
     /// TODO: Fluffy
     // TODO: IA (Berserk, Bounding, Random)
