@@ -226,7 +226,7 @@ public class GameRoom {
                         if (t.getImgPath() == "images/KeyLockedDoor.png") {
                             t.setImgPath("images/OpenedDoor.png");
                         }
-                        if (t.getImgPath() == "images/ExitDoor.png") {
+                        if (t.getImgPath() == "images/TrapDoor.png") {
                             if (StdDraw.isKeyPressed(Controls.space)) {
                                 h.setPos(new Vector2(CENTER_POS.getX(), CENTER_POS.getY()));
                                 return "exit";
