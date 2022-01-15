@@ -50,14 +50,16 @@ public class AI {
                     GameRoom.getTileYIndex(t));
 
             // On ignore les positions trop proches du monstre dans la liste de cheminement
-            for (Vector2 p : pL) {
-                if (Utils.isAdjacent(
-                        p,
-                        new Vector2(GameRoom.TILE_SIZE.getX() * 0.75, GameRoom.TILE_SIZE.getY() * 0.75),
-                        m.getPos(),
-                        m.getSize()))
-                    continue;
-                return p.subVector(m.getPos());
+            if (pL != null) {
+                for (Vector2 p : pL) {
+                    if (Utils.isAdjacent(
+                            p,
+                            new Vector2(GameRoom.TILE_SIZE.getX() * 0.75, GameRoom.TILE_SIZE.getY() * 0.75),
+                            m.getPos(),
+                            m.getSize()))
+                        continue;
+                    return p.subVector(m.getPos());
+                }
             }
         }
 
@@ -88,7 +90,7 @@ public class AI {
             do {
                 // Angle
                 double angle = Utils.randomDouble(0.0, 1.0);
-                double range = b.getSize().distance(m.getSize());
+                double range = b.getSize().addVector(m.getSize()).euclidianNorm();
                 this.nextPos = new Vector2(
                         b.getPos().getX() + Math.cos(angle) * range,
                         b.getPos().getY() + Math.sin(angle) * range);
@@ -173,7 +175,7 @@ public class AI {
         }
 
         // IA: Accompagnement (Un boss est présent)
-        if (b != null) {
+        if (b != null && b != m) {
             return escortDir(b, m, r);
         }
 
