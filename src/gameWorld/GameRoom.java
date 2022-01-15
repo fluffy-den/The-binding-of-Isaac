@@ -37,6 +37,7 @@ public class GameRoom {
     private GameCounter bombReloadSpeed;
     private boolean DoorSkin = true; // Dit le un changement de skin à été fait
     private boolean isShop;
+    private boolean isSpawn;
 
     public static final double MIN_XPOS = 0.113;
     public static final double MAX_XPOS = 0.887;
@@ -77,7 +78,9 @@ public class GameRoom {
     public void drawBackground() {
         /// Sol
         StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY(), this.imgPath, 1.0, 1.0, 0); // Le sol de base
-        if (isShop) {
+        if (isSpawn) {
+            StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY(), "images/DrawnedPentagram.png", 0.1, 0.1, 0);
+        } else if (isShop) {
             StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY() + 0.25, "images/HangingMan.png", 0.1, 0.5, 0);
         }
     }
@@ -162,10 +165,13 @@ public class GameRoom {
             EntityItem e = this.itemList.get(i);
             if (e.isAdjacent(h)) {
                 if (isShop) { // item de shop
-                    if (h.remCoins(e.getPrice())) { // Si le retrait à été fait on donne l'item
-                        e.onHeroItemAction(h);
-                        this.itemList.remove(i);
-                        --i;
+                    if (StdDraw.isKeyPressed(Controls.enter)) {
+
+                        if (h.remCoins(e.getPrice())) { // Si le retrait à été fait on donne l'item
+                            e.onHeroItemAction(h);
+                            this.itemList.remove(i);
+                            --i;
+                        }
                     }
                 } else { // item classique
                     e.onHeroItemAction(h);
@@ -221,8 +227,10 @@ public class GameRoom {
                             t.setImgPath("images/OpenedDoor.png");
                         }
                         if (t.getImgPath() == "images/ExitDoor.png") {
-                            if (StdDraw.isKeyPressed(Controls.space))
+                            if (StdDraw.isKeyPressed(Controls.space)) {
+                                h.setPos(new Vector2(CENTER_POS.getX(), CENTER_POS.getY()));
                                 return "exit";
+                            }
                         } else {
                             DoorSkin = true;
                             Vector2 vec = new Vector2(t.getPos());
@@ -247,7 +255,7 @@ public class GameRoom {
                     }
                 }
             }
-            //t.updateAndDraw();
+            // t.updateAndDraw();
         }
         return null;
     }
@@ -565,17 +573,26 @@ public class GameRoom {
     }
 
     /**
+     * @brief Cree une GameRoom suivant les paramètes suivants
      * 
-     * @param difficulty
-     * @param type
-     * @param xydoor
-     * @param nbdoor
+     * @param difficulty Difficulté du niveau
+     * @param type       0 = Spawn / 1 = Salle normal / 2 = Boss / 3 = Shop
+     * @param xydoor     Coordonnées de la porte d'entrée Nord 04, Ouest 36, Est 44,
+     *                   Sud 76
+     * @param nbdoor     Nombre de portes à ajouter sur une grille
      */
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
         if (type == 3) {
             this.isShop = true;
+            this.isSpawn = false;
+        } else if (type == 0) { // Si la difficultée est à 0 on affiche les commandes et non un pentagram
+            if (difficulty > 0) {
+                this.isSpawn = true;
+            }
+            this.isShop = false;
         } else {
             this.isShop = false;
+            this.isSpawn = false;
         }
         GameGrid map = new GameGrid();
         map.Generate(difficulty, type, xydoor, nbdoor);
@@ -856,6 +873,10 @@ public class GameRoom {
         shopableItems(getPositionFromTile(4, 3));
         shopableItems(getPositionFromTile(6, 3));
 
+    }
+
+    public void setBackground(String s) {
+        this.imgPath = s;
     }
 
     /// TODO: Cyp3

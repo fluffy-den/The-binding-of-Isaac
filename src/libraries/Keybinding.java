@@ -2,7 +2,7 @@ package libraries;
 
 public class Keybinding {
 	public static enum SpecialKeys {
-		RETURN, LEFT, UP, RIGHT, DOWN, MAJ, ESCAPE, SPACE, ALT, ENTER, TAB;
+		RETURN, LEFT, UP, RIGHT, DOWN, MAJ, ESCAPE, SPACE, ALT, TAB;
 	}
 
 	/**
@@ -31,8 +31,6 @@ public class Keybinding {
 				return 32;
 			case ALT: 		// Not used now
 				return 32;
-			case ENTER: 	// Not used now
-				return 10;
 			case TAB: 		// Not used now
 				return 9;
 		}
