@@ -12,7 +12,7 @@ public class EntityBomb extends Entity {
     public static final double EXPLOSION_DURATION = 0.25; // En images/s
     public static final String IMGPATH = "images/Bomb.png";
 
-    private GameCounter counter; // Le temps que met la bombe à exploser (en images)
+    private GameCounter counter; // Le temps que met la bombe avant d'exploser (en images)
 
     private int damage;
     private int range;
@@ -26,7 +26,7 @@ public class EntityBomb extends Entity {
      */
     public EntityBomb(Vector2 pos) {
         super(pos, SIZE, IMGPATH);
-        this.counter = new GameCounter(0.25); // Drop de bombe toutes les 10 images
+        this.counter = new GameCounter(0.025); // Drop de bombe toutes les 10 images
         this.range = EXPLOSION_RANGE;
         this.damage = EXPLOSION_DAMAGE;
     }

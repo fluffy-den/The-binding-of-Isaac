@@ -308,17 +308,18 @@ public class GameRoom {
         int i = 0;
         while (i < this.bombList.size()) {
             EntityBomb b = this.bombList.get(i);
+            if (b != null) {
+                b.updateAndDraw();
+            }
             if (b != null && b.isTimerOver()) {
                 // Creation de l'explosion
                 EntityExplosion e = b.explode();
                 this.explList.add(e);
 
                 // Adjacence avec le hero?
-                /*
-                 * if (h.isAdjacent(e)) {
-                 * b.addDamage(h);
-                 * }
-                 */
+                if (h.isAdjacent(e)) {
+                    b.addDamage(h);
+                }
 
                 // Adjacence avec les monstres?
                 for (EntityMonster m : this.monsterList) {
