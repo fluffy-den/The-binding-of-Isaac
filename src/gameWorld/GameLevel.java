@@ -31,9 +31,9 @@ public class GameLevel {
      * 
      * @param nbRooms Nombre de salle classique maximum du niveau
      */
-    public GameLevel(int nbRooms, int difficulty) {
+    public GameLevel(int nbRooms, int difficulty, Hero hero) {
+        this.hero = hero;
         this.level = new ArrayList<GameMap>();
-        this.hero = new Hero();
         level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0)));
         creatingClassicRoom(1, 76, 15, level.get(0).getCo());
         this.currentCord = level.get(0).getCo();
@@ -66,7 +66,7 @@ public class GameLevel {
      */
     public boolean updateAndDraw() {
         this.currentRoom.updateAndDraw(this.hero);
-        String s = this.currentRoom.updateAndDrawDoors(this.hero);
+        String s = this.currentRoom.updateDoors(this.hero);
 
         if (s != null) {
             if (s.equals("exit")) {

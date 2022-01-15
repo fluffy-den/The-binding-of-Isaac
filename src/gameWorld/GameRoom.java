@@ -100,7 +100,7 @@ public class GameRoom {
                     } else {
                         m = this.boss;
                     }
-                    if (m != null && e.isAdjacent(m)) {//TODO afficher vie mob
+                    if (m != null && e.isAdjacent(m)) {// TODO afficher vie mob
                         e.onHitLivingObject(m);
                         this.projListHero.remove(i);
                         --i;
@@ -125,6 +125,7 @@ public class GameRoom {
     }
 
     /**
+     * Affiche et met à jours les projectils des monstres
      * 
      * @param h
      */
@@ -149,6 +150,7 @@ public class GameRoom {
     }
 
     /**
+     * Affiche et met à jours les items au sol
      * 
      * @param h
      */
@@ -182,6 +184,7 @@ public class GameRoom {
     }
 
     /**
+     * Affiche et met à jours les pièges
      * 
      * @param h
      */
@@ -196,12 +199,12 @@ public class GameRoom {
     }
 
     /**
-     * Affiche les portes et vérifie si le heros peut changer de GameRoom
+     * Vérifie si le heros peut changer de GameRoom et change les skins de portes
      * 
      * @param h Le heros
      * @return L'emplacement de la salle si nécessaire, null sinon
      */
-    public String updateAndDrawDoors(Hero h) {
+    public String updateDoors(Hero h) {
         /// Les portes ne fonctionnent que sur le heor
         boolean tmpS = DoorSkin; // Dis si le skin de la porte à été changé
         for (EntityDoor t : this.doorList) {
@@ -216,34 +219,45 @@ public class GameRoom {
                         if (t.getImgPath() == "images/KeyLockedDoor.png") {
                             t.setImgPath("images/OpenedDoor.png");
                         }
-                        if (t.getImgPath() == "images/ExitDoor.png" && StdDraw.isKeyPressed(Controls.goUp)){
-                            return "exit";
-                        }
+                        if (t.getImgPath() == "images/ExitDoor.png") {
+                            if (StdDraw.isKeyPressed(Controls.space))
+                                return "exit";
+                        } else {
                             DoorSkin = true;
-                        Vector2 vec = new Vector2(t.getPos());
-                        if (vec.getX() == 0.5) {
-                            if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
-                                return ("top");
-                            } else {// 0.14
-                                if (StdDraw.isKeyPressed(Controls.goDown)) {
-                                    return "bottom";
+                            Vector2 vec = new Vector2(t.getPos());
+                            if (vec.getX() == 0.5) {
+                                if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
+                                    return ("top");
+                                } else {// 0.14
+                                    if (StdDraw.isKeyPressed(Controls.goDown)) {
+                                        return "bottom";
+                                    }
                                 }
-                            }
-                        } else {// y = 0.5
-                            if (vec.getX() == 0.1 && StdDraw.isKeyPressed(Controls.goLeft)) {
-                                return "left";
-                            } else {// 0.9
-                                if (StdDraw.isKeyPressed(Controls.goRight)) {
-                                    return "right";
+                            } else {// y = 0.5
+                                if (vec.getX() == 0.1 && StdDraw.isKeyPressed(Controls.goLeft)) {
+                                    return "left";
+                                } else {// 0.9
+                                    if (StdDraw.isKeyPressed(Controls.goRight)) {
+                                        return "right";
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            t.updateAndDraw();
+            //t.updateAndDraw();
         }
         return null;
+    }
+
+    /**
+     * Affiche les portes
+     */
+    public void drawDoors() {
+        for (EntityDoor t : this.doorList) {
+            t.updateAndDraw();
+        }
     }
 
     /**
@@ -461,6 +475,7 @@ public class GameRoom {
         this.updateCheatActions(h);
         h.updateCheatActions();
         this.drawBackground();
+        this.drawDoors();
         this.updateAndDrawTerrain(h);
         this.updateHeroMovementActions(h);
         this.updateHeroTearActions(h);
@@ -474,7 +489,6 @@ public class GameRoom {
         this.updateAndDrawMonsterProjectiles(h);
         h.draw();
         h.drawHUD();
-
     }
 
     /// Tile <=> Position
@@ -872,8 +886,9 @@ public class GameRoom {
     // FAIT Shop
     // Fait Clés
     // TODO Trapes Level
-    // TODO HUD Mob
+    // TODO HUD Mob => overright du draw ?
     // TODO Bombe timer
+    // Esater egg On écrase la mere à la fin
 
     /// TODO: Fluffy
     // TODO: IA (Berserk, Bounding, Random)

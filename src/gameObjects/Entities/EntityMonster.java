@@ -9,7 +9,9 @@ import gameObjects.Projectiles.MonsterProjectile;
 
 import gameWorld.Game;
 import gameWorld.GameRoom;
+
 import libraries.Vector2;
+import libraries.StdDraw;
 
 public abstract class EntityMonster extends EntityLiving {
     protected int meleeDamage;
@@ -43,6 +45,17 @@ public abstract class EntityMonster extends EntityLiving {
         this.meleeReloadSpeed = meleeReloadSpeed;
         this.lastMeleeReloadFrame = 0;
         this.monsterAI = ai;
+    }
+
+    /**
+     * Affiche le monstre et ses points de vie
+     */
+    @Override
+    public void draw() {
+        StdDraw.picture(getPos().getX(), getPos().getY(), getImgPath(), getSize().getX(), getSize().getY(),
+                0);
+        StdDraw.setPenColor(StdDraw.WHITE);
+        StdDraw.text(getPos().getX(), getPos().getY() + 0.05, Integer.toString(this.health));
     }
 
     /**

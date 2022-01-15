@@ -99,6 +99,8 @@ public class AI {
                 GameRoom.getTileYIndex(h.getPos()));
 
         // On ignore les positions trop proches du monstre dans la liste de cheminement
+
+        //TODO LQ if pL.isEmpty (Ne rien faire ?)
         for (Vector2 p : pL) {
             if (Utils.isAdjacent(
                     p,

@@ -8,6 +8,8 @@ import java.util.PriorityQueue;
 import libraries.StdDraw;
 import libraries.Timer;
 
+import gameObjects.Hero;
+
 public class Game {
     private static GameLevel LEVEL;
     private static GameState STATE;
@@ -32,7 +34,8 @@ public class Game {
         StdDraw.enableDoubleBuffering();
 
         // TODO: @cyp3 à changer
-        LEVEL = new GameLevel(10, 0);
+        Hero hero = new Hero();
+        LEVEL = new GameLevel(10, 0, hero);
         int lvl = 1; // 5 niveau (car 5 boss)
         // Boucle du jeu
         while (STATE == GameState.RUNNING) {
@@ -42,7 +45,7 @@ public class Game {
             /// Affichage et changement de niveau
             if (LEVEL.updateAndDraw()) {
                 System.out.println(lvl);
-                LEVEL = new GameLevel(10, lvl);
+                LEVEL = new GameLevel(10, lvl, hero);
                 lvl++;
             }
             if(lvl == 6){
