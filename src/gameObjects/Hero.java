@@ -264,9 +264,12 @@ public class Hero extends EntityLiving {
      * @param count
      * @return
      */
-    public int remCoins(int count) {
-        this.nCoins -= count;
-        return this.nCoins;
+    public boolean remCoins(int count) {
+        if(this.nCoins - count >-1){
+            this.nCoins -= count;
+            return true;
+        }
+        return false;
     }
 
     // Bombs

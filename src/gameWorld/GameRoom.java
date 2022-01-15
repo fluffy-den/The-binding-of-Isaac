@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import java.awt.Font;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
@@ -35,6 +36,7 @@ public class GameRoom {
     protected String imgPath;
     private GameCounter bombReloadSpeed;
     private boolean DoorSkin = true; // Dit le un changement de skin à été fait
+    private boolean isShop;
 
     public static final double MIN_XPOS = 0.113;
     public static final double MAX_XPOS = 0.887;
@@ -74,6 +76,9 @@ public class GameRoom {
     public void drawBackground() {
         /// Sol
         StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY(), this.imgPath, 1.0, 1.0, 0); // Le sol de base
+        if (isShop) {
+            // TODO On affiche le pendu
+        }
     }
 
     /**
@@ -149,15 +154,29 @@ public class GameRoom {
     public void updateAndDrawHeroItems(Hero h) {
         /// Items au sol
         int i = 0;
+        // System.out.println(this.itemList.size());
         while (i < this.itemList.size()) {
             EntityItem e = this.itemList.get(i);
             if (e.isAdjacent(h)) {
-                e.onHeroItemAction(h);
-                this.itemList.remove(i);
-                --i;
-            } else {
-                e.updateAndDraw();
+                if (isShop) { // item de shop
+                    if (h.remCoins(e.getPrice())) { // Si le retrait à été fait on donne l'item
+                        e.onHeroItemAction(h);
+                        this.itemList.remove(i);
+                        --i;
+                    }
+                } else { // item classique
+                    e.onHeroItemAction(h);
+                    this.itemList.remove(i);
+                    --i;
+                }
             }
+            if (isShop) {
+                Font font = new Font("Arial", Font.BOLD, 15);
+                StdDraw.setFont(font);
+                StdDraw.setPenColor(StdDraw.WHITE);
+                StdDraw.text(e.getPos().getX(), e.getPos().getY() - 0.043, Integer.toString(e.getPrice()));
+            }
+            e.updateAndDraw();
             ++i;
         }
     }
@@ -263,15 +282,17 @@ public class GameRoom {
         int i = 0;
         while (i < this.bombList.size()) {
             EntityBomb b = this.bombList.get(i);
-            if (b.isTimerOver()) {
+            if (b != null && b.isTimerOver()) {
                 // Creation de l'explosion
                 EntityExplosion e = b.explode();
                 this.explList.add(e);
 
                 // Adjacence avec le hero?
-                if (h.isAdjacent(e)) {
-                    b.addDamage(h);
-                }
+                /*
+                 * if (h.isAdjacent(e)) {
+                 * b.addDamage(h);
+                 * }
+                 */
 
                 // Adjacence avec les monstres?
                 for (EntityMonster m : this.monsterList) {
@@ -523,9 +544,17 @@ public class GameRoom {
      * @param nbdoor
      */
     public void generateGameRoom(int difficulty, int type, int xydoor, int nbdoor) {
+        if (type == 3) {
+            this.isShop = true;
+        } else {
+            this.isShop = false;
+        }
         GameGrid map = new GameGrid();
         map.Generate(difficulty, type, xydoor, nbdoor);
         gridToLinked(map.getGrid());
+        if (type == 3) {
+            marketMaker();
+        }
     }
 
     /**
@@ -559,7 +588,7 @@ public class GameRoom {
     /**
      * Utilise le tableau généré par Grid pour générer une game room
      * 
-     * @param Grid Tableau de positionnement des "objets"
+     * @param Grid Tableau de positionnement des éléments
      */
     public void gridToLinked(String[][] Grid) {
         Random random = new Random();
@@ -699,24 +728,24 @@ public class GameRoom {
     public EntityItem choixItem(Vector2 p) {
         EntityItem e = new ItemNickel(p);
         Random random = new Random();
-        int prob = random.nextInt(5);
+        int prob = random.nextInt(8);
         if (prob != 4) {
             int rdm2 = random.nextInt(11);
             switch (rdm2) {
-                case 0, 1, 2:
+                case 0, 1:
                     e = new ItemHalfRedHeart(p); // Régénération de 0.5 coeur
                     break;
-                case 3:
-                    e = new ItemBomb(p); // Régénération complette + don de 1 coeur
+                case 2, 3, 4:
+                    e = new ItemBomb(p);
                     break;
-                case 4:
+                case 5:
                     e = new ItemRedHeart(p);
                 default:
                     e = new ItemNickel(p);
                     break;
             }
         } else {
-            int rdm2 = random.nextInt(10);
+            int rdm2 = random.nextInt(11);
             switch (rdm2) {
                 case 0:
                     e = new ItemBloodOfTheMartyr(p);
@@ -742,7 +771,6 @@ public class GameRoom {
                 case 8:
                     e = new ItemPentagram(p);
                     break;
-
                 case 9:
                     e = new ItemPenny(p);
                     break;
@@ -753,6 +781,47 @@ public class GameRoom {
             }
         }
         return e;
+    }
+
+    public void shopableItems(Vector2 p) {
+        Random random = new Random();
+        EntityItem e = new ItemNickel(p);
+        int price = 10 + random.nextInt(16);
+        int rdm = random.nextInt(7);
+        switch (rdm) {
+            case 0:
+                e = new ItemBloodOfTheMartyr(p);
+                break;
+            case 1:
+                e = new ItemJesusJuice(p);
+                break;
+            case 2:
+                e = new ItemLunch(p);
+                break;
+            case 3:
+                e = new ItemStigmata(p);
+                break;
+            case 4:
+                e = new ItemMagicMushroom(p);
+                break;
+            case 5:
+                e = new ItemPentagram(p);
+                break;
+            case 6:
+                e = new ItemKey(p);
+                break;
+
+        }
+        e.setPrice(price);
+        System.out.println(e);
+        this.itemList.add(e);
+    }
+
+    public void marketMaker() {
+        shopableItems(getPositionFromTile(2, 3));
+        shopableItems(getPositionFromTile(4, 3));
+        shopableItems(getPositionFromTile(6, 3));
+
     }
 
     /// TODO: Cyp3
