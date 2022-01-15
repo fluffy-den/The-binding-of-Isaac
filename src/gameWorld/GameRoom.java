@@ -47,6 +47,7 @@ public class GameRoom {
             (MAX_XPOS - MIN_XPOS) / NUM_OF_TILES,
             (MAX_YPOS - MIN_YPOS) / NUM_OF_TILES);
     public static final Vector2 CENTER_POS = new Vector2(0.5, 0.5);
+    public static final double TILE_DIST = Math.sqrt(Math.pow(TILE_SIZE.getX(), 2) + Math.pow(TILE_SIZE.getY(), 2));
     public static final String DEFAULT_BACKGROUND = "images/DefaultBackground.png";
 
     /// Constructeur

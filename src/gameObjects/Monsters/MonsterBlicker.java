@@ -17,6 +17,7 @@ public class MonsterBlicker extends EntityMonster {
     public static final double SPEED = 0.002;
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
+    public static final double AGGRO_RANGE = 0.00;
     public static final int MELEE_DAMAGE = 1;
     public static final int HP = 7;
     public static final String IMGPATH = "images/Blicker.png";
@@ -25,7 +26,8 @@ public class MonsterBlicker extends EntityMonster {
      * 
      */
     public MonsterBlicker(Vector2 pos) {
-        super(pos,
+        super(
+                pos,
                 SIZE,
                 SPEED,
                 false,
@@ -34,6 +36,6 @@ public class MonsterBlicker extends EntityMonster {
                 MELEE_EFFECT_POWER,
                 MELEE_RELOAD_SPEED,
                 IMGPATH,
-                new AI());
+                new AI(pos, AGGRO_RANGE));
     }
 }
