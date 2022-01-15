@@ -84,7 +84,7 @@ public class AI {
         if (n == null || n.isEmpty())
             return new Vector2();
         else
-            return (ctrl.getPos().subVector(n.get(1)));
+            return (h.getPos().subVector(n.get(0)));
     }
 
     /**
@@ -100,56 +100,65 @@ public class AI {
      * @return La position que doit prendre le monstre.
      */
     public Vector2 nextDir(EntityBoss boss, EntityMonster ctrl, Hero h, GameRoom room) {
-        // Le monstre a-t-il atteint la dernière case calculée?
-        Vector2 overlapVector = new Vector2(GameRoom.TILE_SIZE.getX() / 1000, GameRoom.TILE_SIZE.getY() / 1000);
-        if (!Utils.isAdjacent(ctrl.getPos(), ctrl.getSize(), this.nextPos, overlapVector)) {
-            return this.nextPos.subVector(ctrl.getPos());
-        }
+        this.nextPos = aggroPos(ctrl, h, room);
+        return nextPos;
 
-        // L'IA fonce sur le joueur si celui-ci est trop proche, où a été touché par le
-        // joueur.
-        if (enableAggro && !aggro && ctrl.getPos().distance(h.getPos()) <= this.aggroRange) {
-            aggro = true;
-        }
-        if (aggro) {
-            this.nextPos = aggroPos(ctrl, h, room);
-            return nextPos;
-        }
-
-        // Accompagne le boss
-        if (boss != null && boss != ctrl) {
-            if (ctrl.isFlying()) {
-                this.nextPos = ctrl.getPos().subVector(this.randomBossPos(boss, ctrl, room));
-            } else {
-                boolean isAdjacent;
-                do {
-                    isAdjacent = false;
-                    this.nextPos = this.randomBossPos(boss, ctrl, room);
-                    List<EntityTerrain> terrainList = room.getTerrainList();
-                    for (EntityTerrain t : terrainList) {
-                        if (Utils.isAdjacent(t.getPos(), t.getSize(), this.nextPos, overlapVector))
-                            isAdjacent = true;
-                    }
-                } while (isAdjacent);
-                return this.nextPos;
-            }
-        }
-
-        // Mouvement random
-        if (ctrl.isFlying()) {
-            return this.randomPos(ctrl, room);
-        }
-        boolean isAdjacent;
-        do {
-            isAdjacent = false;
-            this.nextPos = this.randomPos(ctrl, room);
-            List<EntityTerrain> terrainList = room.getTerrainList();
-            for (EntityTerrain t : terrainList) {
-                if (Utils.isAdjacent(t.getPos(), t.getSize(), this.nextPos, overlapVector))
-                    isAdjacent = true;
-            }
-        } while (isAdjacent);
-        return this.nextPos;
+        /*
+         * // Le monstre a-t-il atteint la dernière case calculée?
+         * Vector2 overlapVector = new Vector2(GameRoom.TILE_SIZE.getX() / 1000,
+         * GameRoom.TILE_SIZE.getY() / 1000);
+         * if (!Utils.isAdjacent(ctrl.getPos(), ctrl.getSize(), this.nextPos,
+         * overlapVector)) {
+         * return this.nextPos.subVector(ctrl.getPos());
+         * }
+         * 
+         * // L'IA fonce sur le joueur si celui-ci est trop proche, où a été touché par
+         * le
+         * // joueur.
+         * if (enableAggro && !aggro && ctrl.getPos().distance(h.getPos()) <=
+         * this.aggroRange) {
+         * aggro = true;
+         * }
+         * if (aggro) {
+         * this.nextPos = aggroPos(ctrl, h, room);
+         * return nextPos;
+         * }
+         * 
+         * // Accompagne le boss
+         * if (boss != null && boss != ctrl) {
+         * if (ctrl.isFlying()) {
+         * this.nextPos = ctrl.getPos().subVector(this.randomBossPos(boss, ctrl, room));
+         * } else {
+         * boolean isAdjacent;
+         * do {
+         * isAdjacent = false;
+         * this.nextPos = this.randomBossPos(boss, ctrl, room);
+         * List<EntityTerrain> terrainList = room.getTerrainList();
+         * for (EntityTerrain t : terrainList) {
+         * if (Utils.isAdjacent(t.getPos(), t.getSize(), this.nextPos, overlapVector))
+         * isAdjacent = true;
+         * }
+         * } while (isAdjacent);
+         * return this.nextPos;
+         * }
+         * }
+         * 
+         * // Mouvement random
+         * if (ctrl.isFlying()) {
+         * return this.randomPos(ctrl, room);
+         * }
+         * boolean isAdjacent;
+         * do {
+         * isAdjacent = false;
+         * this.nextPos = this.randomPos(ctrl, room);
+         * List<EntityTerrain> terrainList = room.getTerrainList();
+         * for (EntityTerrain t : terrainList) {
+         * if (Utils.isAdjacent(t.getPos(), t.getSize(), this.nextPos, overlapVector))
+         * isAdjacent = true;
+         * }
+         * } while (isAdjacent);
+         * return this.nextPos;
+         */
     }
 
     /**
