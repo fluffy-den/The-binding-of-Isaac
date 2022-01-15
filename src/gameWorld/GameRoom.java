@@ -263,15 +263,15 @@ public class GameRoom {
         int i = 0;
         while (i < this.bombList.size()) {
             EntityBomb b = this.bombList.get(i);
-            if (b.isTimerOver()) {
+            if (b != null && b.isTimerOver()) {
                 // Creation de l'explosion
                 EntityExplosion e = b.explode();
                 this.explList.add(e);
 
                 // Adjacence avec le hero?
-                if (h.isAdjacent(e)) {
+                /*if (h.isAdjacent(e)) {
                     b.addDamage(h);
-                }
+                }*/
 
                 // Adjacence avec les monstres?
                 for (EntityMonster m : this.monsterList) {
@@ -699,17 +699,17 @@ public class GameRoom {
     public EntityItem choixItem(Vector2 p) {
         EntityItem e = new ItemNickel(p);
         Random random = new Random();
-        int prob = random.nextInt(5);
+        int prob = random.nextInt(8);
         if (prob != 4) {
             int rdm2 = random.nextInt(11);
             switch (rdm2) {
-                case 0, 1, 2:
+                case 0, 1:
                     e = new ItemHalfRedHeart(p); // Régénération de 0.5 coeur
                     break;
-                case 3:
-                    e = new ItemBomb(p); // Régénération complette + don de 1 coeur
+                case 2,3,4:
+                    e = new ItemBomb(p);
                     break;
-                case 4:
+                case 5:
                     e = new ItemRedHeart(p);
                 default:
                     e = new ItemNickel(p);
