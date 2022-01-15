@@ -100,14 +100,14 @@ public class GameRoom {
                     } else {
                         m = this.boss;
                     }
-                    if (m != null && e.isAdjacent(m)) {
+                    if (m != null && e.isAdjacent(m)) {//TODO afficher vie mob
                         e.onHitLivingObject(m);
                         this.projListHero.remove(i);
-                        j = this.monsterList.size() + 2;
                         --i;
                         if (!m.isLiving()) {
                             dropLoot(m);
                             if (m == this.boss) {
+                                this.doorList.add(new ExitDoor(new Vector2(0.5, 0.5)));
                                 this.boss = null;
                             } else {
                                 this.monsterList.remove(m);
@@ -115,6 +115,7 @@ public class GameRoom {
                         } else {
                             m.updateAndDraw();
                         }
+                        j = this.monsterList.size() + 2;
                     }
                 }
                 e.updateAndDraw();
@@ -154,7 +155,6 @@ public class GameRoom {
     public void updateAndDrawHeroItems(Hero h) {
         /// Items au sol
         int i = 0;
-        // System.out.println(this.itemList.size());
         while (i < this.itemList.size()) {
             EntityItem e = this.itemList.get(i);
             if (e.isAdjacent(h)) {
@@ -216,7 +216,10 @@ public class GameRoom {
                         if (t.getImgPath() == "images/KeyLockedDoor.png") {
                             t.setImgPath("images/OpenedDoor.png");
                         }
-                        DoorSkin = true;
+                        if (t.getImgPath() == "images/ExitDoor.png" && StdDraw.isKeyPressed(Controls.goUp)){
+                            return "exit";
+                        }
+                            DoorSkin = true;
                         Vector2 vec = new Vector2(t.getPos());
                         if (vec.getX() == 0.5) {
                             if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
@@ -298,6 +301,12 @@ public class GameRoom {
                 for (EntityMonster m : this.monsterList) {
                     if (m.isAdjacent(e))
                         b.addDamage(m);
+                }
+
+                // Adjacence avec le boss ?
+                if (this.boss != null) {
+                    if (this.boss.isAdjacent(e))
+                        b.addDamage(this.boss);
                 }
 
                 // Adjacence avec le terrain?
@@ -391,6 +400,7 @@ public class GameRoom {
             }
             if (this.boss != null) {
                 dropLoot(this.boss);
+                this.doorList.add(new ExitDoor(new Vector2(0.5, 0.5)));
                 this.boss = null;
             }
             this.monsterList.clear();
@@ -507,8 +517,11 @@ public class GameRoom {
     }
 
     /**
+     * Permet de savoir si un vecteur est sur la grille de jeu
      * 
-     * @param e
+     * @param p         vecteur à tester
+     * @param s         vecteur de déplacement (si besoin)
+     * @param obstacles listes des obstacles
      * @return
      */
     public static boolean isPlaceCorrect(Vector2 p, Vector2 s, List<EntityTerrain> obstacles) {
@@ -695,7 +708,7 @@ public class GameRoom {
                 nb = 30;
                 chance = true;
             } else {
-                nb = 5;
+                nb = 50;
             }
         } else {
             nb = random.nextInt(3);
@@ -707,6 +720,14 @@ public class GameRoom {
             Vector2 rdm = new Vector2(vec);
             rdm.addX((x - 5) * 0.02);
             rdm.addY((y - 5) * 0.02);
+            while (!GameRoom.isPlaceCorrect(rdm, new Vector2(), this.getTerrainList())) {
+                x = random.nextInt(11);
+                y = random.nextInt(11);
+                rdm.setX(vec.getX());
+                rdm.setY(vec.getY());
+                rdm.addX((x - 5) * 0.02);
+                rdm.addY((y - 5) * 0.02);
+            }
             if (chance) {
                 switch (random.nextInt(3)) {
                     case 0:
@@ -813,7 +834,6 @@ public class GameRoom {
 
         }
         e.setPrice(price);
-        System.out.println(e);
         this.itemList.add(e);
     }
 
@@ -847,12 +867,13 @@ public class GameRoom {
     // : -> Easter Egg, maman morte -> Fin
     // : -> Nombre de salle maximum en fonction de la difficulté
     // FAIT: 3. Portes
-
+    // FAIT loots moob
     // FAIT Images
-    // TODO Shop
+    // FAIT Shop
     // Fait Clés
     // TODO Trapes Level
-    // TODO loots moob
+    // TODO HUD Mob
+    // TODO Bombe timer
 
     /// TODO: Fluffy
     // TODO: IA (Berserk, Bounding, Random)

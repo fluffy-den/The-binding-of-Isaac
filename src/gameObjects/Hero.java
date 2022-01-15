@@ -265,7 +265,7 @@ public class Hero extends EntityLiving {
      * @return
      */
     public boolean remCoins(int count) {
-        if(this.nCoins - count >-1){
+        if (this.nCoins - count > -1) {
             this.nCoins -= count;
             return true;
         }

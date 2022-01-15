@@ -2,6 +2,7 @@ package gameWorld;
 
 import resources.DisplaySettings;
 
+import java.lang.Thread.State;
 import java.util.PriorityQueue;
 
 import libraries.StdDraw;
@@ -31,15 +32,22 @@ public class Game {
         StdDraw.enableDoubleBuffering();
 
         // TODO: @cyp3 à changer
-        LEVEL = new GameLevel(10);
-
+        LEVEL = new GameLevel(10, 0);
+        int lvl = 1; // 5 niveau (car 5 boss)
         // Boucle du jeu
         while (STATE == GameState.RUNNING) {
             Timer.beginTimer();
             StdDraw.clear();
 
-            /// Affichage
-            LEVEL.updateAndDraw();
+            /// Affichage et changement de niveau
+            if (LEVEL.updateAndDraw()) {
+                System.out.println(lvl);
+                LEVEL = new GameLevel(10, lvl);
+                lvl++;
+            }
+            if(lvl == 6){
+                STATE = GameState.WIN;
+            }
 
             IMAGE_NUM++;
 
