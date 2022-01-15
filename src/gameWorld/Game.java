@@ -2,9 +2,6 @@ package gameWorld;
 
 import resources.DisplaySettings;
 
-import java.lang.Thread.State;
-import java.util.PriorityQueue;
-
 import libraries.StdDraw;
 import libraries.Timer;
 
@@ -33,7 +30,6 @@ public class Game {
         // https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics
         StdDraw.enableDoubleBuffering();
 
-        // TODO: @cyp3 à changer
         Hero hero = new Hero();
         LEVEL = new GameLevel(10, 0, hero);
         int lvl = 1; // 5 niveau (car 5 boss)

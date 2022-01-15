@@ -24,7 +24,7 @@ import java.awt.Font;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
-    protected EntityBoss boss; // @cypri3 TODO -> Si un boss tu le met ici pls x3
+    protected EntityBoss boss;
     protected LinkedList<Tear> projListHero;
     protected LinkedList<MonsterProjectile> projListMonster;
     protected LinkedList<EntityItem> itemList;
@@ -77,7 +77,7 @@ public class GameRoom {
         /// Sol
         StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY(), this.imgPath, 1.0, 1.0, 0); // Le sol de base
         if (isShop) {
-            // TODO On affiche le pendu
+            StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY() + 0.25, "images/HangingMan.png", 0.1, 0.5, 0);
         }
     }
 
@@ -100,7 +100,7 @@ public class GameRoom {
                     } else {
                         m = this.boss;
                     }
-                    if (m != null && e.isAdjacent(m)) {// TODO afficher vie mob
+                    if (m != null && e.isAdjacent(m)) {
                         e.onHitLivingObject(m);
                         this.projListHero.remove(i);
                         --i;
@@ -507,7 +507,7 @@ public class GameRoom {
     /**
      * 
      */
-    public static int getTileXIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
+    public static int getTileXIndex(Vector2 p) {
         int x = (int) ((p.getX() - MIN_XPOS) / TILE_SIZE.getX());
         if (x < 0)
             x = 0;
@@ -521,7 +521,7 @@ public class GameRoom {
      * @param e
      * @return
      */
-    public static int getTileYIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
+    public static int getTileYIndex(Vector2 p) {
         int y = (int) ((p.getY() - MIN_YPOS) / TILE_SIZE.getY());
         if (y < 0)
             y = 0;
@@ -625,7 +625,6 @@ public class GameRoom {
                     Vector2 p = getPositionFromTile(i, j);
                     switch (Grid[i][j]) {
                         case "D": // door
-                            // TODO Portes Complexes
                             if (j == 4) {
                                 if (i == 0) {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.86));
@@ -885,8 +884,8 @@ public class GameRoom {
     // FAIT Images
     // FAIT Shop
     // Fait Clés
-    // TODO Trapes Level
-    // TODO HUD Mob => overright du draw ?
+    // FAIT Trapes Level
+    // FAIT HUD Mob => overright du draw ?
     // TODO Bombe timer
     // Esater egg On écrase la mere à la fin
 
@@ -895,4 +894,5 @@ public class GameRoom {
     // TODO: 6. Quelques boss (7 premiers du jeu)
     // TODO: 7. Quelques monstres
     // TODO: IA
+    // TODO: Tire des mobs
 }

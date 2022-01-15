@@ -1,22 +1,15 @@
 package gameWorld;
 
-import java.lang.System.Logger.Level;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import libraries.StdDraw;
-
 import libraries.Vector2;
-import resources.Controls;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityDoor;
 import gameObjects.Doors.BossDoor;
 import gameObjects.Doors.KeyLockedDoor;
 import gameObjects.Doors.ShopDoor;
-
-import gameWorld.GameMap;
 
 public class GameLevel {
     private Hero hero;

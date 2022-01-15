@@ -1,10 +1,5 @@
 package gameWorld;
 
-import gameWorld.GameLevel;
-import gameObjects.Doors.*;
-import gameObjects.Entities.EntityDoor;
-
-import java.util.Random;
 import libraries.Vector2;
 
 public class GameMap {

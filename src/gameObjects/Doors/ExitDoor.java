@@ -13,6 +13,6 @@ public class ExitDoor extends EntityDoor {
      * @param pos Coordonnées de la porte
      */
     public ExitDoor(Vector2 pos) {
-        super(pos, IMGPATH, true, false, false);
+        super(pos, IMGPATH, true, false);
     }
 }

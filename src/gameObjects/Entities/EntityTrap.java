@@ -1,7 +1,6 @@
 package gameObjects.Entities;
 
 import gameObjects.Hero;
-import gameWorld.Game;
 import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 import libraries.Vector2;

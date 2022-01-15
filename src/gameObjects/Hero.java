@@ -9,7 +9,6 @@ import java.awt.Font;
 
 import gameObjects.Entities.EntityLiving;
 import gameObjects.Projectiles.Tear;
-import gameObjects.Entities.Entity;
 import gameObjects.Entities.EntityBomb;
 
 import libraries.StdDraw;

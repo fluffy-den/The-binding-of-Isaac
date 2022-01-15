@@ -13,7 +13,6 @@ public abstract class EntityDoor extends Entity {
     // Adjacent & bouton vers le haut
     private boolean isOpened;
     private boolean isKeyLocked;
-    private boolean isSecret;
 
     /**
      * 
@@ -23,12 +22,10 @@ public abstract class EntityDoor extends Entity {
      * @param isKeyLocked True si fermée false sinon
      * @param isSecret    True si sectète false sinon
      */
-    public EntityDoor(Vector2 pos, String imgPath, boolean isOpened, boolean isKeyLocked,
-            boolean isSecret) {
+    public EntityDoor(Vector2 pos, String imgPath, boolean isOpened, boolean isKeyLocked) {
         super(pos, GameRoom.TILE_SIZE, imgPath);
         this.isOpened = isOpened;
         this.isKeyLocked = isKeyLocked;
-        this.isSecret = isSecret;
     }
 
     /**
