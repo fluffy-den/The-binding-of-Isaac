@@ -185,6 +185,7 @@ public class GameRoom {
                         if (t.getImgPath() == "images/KeyLockedDoor.png") {
                             t.setImgPath("images/OpenedDoor.png");
                         }
+                        DoorSkin = true;
                         Vector2 vec = new Vector2(t.getPos());
                         if (vec.getX() == 0.5) {
                             if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
@@ -639,6 +640,16 @@ public class GameRoom {
                 return;
             }
         }
+    }
+
+    /**
+     * Remplace un item par une clé
+     */
+    public void addKey(){
+        Vector2 vec = new Vector2(this.itemList.getFirst().getPos());
+        this.itemList.removeFirst();
+        this.itemList.addFirst(new ItemKey(vec));
+
     }
 
     /// TODO: Cyp3
