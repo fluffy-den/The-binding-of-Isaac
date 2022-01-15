@@ -16,6 +16,7 @@ public class MonsterWizoob extends EntityMonster {
     public static final double SPEED = 0.0035;
     public static final double MELEE_RELOAD_SPEED = 0.025;
     public static final double MELEE_EFFECT_POWER = 7.5;
+    public static final double AGGRO_RANGE = 0.00;
     public static final int MELEE_DAMAGE = 1;
     public static final int HP = 8;
     public static final String IMGPATH = "images/Wizoob.png";
@@ -34,6 +35,6 @@ public class MonsterWizoob extends EntityMonster {
                 MELEE_EFFECT_POWER,
                 MELEE_RELOAD_SPEED,
                 IMGPATH,
-                new AI());
+                new AI(pos, AGGRO_RANGE));
     }
 };

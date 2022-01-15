@@ -14,6 +14,7 @@ public class MonsterDeathHead extends EntityMonster {
     public static final double SPEED = 0.002;
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
+    public static final double AGGRO_RANGE = 0.00;
     public static final int MELEE_DAMAGE = 4;
     public static final int HP = 12;
     public static final String IMGPATH = "images/DeathHead.png";
@@ -23,15 +24,16 @@ public class MonsterDeathHead extends EntityMonster {
      * @param pos
      */
     public MonsterDeathHead(Vector2 pos) {
-        super(pos,
+        super(
+                pos,
                 SIZE,
                 SPEED,
-                false,
+                true,
                 HP,
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,
                 MELEE_RELOAD_SPEED,
                 IMGPATH,
-                new AI());
+                new AI(pos, AGGRO_RANGE));
     }
 }

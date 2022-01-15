@@ -10,6 +10,7 @@ import libraries.Vector2;
 public class Utils {
 
         /**
+         * @brief
          * 
          * @param xp
          * @param xs
@@ -36,6 +37,7 @@ public class Utils {
         }
 
         /**
+         * @brief
          * 
          * @param lower
          * @param upper

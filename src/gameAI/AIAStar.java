@@ -1,6 +1,5 @@
 package gameAI;
 
-import gameObjects.Entities.Entity;
 import gameObjects.Entities.EntityTerrain;
 
 import java.util.PriorityQueue;
@@ -12,38 +11,39 @@ import gameWorld.GameRoom;
 import libraries.Vector2;
 
 /**
+ * @brief Implémentation de l'algorithme A star pour que l'IA puisse éviter de
+ *        se bloquer contre les objets EntityTerrain
  * 
+ * @see https://fr.wikipedia.org/wiki/Algorithme_A*
  */
 public class AIAStar {
     /**
-     * 
+     * @brief Représente un noeud dans l'algorithme A*.
      */
     static private class Node implements Comparable<Node> {
         public Node p;
         public int x;
         public int y;
-        public double g;
         public double f; // = g + h
 
         /**
-         * @brief
+         * @brief Construit l'objet Node.
          * 
-         * @param p
-         * @param x
-         * @param y
-         * @param g
-         * @param f
+         * @param p Noeud parent à celui-ci.
+         * @param x Position x sur la grille de jeu.
+         * @param y Position y sur la grille de jeu.
+         * @param f Coût total entre ce noeud et le noeud de fin.
          */
-        public Node(Node p, int x, int y, double g, double f) {
+        public Node(Node p, int x, int y, double f) {
             this.p = p;
             this.x = x;
             this.y = y;
-            this.g = g;
             this.f = f;
         }
 
         /**
-         * 
+         * @brief Fonction de comparaison entre les coûts des noeuds pour pouvoir une
+         *        PriorityQueue.
          */
         @Override
         public int compareTo(Node o) {
@@ -52,14 +52,14 @@ public class AIAStar {
     }
 
     /**
-     * 
+     * @brief Représente une tuille non-vide sur la grille de jeu.
      */
     static private class Edge {
         public int x;
         public int y;
 
         /**
-         * 
+         * @brief Construit l'objet Edge.
          */
         public Edge(int x, int y) {
             this.x = x;
@@ -68,7 +68,14 @@ public class AIAStar {
     }
 
     /**
+     * @brief Calcule la distance euclidienne entre les points A = (x1, y1) et B =
+     *        (x2, y2).
      * 
+     * @param x1 La position x sur la grille de jeu du premier point.
+     * @param y1 La position y sur la grille de jeu du premier point.
+     * @param x2 La position x sur la grille de jeu du second point.
+     * @param y2 La position x sur la grille de jeu du second point.
+     * @return La distance euclidienne entre (x1, y1) et (x2, y2).
      */
     static private double euclidianDistance(int x1, int y1, int x2, int y2) {
         int dx = x2 - x1;
@@ -77,10 +84,13 @@ public class AIAStar {
     }
 
     /**
-     * @brief
+     * @brief Détermine l'ensemble des positions voisines accessible depuis le
+     *        point(x, y)
      * 
-     * @param n
-     * @return
+     * @param g La grille de jeu représentant les tuilles accessibles.
+     * @param x La position X sur la grille de jeu.
+     * @param y La position Y sur la grille de jeu.
+     * @return Liste des positions voisines.
      */
     static private List<Edge> constructNeighbors(boolean[][] g, int x, int y) {
         // i
@@ -115,7 +125,6 @@ public class AIAStar {
                         continue;
 
                     l.add(new Edge(i, j));
-
                 }
             }
         }
@@ -124,10 +133,10 @@ public class AIAStar {
     }
 
     /**
-     * @brief
+     * @brief Reconstruit le cheminement des noeuds depuis le dernier noeud trouvé.
      * 
-     * @param e
-     * @return
+     * @param e Le dernier noeud.
+     * @return Liste du cheminement des noeuds dans l'ordre (partant -> arrivé).
      */
     static private List<Vector2> constructPath(Node e) {
         Node c = e;
@@ -140,7 +149,14 @@ public class AIAStar {
     }
 
     /**
+     * @brief Implémentation de l'algorithme A*.
      * 
+     * @param sx Position de départ X sur la grille de jeu.
+     * @param sy Position de départ Y sur la grille de jeu.
+     * @param ex Position d'arrivée X sur la grille de jeu.
+     * @param ey Position d'arrivée Y sur la grille de jeu.
+     * @return Liste du cheminement des noeuds dans l'ordre (partant -> arrivé).
+     *         Null si cheminement impossible.
      */
     static public List<Vector2> aStar(GameRoom r, int sx, int sy, int ex, int ey) {
         // 1. Initialisation
@@ -150,7 +166,6 @@ public class AIAStar {
                 null,
                 sx,
                 sy,
-                0.0,
                 euclidianDistance(sx, sy, ex, ey)));
 
         // 2. Construction d'une grille de boolean représentant les cases non
@@ -189,7 +204,6 @@ public class AIAStar {
                             n,
                             e.x,
                             e.y,
-                            eg,
                             ef));
                 }
             }
