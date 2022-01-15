@@ -35,6 +35,6 @@ public class MonsterConjoinedFaty extends EntityMonster {
                 MELEE_EFFECT_POWER,
                 MELEE_RELOAD_SPEED,
                 IMGPATH,
-                new AI(pos, GameRoom.TILE_SIZE.euclidianNorm() * 5, true));
+                new AI());
     }
 }

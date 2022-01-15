@@ -2,12 +2,12 @@ package gameAI;
 
 import gameObjects.Entities.EntityBoss;
 import gameObjects.Entities.EntityMonster;
-import gameObjects.Entities.EntityTerrain;
 import gameObjects.Hero;
 
 import java.util.List;
 import java.util.Random;
 
+import gameWorld.Game;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -15,18 +15,12 @@ import libraries.Vector2;
 import resources.Utils;
 
 public class AI {
-    private Vector2 nextPos;
-    private double aggroRange;
-    private boolean enableAggro;
-    private boolean aggro;
 
     /**
      * Construit l'objet IA. Permet de contrôler le comportement des monstres.
      */
-    public AI(Vector2 startPos, double aggroRange, boolean enableAggro) {
-        this.nextPos = startPos;
-        this.aggroRange = aggroRange;
-        this.enableAggro = enableAggro;
+    public AI() {
+
     }
 
     /**
@@ -76,14 +70,7 @@ public class AI {
      * @return La position que doit prendre le monstre.
      */
     private Vector2 aggroPos(EntityMonster ctrl, Hero h, GameRoom room) {
-        if (ctrl.isFlying())
-            return ((h.getPos().subVector(ctrl.getPos()))); // Une IA aggro fonce sur le joueur
-
-        // Méthode A*
-        List<Vector2> n = AIPathing.generatePath(ctrl, h, room);
-        if (n == null)
-            return ctrl.getPos();
-        return (h.getPos().subVector(n.get(0)));
+        return new Vector2();
     }
 
     /**
@@ -92,72 +79,31 @@ public class AI {
      *        Cette IA accompagne le boss. Lorsque le joueur s'approche trop du
      *        boss, les monstres attaquent le joueur.
      * 
-     * @param boss Le boss de la salle.
-     * @param ctrl Le monstre contrôlé.
-     * @param h    Le joueur.
-     * @param room La salle actuelle du jeu.
+     * @param b Le boss de la salle.
+     * @param m Le monstre contrôlé.
+     * @param h Le joueur.
+     * @param r La salle actuelle du jeu.
      * @return La position que doit prendre le monstre.
      */
-    public Vector2 nextDir(EntityBoss boss, EntityMonster ctrl, Hero h, GameRoom room) {
-        this.nextPos = aggroPos(ctrl, h, room);
-        return nextPos;
+    public Vector2 nextDir(EntityBoss b, EntityMonster m, Hero h, GameRoom r) {
+        List<Vector2> pL = AIAStar.aStar(
+                r,
+                GameRoom.getTileXIndex(m.getPos()),
+                GameRoom.getTileYIndex(m.getPos()),
+                GameRoom.getTileXIndex(h.getPos()),
+                GameRoom.getTileYIndex(h.getPos()));
 
-        /*
-         * // Le monstre a-t-il atteint la dernière case calculée?
-         * Vector2 overlapVector = new Vector2(GameRoom.TILE_SIZE.getX() / 1000,
-         * GameRoom.TILE_SIZE.getY() / 1000);
-         * if (!Utils.isAdjacent(ctrl.getPos(), ctrl.getSize(), this.nextPos,
-         * overlapVector)) {
-         * return this.nextPos.subVector(ctrl.getPos());
-         * }
-         * 
-         * // L'IA fonce sur le joueur si celui-ci est trop proche, où a été touché par
-         * le
-         * // joueur.
-         * if (enableAggro && !aggro && ctrl.getPos().distance(h.getPos()) <=
-         * this.aggroRange) {
-         * aggro = true;
-         * }
-         * if (aggro) {
-         * this.nextPos = aggroPos(ctrl, h, room);
-         * return nextPos;
-         * }
-         * 
-         * // Accompagne le boss
-         * if (boss != null && boss != ctrl) {
-         * if (ctrl.isFlying()) {
-         * this.nextPos = ctrl.getPos().subVector(this.randomBossPos(boss, ctrl, room));
-         * } else {
-         * boolean isAdjacent;
-         * do {
-         * isAdjacent = false;
-         * this.nextPos = this.randomBossPos(boss, ctrl, room);
-         * List<EntityTerrain> terrainList = room.getTerrainList();
-         * for (EntityTerrain t : terrainList) {
-         * if (Utils.isAdjacent(t.getPos(), t.getSize(), this.nextPos, overlapVector))
-         * isAdjacent = true;
-         * }
-         * } while (isAdjacent);
-         * return this.nextPos;
-         * }
-         * }
-         * 
-         * // Mouvement random
-         * if (ctrl.isFlying()) {
-         * return this.randomPos(ctrl, room);
-         * }
-         * boolean isAdjacent;
-         * do {
-         * isAdjacent = false;
-         * this.nextPos = this.randomPos(ctrl, room);
-         * List<EntityTerrain> terrainList = room.getTerrainList();
-         * for (EntityTerrain t : terrainList) {
-         * if (Utils.isAdjacent(t.getPos(), t.getSize(), this.nextPos, overlapVector))
-         * isAdjacent = true;
-         * }
-         * } while (isAdjacent);
-         * return this.nextPos;
-         */
+        for (Vector2 p : pL) {
+            if (Utils.isAdjacent(
+                    p,
+                    new Vector2(GameRoom.TILE_SIZE.getX() * 0.75, GameRoom.TILE_SIZE.getY() * 0.75),
+                    m.getPos(),
+                    m.getSize()))
+                continue;
+            return p.subVector(m.getPos());
+        }
+
+        return h.getPos();
     }
 
     /**
@@ -165,7 +111,6 @@ public class AI {
      *        monstre.
      */
     public void onHit() {
-        if (this.enableAggro)
-            this.aggro = true;
+
     }
 }
