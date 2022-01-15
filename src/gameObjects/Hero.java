@@ -74,7 +74,7 @@ public class Hero extends EntityLiving {
         // Inventaire
         this.nBombs = 0;
         this.nCoins = 0;
-        this.nKeys = 0;
+        this.nKeys = 1;
 
         // Triche
         this.cheatInvincible = false;
