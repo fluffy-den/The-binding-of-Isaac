@@ -14,7 +14,7 @@ import libraries.Vector2;
 import resources.Utils;
 
 public class AI {
-    private GameCounter escortCounter;
+    private GameCounter counterPos;
     private Vector2 nextPos;
     private double aggroRange;
 
@@ -22,7 +22,7 @@ public class AI {
      * Construit l'objet IA. Permet de contrôler le comportement des monstres.
      */
     public AI(Vector2 p, double r) {
-        this.escortCounter = new GameCounter(0.025);
+        this.counterPos = new GameCounter(0.025);
         this.nextPos = p;
         this.aggroRange = r;
     }
@@ -80,27 +80,22 @@ public class AI {
     private Vector2 escortDir(EntityBoss b, EntityMonster m, GameRoom r) {
         // On veut que les monstres tournent autour du monstre pour l'escorter
         // On force une régénération des positions toutes les secondes
-        if (this.escortCounter.isFinished() || Utils.isAdjacent(
+        if (this.counterPos.isFinished() || Utils.isAdjacent(
                 m.getPos(),
                 m.getSize(),
                 this.nextPos,
                 new Vector2(GameRoom.TILE_SIZE.getX() * 0.75, GameRoom.TILE_SIZE.getY() * 0.75))) {
 
             // Génération d'une nouvelle position aléatoire autour du boss
-            do {
-                // Angle
-                double angle = Utils.randomDouble(0.0, 1.0);
-                double range = b.getSize().addVector(m.getSize()).euclidianNorm();
-                this.nextPos = new Vector2(
-                        b.getPos().getX() + Math.cos(angle) * range,
-                        b.getPos().getY() + Math.sin(angle) * range);
-                this.nextPos = GameRoom.getPositionFromTile(
-                        GameRoom.getTileXIndex(this.nextPos),
-                        GameRoom.getTileYIndex(this.nextPos));
-            } while (GameRoom.isPlaceCorrect(
-                    this.nextPos,
-                    m.getSize(),
-                    r.getTerrainList()));
+            // Angle
+            double angle = Utils.randomDouble(0.0, 1.0);
+            double range = b.getSize().addVector(m.getSize()).euclidianNorm();
+            this.nextPos = new Vector2(
+                    b.getPos().getX() + Math.cos(angle) * range,
+                    b.getPos().getY() + Math.sin(angle) * range);
+            this.nextPos = GameRoom.getPositionFromTile(
+                    GameRoom.getTileXIndex(this.nextPos),
+                    GameRoom.getTileYIndex(this.nextPos));
         }
 
         // Fin
@@ -117,25 +112,19 @@ public class AI {
     private Vector2 randomDir(EntityMonster m, Hero h, GameRoom r) {
         // Si la dernière position n'a pas été atteinte on ne regénère pas de nouvelle
         // position
-        if (Utils.isAdjacent(
+        if (this.counterPos.isFinished() || Utils.isAdjacent(
                 m.getPos(),
                 m.getSize(),
                 this.nextPos,
                 new Vector2(GameRoom.TILE_SIZE.getX() * 0.75, GameRoom.TILE_SIZE.getY() * 0.75))) {
 
             // Génération d'une nouvelle position aléatoire
-
-            do {
-                this.nextPos = new Vector2(
-                        Utils.randomDouble(GameRoom.MIN_XPOS, GameRoom.MAX_XPOS),
-                        Utils.randomDouble(GameRoom.MIN_YPOS, GameRoom.MAX_YPOS));
-                this.nextPos = GameRoom.getPositionFromTile(
-                        GameRoom.getTileXIndex(this.nextPos),
-                        GameRoom.getTileYIndex(this.nextPos));
-            } while (GameRoom.isPlaceCorrect(
-                    this.nextPos,
-                    m.getSize(),
-                    r.getTerrainList()));
+            this.nextPos = new Vector2(
+                    Utils.randomDouble(GameRoom.MIN_XPOS, GameRoom.MAX_XPOS),
+                    Utils.randomDouble(GameRoom.MIN_YPOS, GameRoom.MAX_YPOS));
+            this.nextPos = GameRoom.getPositionFromTile(
+                    GameRoom.getTileXIndex(this.nextPos),
+                    GameRoom.getTileYIndex(this.nextPos));
         }
 
         // Calcul de la direction utilisant l'algorithme A*
