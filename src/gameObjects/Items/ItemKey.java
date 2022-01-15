@@ -1,6 +1,5 @@
 package gameObjects.Items;
 
-import gameWorld.GameMap;
 import gameWorld.GameRoom;
 
 import gameObjects.Entities.EntityItem;

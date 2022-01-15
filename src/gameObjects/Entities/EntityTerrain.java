@@ -4,8 +4,6 @@ import gameWorld.GameRoom;
 
 import libraries.Vector2;
 
-import java.util.ArrayList;
-
 public abstract class EntityTerrain extends Entity {
     /**
      * 

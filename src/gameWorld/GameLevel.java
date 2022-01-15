@@ -1,22 +1,15 @@
 package gameWorld;
 
-import java.lang.System.Logger.Level;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import libraries.StdDraw;
-
 import libraries.Vector2;
-import resources.Controls;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityDoor;
 import gameObjects.Doors.BossDoor;
 import gameObjects.Doors.KeyLockedDoor;
 import gameObjects.Doors.ShopDoor;
-
-import gameWorld.GameMap;
 
 public class GameLevel {
     private Hero hero;
@@ -31,9 +24,9 @@ public class GameLevel {
      * 
      * @param nbRooms Nombre de salle classique maximum du niveau
      */
-    public GameLevel(int nbRooms) {
+    public GameLevel(int nbRooms, int difficulty, Hero hero) {
+        this.hero = hero;
         this.level = new ArrayList<GameMap>();
-        this.hero = new Hero();
         level.add(new GameMap(0, 0, 4, 0, new Vector2(0, 0)));
         creatingClassicRoom(1, 76, 15, level.get(0).getCo());
         this.currentCord = level.get(0).getCo();
@@ -41,8 +34,7 @@ public class GameLevel {
         this.currentRoom = getSpeRoom(this.currentCord);
         this.alreadyExplore = new ArrayList<GameRoom>();
         setKeyNDoors(0, 0, new Vector2(0, 0));
-        setSpecialRoom(4, 2);
-        setSpecialRoom(3, 2);
+        setSpecialRoom(difficulty, 2);
         setSpecialRoom(0, 3);
     }
 
@@ -65,12 +57,17 @@ public class GameLevel {
     /**
      * Affiche la salle et change de GameMap si besoin
      */
-    public void updateAndDraw() {
+    public boolean updateAndDraw() {
         this.currentRoom.updateAndDraw(this.hero);
-        String s = this.currentRoom.updateAndDrawDoors(this.hero);
+        String s = this.currentRoom.updateDoors(this.hero);
+
         if (s != null) {
+            if (s.equals("exit")) {
+                return true;
+            }
             ChangeMap(s);
         }
+        return false;
     }
 
     /**
@@ -148,7 +145,6 @@ public class GameLevel {
                         break;
                 }
                 if (getSpeRoom(tmp) == null) {
-                    System.out.println("Map " + mapPos + " Cord :" + doorL.get(d).getPos());
                     doorL.remove(d);
                     d--;
                 }

@@ -24,7 +24,7 @@ import java.awt.Font;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
-    protected EntityBoss boss; // @cypri3 TODO -> Si un boss tu le met ici pls x3
+    protected EntityBoss boss;
     protected LinkedList<Tear> projListHero;
     protected LinkedList<MonsterProjectile> projListMonster;
     protected LinkedList<EntityItem> itemList;
@@ -78,7 +78,7 @@ public class GameRoom {
         /// Sol
         StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY(), this.imgPath, 1.0, 1.0, 0); // Le sol de base
         if (isShop) {
-            // TODO On affiche le pendu
+            StdDraw.picture(CENTER_POS.getX(), CENTER_POS.getY() + 0.25, "images/HangingMan.png", 0.1, 0.5, 0);
         }
     }
 
@@ -104,11 +104,11 @@ public class GameRoom {
                     if (m != null && e.isAdjacent(m)) {
                         e.onHitLivingObject(m);
                         this.projListHero.remove(i);
-                        j = this.monsterList.size() + 2;
                         --i;
                         if (!m.isLiving()) {
                             dropLoot(m);
                             if (m == this.boss) {
+                                this.doorList.add(new ExitDoor(new Vector2(0.5, 0.5)));
                                 this.boss = null;
                             } else {
                                 this.monsterList.remove(m);
@@ -116,6 +116,7 @@ public class GameRoom {
                         } else {
                             m.updateAndDraw();
                         }
+                        j = this.monsterList.size() + 2;
                     }
                 }
                 e.updateAndDraw();
@@ -125,6 +126,7 @@ public class GameRoom {
     }
 
     /**
+     * Affiche et met à jours les projectils des monstres
      * 
      * @param h
      */
@@ -149,13 +151,13 @@ public class GameRoom {
     }
 
     /**
+     * Affiche et met à jours les items au sol
      * 
      * @param h
      */
     public void updateAndDrawHeroItems(Hero h) {
         /// Items au sol
         int i = 0;
-        // System.out.println(this.itemList.size());
         while (i < this.itemList.size()) {
             EntityItem e = this.itemList.get(i);
             if (e.isAdjacent(h)) {
@@ -183,6 +185,7 @@ public class GameRoom {
     }
 
     /**
+     * Affiche et met à jours les pièges
      * 
      * @param h
      */
@@ -197,12 +200,12 @@ public class GameRoom {
     }
 
     /**
-     * Affiche les portes et vérifie si le heros peut changer de GameRoom
+     * Vérifie si le heros peut changer de GameRoom et change les skins de portes
      * 
      * @param h Le heros
      * @return L'emplacement de la salle si nécessaire, null sinon
      */
-    public String updateAndDrawDoors(Hero h) {
+    public String updateDoors(Hero h) {
         /// Les portes ne fonctionnent que sur le heor
         boolean tmpS = DoorSkin; // Dis si le skin de la porte à été changé
         for (EntityDoor t : this.doorList) {
@@ -217,31 +220,45 @@ public class GameRoom {
                         if (t.getImgPath() == "images/KeyLockedDoor.png") {
                             t.setImgPath("images/OpenedDoor.png");
                         }
-                        DoorSkin = true;
-                        Vector2 vec = new Vector2(t.getPos());
-                        if (vec.getX() == 0.5) {
-                            if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
-                                return ("top");
-                            } else {// 0.14
-                                if (StdDraw.isKeyPressed(Controls.goDown)) {
-                                    return "bottom";
+                        if (t.getImgPath() == "images/ExitDoor.png") {
+                            if (StdDraw.isKeyPressed(Controls.space))
+                                return "exit";
+                        } else {
+                            DoorSkin = true;
+                            Vector2 vec = new Vector2(t.getPos());
+                            if (vec.getX() == 0.5) {
+                                if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
+                                    return ("top");
+                                } else {// 0.14
+                                    if (StdDraw.isKeyPressed(Controls.goDown)) {
+                                        return "bottom";
+                                    }
                                 }
-                            }
-                        } else {// y = 0.5
-                            if (vec.getX() == 0.1 && StdDraw.isKeyPressed(Controls.goLeft)) {
-                                return "left";
-                            } else {// 0.9
-                                if (StdDraw.isKeyPressed(Controls.goRight)) {
-                                    return "right";
+                            } else {// y = 0.5
+                                if (vec.getX() == 0.1 && StdDraw.isKeyPressed(Controls.goLeft)) {
+                                    return "left";
+                                } else {// 0.9
+                                    if (StdDraw.isKeyPressed(Controls.goRight)) {
+                                        return "right";
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            t.updateAndDraw();
+            //t.updateAndDraw();
         }
         return null;
+    }
+
+    /**
+     * Affiche les portes
+     */
+    public void drawDoors() {
+        for (EntityDoor t : this.doorList) {
+            t.updateAndDraw();
+        }
     }
 
     /**
@@ -299,6 +316,12 @@ public class GameRoom {
                 for (EntityMonster m : this.monsterList) {
                     if (m.isAdjacent(e))
                         b.addDamage(m);
+                }
+
+                // Adjacence avec le boss ?
+                if (this.boss != null) {
+                    if (this.boss.isAdjacent(e))
+                        b.addDamage(this.boss);
                 }
 
                 // Adjacence avec le terrain?
@@ -392,6 +415,7 @@ public class GameRoom {
             }
             if (this.boss != null) {
                 dropLoot(this.boss);
+                this.doorList.add(new ExitDoor(new Vector2(0.5, 0.5)));
                 this.boss = null;
             }
             this.monsterList.clear();
@@ -452,6 +476,7 @@ public class GameRoom {
         this.updateCheatActions(h);
         h.updateCheatActions();
         this.drawBackground();
+        this.drawDoors();
         this.updateAndDrawTerrain(h);
         this.updateHeroMovementActions(h);
         this.updateHeroTearActions(h);
@@ -465,7 +490,6 @@ public class GameRoom {
         this.updateAndDrawMonsterProjectiles(h);
         h.draw();
         h.drawHUD();
-
     }
 
     /// Tile <=> Position
@@ -484,7 +508,7 @@ public class GameRoom {
     /**
      * 
      */
-    public static int getTileXIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
+    public static int getTileXIndex(Vector2 p) {
         int x = (int) ((p.getX() - MIN_XPOS) / TILE_SIZE.getX());
         if (x < 0)
             x = 0;
@@ -498,7 +522,7 @@ public class GameRoom {
      * @param e
      * @return
      */
-    public static int getTileYIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
+    public static int getTileYIndex(Vector2 p) {
         int y = (int) ((p.getY() - MIN_YPOS) / TILE_SIZE.getY());
         if (y < 0)
             y = 0;
@@ -508,8 +532,11 @@ public class GameRoom {
     }
 
     /**
+     * Permet de savoir si un vecteur est sur la grille de jeu
      * 
-     * @param e
+     * @param p         vecteur à tester
+     * @param s         vecteur de déplacement (si besoin)
+     * @param obstacles listes des obstacles
      * @return
      */
     public static boolean isPlaceCorrect(Vector2 p, Vector2 s, List<EntityTerrain> obstacles) {
@@ -599,7 +626,6 @@ public class GameRoom {
                     Vector2 p = getPositionFromTile(i, j);
                     switch (Grid[i][j]) {
                         case "D": // door
-                            // TODO Portes Complexes
                             if (j == 4) {
                                 if (i == 0) {
                                     OpenedDoor d = new OpenedDoor(new Vector2(0.5, 0.86));
@@ -696,7 +722,7 @@ public class GameRoom {
                 nb = 30;
                 chance = true;
             } else {
-                nb = 5;
+                nb = 50;
             }
         } else {
             nb = random.nextInt(3);
@@ -708,6 +734,14 @@ public class GameRoom {
             Vector2 rdm = new Vector2(vec);
             rdm.addX((x - 5) * 0.02);
             rdm.addY((y - 5) * 0.02);
+            while (!GameRoom.isPlaceCorrect(rdm, new Vector2(), this.getTerrainList())) {
+                x = random.nextInt(11);
+                y = random.nextInt(11);
+                rdm.setX(vec.getX());
+                rdm.setY(vec.getY());
+                rdm.addX((x - 5) * 0.02);
+                rdm.addY((y - 5) * 0.02);
+            }
             if (chance) {
                 switch (random.nextInt(3)) {
                     case 0:
@@ -814,7 +848,6 @@ public class GameRoom {
 
         }
         e.setPrice(price);
-        System.out.println(e);
         this.itemList.add(e);
     }
 
@@ -848,16 +881,19 @@ public class GameRoom {
     // : -> Easter Egg, maman morte -> Fin
     // : -> Nombre de salle maximum en fonction de la difficulté
     // FAIT: 3. Portes
-
+    // FAIT loots moob
     // FAIT Images
-    // TODO Shop
+    // FAIT Shop
     // Fait Clés
-    // TODO Trapes Level
-    // TODO loots moob
+    // FAIT Trapes Level
+    // FAIT HUD Mob => overright du draw ?
+    // TODO Bombe timer
+    // Esater egg On écrase la mere à la fin
 
     /// TODO: Fluffy
     // TODO: IA (Berserk, Bounding, Random)
     // TODO: 6. Quelques boss (7 premiers du jeu)
     // TODO: 7. Quelques monstres
     // TODO: IA
+    // TODO: Tire des mobs
 }

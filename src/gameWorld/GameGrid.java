@@ -109,7 +109,7 @@ public class GameGrid {
             }
 
             // Items
-            int rdm = random.nextInt(3) + 1; //Au moins un item pour les clés
+            int rdm = random.nextInt(3) + 1; // Au moins un item pour les clés
             for (int i = 0; i < rdm; i++) {
                 int co = random.nextInt(81);
                 while (this.Grid[co / 9][co % 9] != null) {
@@ -127,26 +127,5 @@ public class GameGrid {
                 this.Grid[co / 9][co % 9] = "B";
             }
         }
-        // TODO Verifier qu'aucune case à 4 rocher autour d'elle
     }
-
-    /**
-     * Fonction pour développeurs
-     * Premet d'afficher la grille dans la console
-     */
-    public String toString() {
-        String s = "";
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (this.Grid[i][j] == null) {
-                    s += "_ ";
-                } else {
-                    s += this.Grid[i][j] + " ";
-                }
-            }
-            s += "\n";
-        }
-        return s;
-    }
-
 }

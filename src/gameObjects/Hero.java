@@ -9,7 +9,6 @@ import java.awt.Font;
 
 import gameObjects.Entities.EntityLiving;
 import gameObjects.Projectiles.Tear;
-import gameObjects.Entities.Entity;
 import gameObjects.Entities.EntityBomb;
 
 import libraries.StdDraw;
@@ -265,7 +264,7 @@ public class Hero extends EntityLiving {
      * @return
      */
     public boolean remCoins(int count) {
-        if(this.nCoins - count >-1){
+        if (this.nCoins - count > -1) {
             this.nCoins -= count;
             return true;
         }

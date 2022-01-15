@@ -2,10 +2,10 @@ package gameWorld;
 
 import resources.DisplaySettings;
 
-import java.util.PriorityQueue;
-
 import libraries.StdDraw;
 import libraries.Timer;
+
+import gameObjects.Hero;
 
 public class Game {
     private static GameLevel LEVEL;
@@ -30,16 +30,23 @@ public class Game {
         // https://en.wikipedia.org/wiki/Multiple_buffering#Double_buffering_in_computer_graphics
         StdDraw.enableDoubleBuffering();
 
-        // TODO: @cyp3 à changer
-        LEVEL = new GameLevel(10);
-
+        Hero hero = new Hero();
+        LEVEL = new GameLevel(10, 0, hero);
+        int lvl = 1; // 5 niveau (car 5 boss)
         // Boucle du jeu
         while (STATE == GameState.RUNNING) {
             Timer.beginTimer();
             StdDraw.clear();
 
-            /// Affichage
-            LEVEL.updateAndDraw();
+            /// Affichage et changement de niveau
+            if (LEVEL.updateAndDraw()) {
+                System.out.println(lvl);
+                LEVEL = new GameLevel(10, lvl, hero);
+                lvl++;
+            }
+            if(lvl == 6){
+                STATE = GameState.WIN;
+            }
 
             IMAGE_NUM++;
 

@@ -3,12 +3,14 @@ package resources;
 import libraries.Keybinding;
 
 public class Controls {
-	// Touches: Déplacement d'ISAAC
+	// Touches: Déplacement d'ISAAC / passer une porte
 	public static int goUp = Keybinding.keycodeOf('z');
 	public static int goDown = Keybinding.keycodeOf('s');
 	public static int goRight = Keybinding.keycodeOf('d');
 	public static int goLeft = Keybinding.keycodeOf('q');
 
+	// Touche: Changer de niveau 
+	public static int space = Keybinding.keycodeOf(Keybinding.SpecialKeys.SPACE);
 	// Touches: Tirs des larmes d'ISAAC
 	public static int fireUp = Keybinding.keycodeOf(Keybinding.SpecialKeys.UP);
 	public static int fireDown = Keybinding.keycodeOf(Keybinding.SpecialKeys.DOWN);

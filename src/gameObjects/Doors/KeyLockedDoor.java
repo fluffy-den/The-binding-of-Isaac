@@ -13,6 +13,6 @@ public class KeyLockedDoor extends EntityDoor {
      * @param pos Coordonnées de la porte
      */
     public KeyLockedDoor(Vector2 pos) {
-        super(pos, IMGPATH, false, true, false);
+        super(pos, IMGPATH, false, true);
     }
 }

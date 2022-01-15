@@ -14,6 +14,6 @@ public class OpenedDoor extends EntityDoor {
      * @param pos Coordonnées de la porte
      */
     public OpenedDoor(Vector2 pos) {
-        super(pos, IMGPATH, true, false, false);
+        super(pos, IMGPATH, true, false);
     }
 }

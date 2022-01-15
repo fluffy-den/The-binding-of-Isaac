@@ -1,7 +1,5 @@
 package gameObjects.Entities;
 
-import gameWorld.GameRoom;
-
 import libraries.Vector2;
 import resources.Utils;
 import libraries.StdDraw;
