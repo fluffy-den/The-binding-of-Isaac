@@ -1,6 +1,9 @@
 package gameWorld;
 
 import resources.DisplaySettings;
+
+import java.util.PriorityQueue;
+
 import libraries.StdDraw;
 import libraries.Timer;
 

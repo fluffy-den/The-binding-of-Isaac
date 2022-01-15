@@ -81,10 +81,7 @@ public class AI {
 
         // Méthode A*
         List<Vector2> n = AIPathing.generatePath(ctrl, h, room);
-        if (n == null || n.isEmpty())
-            return new Vector2();
-        else
-            return (h.getPos().subVector(n.get(0)));
+        return (h.getPos().subVector(n.get(0)));
     }
 
     /**

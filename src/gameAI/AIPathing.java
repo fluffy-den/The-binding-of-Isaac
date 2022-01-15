@@ -2,6 +2,7 @@ package gameAI;
 
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 import java.util.LinkedList;
 
 import gameObjects.Entities.Entity;
@@ -82,7 +83,7 @@ public class AIPathing {
          *               si obstacle, false sinon)
          * @param Entity Vers quel objet on veut se déplacer.
          */
-        public void generateSuccessors(boolean[][] grid, Entity to) {
+        public void generateSuccessors(boolean[][] grid, PriorityQueue<Node> o, Entity to) {
             // Génération des voisins de q
             // i
             int imin = this.x - 1;
@@ -106,8 +107,18 @@ public class AIPathing {
             for (int i = imin; i <= imax; ++i) {
                 for (int j = jmin; j <= jmax; ++j) {
                     if ((grid[i][j] == false) && ((i != this.x) || (j != this.y))) {
-                        this.successors.add(new Node(i, j,
-                                GameRoom.getPositionFromTile(i, j).distance(to.getPos()), this));
+                        boolean alreadyExist = false;
+                        for (Node k : o) {
+                            if (k.x == i && k.y == j) {
+                                alreadyExist = true;
+                                break;
+                            }
+                        }
+
+                        if (!alreadyExist) {
+                            this.successors.add(new Node(i, j,
+                                    GameRoom.getPositionFromTile(i, j).distance(to.getPos()), this));
+                        }
                     }
                 }
             }
@@ -136,8 +147,6 @@ public class AIPathing {
             list.addFirst(p.toVector2());
             p = p.parent;
         }
-        if (list.isEmpty())
-            list.addFirst(end.toVector2());
         return list;
     }
 
@@ -156,6 +165,7 @@ public class AIPathing {
         // Initialisation
         PriorityQueue<Node> o = new PriorityQueue<Node>();
         PriorityQueue<Node> c = new PriorityQueue<Node>();
+
         o.add(new Node(GameRoom.getTileXIndex(from.getPos()),
                 GameRoom.getTileYIndex(from.getPos()),
                 from.getPos().distance(to.getPos()),
@@ -172,9 +182,10 @@ public class AIPathing {
 
             // Successeurs
             o.remove(q);
-            q.generateSuccessors(grid, to);
+            o.remove(null);
+            q.generateSuccessors(grid, o, to);
             for (Node n : q.successors) {
-                if (q.g < n.g && !o.contains(n)) {
+                if (n != null && q.g < n.g) {
                     o.add(n);
                 }
             }
