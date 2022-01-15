@@ -40,7 +40,6 @@ public class Game {
 
             /// Affichage et changement de niveau
             if (LEVEL.updateAndDraw()) {
-                System.out.println(lvl);
                 LEVEL = new GameLevel(10, lvl, hero);
                 lvl++;
             }

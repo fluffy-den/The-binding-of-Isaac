@@ -11,6 +11,10 @@ public class Controls {
 
 	// Touche: Changer de niveau 
 	public static int space = Keybinding.keycodeOf(Keybinding.SpecialKeys.SPACE);
+
+	// Touche: Aceter un objet
+	public static int enter = Keybinding.keycodeOf(Keybinding.SpecialKeys.RETURN);
+
 	// Touches: Tirs des larmes d'ISAAC
 	public static int fireUp = Keybinding.keycodeOf(Keybinding.SpecialKeys.UP);
 	public static int fireDown = Keybinding.keycodeOf(Keybinding.SpecialKeys.DOWN);
