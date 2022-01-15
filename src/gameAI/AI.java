@@ -86,6 +86,11 @@ public class AI {
      * @return La position que doit prendre le monstre.
      */
     public Vector2 nextDir(EntityBoss b, EntityMonster m, Hero h, GameRoom r) {
+        // Si le monstre vole alors pas besoin d'utiliser A*
+        if (m.isFlying())
+            return h.getPos().subVector(m.getPos());
+
+        // Liste du cheminement
         List<Vector2> pL = AIAStar.aStar(
                 r,
                 GameRoom.getTileXIndex(m.getPos()),
@@ -93,6 +98,7 @@ public class AI {
                 GameRoom.getTileXIndex(h.getPos()),
                 GameRoom.getTileYIndex(h.getPos()));
 
+        // On ignore les positions trop proches du monstre dans la liste de cheminement
         for (Vector2 p : pL) {
             if (Utils.isAdjacent(
                     p,
@@ -103,7 +109,8 @@ public class AI {
             return p.subVector(m.getPos());
         }
 
-        return h.getPos();
+        // Envoie la direction du monstre vers le joueur par défaut
+        return h.getPos().subVector(m.getPos());
     }
 
     /**
