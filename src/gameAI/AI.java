@@ -15,7 +15,7 @@ import resources.Utils;
 
 public class AI {
     public static final double AI_NODE_SCALAR = 0.75;
-    public static final double AI_RANDOM_UPDATE_TIME = 0.055;
+    public static final double AI_RANDOM_UPDATE_TIME = 0.0065;
     public static final double AI_ESCORT_UPDATE_TIME = 0.025;
 
     private GameCounter counterPos;
