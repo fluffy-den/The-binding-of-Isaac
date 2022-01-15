@@ -13,7 +13,7 @@ public class MonsterSpider extends EntityMonster {
     public static final double SPEED = 0.002;
     public static final double MELEE_RELOAD_SPEED = 0.035;
     public static final double MELEE_EFFECT_POWER = 5.;
-    public static final double AGGRO_RANGE = 0.00;
+    public static final double AGGRO_RANGE = 0.30;
     public static final int MELEE_DAMAGE = 1;
     public static final int HP = 5;
     public static final String IMGPATH = "images/Spider.png";
