@@ -40,10 +40,10 @@ public class GameLevel {
         delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
         this.alreadyExplore = new ArrayList<GameRoom>();
-        setKeyNDoors(0,0,new Vector2(0,0));
+        setKeyNDoors(0, 0, new Vector2(0, 0));
         setSpecialRoom(4, 2);
+        setSpecialRoom(3, 2);
         setSpecialRoom(0, 3);
-        print();
     }
 
     /**
@@ -224,7 +224,7 @@ public class GameLevel {
      */
     public boolean setRoom(Vector2 vec) {
         long elapsed = Game.getImageNum() - this.lastTPFrame;
-        if (elapsed * 0.025 >= 1) {
+        if (elapsed * 0.25 >= 1) {
             this.lastTPFrame = Game.getImageNum();
             GameRoom g = getSpeRoom(vec);
             if (g != null) {
@@ -293,6 +293,7 @@ public class GameLevel {
                     getSpeRoom(pos).addBoss(bossLevel);
                 return;
             }
+            i = random.nextInt(this.level.size());
         }
     }
 
@@ -311,13 +312,13 @@ public class GameLevel {
             if (nbK < 3) {
                 int rdm = random.nextInt(6);
                 if (rdm < 3) {
-                    // TODO addKey
+                    current.addKey();
+                    nbK++;
                 }
-                nbK++;
             }
             if (nbK > 0 && (current.doorList.size() > 1)) {
-                int rdm = random.nextInt(6);
-                if (rdm < 4) {
+                int rdm = random.nextInt(3);
+                if (rdm < 1) {
                     for (int i = 0; i < current.doorList.size(); i++) {
                         EntityDoor d = current.doorList.get(i);
                         Vector2 vec = d.getPos();
@@ -337,7 +338,9 @@ public class GameLevel {
                             }
                         }
                         if (alreadyExplore.contains(getSpeRoom(tmp)) == false) {
-                            current.doorList.add(new KeyLockedDoor(current.doorList.get(i).getPos()));
+                            EntityDoor newd = new KeyLockedDoor(current.doorList.get(i).getPos());
+                            newd.setRotation(current.doorList.get(i).getRotation());
+                            current.doorList.add(newd);
                             current.doorList.remove(i);
                             nbDSet++;
                             i = 5;
@@ -367,15 +370,6 @@ public class GameLevel {
                     setKeyNDoors(nbK, nbDSet, vec2);
                 }
             }
-            // TODO recursif
         }
-    }
-
-    public void print() {
-        /*
-         * for (GameMap g : this.level) {
-         * System.out.println(g.getCo());
-         * }
-         */
     }
 }

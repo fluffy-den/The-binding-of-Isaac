@@ -17,7 +17,7 @@ public class BossDarkOne extends EntityBoss {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final int MELEE_DAMAGE = 1;
-    public static final int HP = 180;
+    public static final int HP = 60;
     public static final String IMGPATH = "images/DarkOne.png";
 
     /**

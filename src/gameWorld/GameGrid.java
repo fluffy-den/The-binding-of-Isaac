@@ -109,7 +109,7 @@ public class GameGrid {
             }
 
             // Items
-            int rdm = random.nextInt(4);
+            int rdm = random.nextInt(3) + 1; //Au moins un item pour les clés
             for (int i = 0; i < rdm; i++) {
                 int co = random.nextInt(81);
                 while (this.Grid[co / 9][co % 9] != null) {

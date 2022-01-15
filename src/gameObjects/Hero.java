@@ -74,7 +74,7 @@ public class Hero extends EntityLiving {
         // Inventaire
         this.nBombs = 0;
         this.nCoins = 0;
-        this.nKeys = 2;
+        this.nKeys = 0;
 
         // Triche
         this.cheatInvincible = false;
@@ -303,6 +303,7 @@ public class Hero extends EntityLiving {
     public static final String IMGPATH_HUD_HEART_EMPTY = "images/HUD_heart_red_empty.png";
     public static final String IMGPATH_HUD_BOMB = "images/Bomb.png";
     public static final String IMGPATH_HUD_COINS = "images/Dime.png";
+    public static final String IMGPATH_HUD_KEY = "images/Key.png";
 
     /**
      * 
@@ -358,11 +359,18 @@ public class Hero extends EntityLiving {
         StdDraw.textLeft(pos.getX() + size.getX(), pos.getY(), Integer.toString(this.nCoins));
     }
 
+    public void drawKeyBar() {
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 4);
+        Vector2 size = new Vector2(0.03, 0.03);
+        StdDraw.picture(pos.getX(), pos.getY(), IMGPATH_HUD_KEY, size.getX(), size.getY());
+        StdDraw.textLeft(pos.getX() + size.getX(), pos.getY(), Integer.toString(this.nKeys));
+    }
+
     /**
      * 
      */
     public void drawTearRangeHUD() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 4);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 5);
         StdDraw.textLeft(pos.getX(), pos.getY(), "Range: " + Double.toString(this.tearRange));
     }
 
@@ -370,7 +378,7 @@ public class Hero extends EntityLiving {
      * 
      */
     public void drawTearReloadSpeedHUD() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 5);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 6);
         StdDraw.textLeft(pos.getX(), pos.getY(), "Reload: " + Double.toString(this.tearReloadSpeed.getStep()));
     }
 
@@ -378,7 +386,7 @@ public class Hero extends EntityLiving {
      * 
      */
     public void drawTearDamageHUD() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 6);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 7);
         StdDraw.textLeft(pos.getX(), pos.getY(), "Damage: " + Double.toString(this.tearDamage));
     }
 
@@ -386,7 +394,7 @@ public class Hero extends EntityLiving {
      * 
      */
     public void drawSpeedHUD() {
-        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 7);
+        Vector2 pos = new Vector2(0.040, 1 - 0.033 * 8);
         StdDraw.textLeft(pos.getX(), pos.getY(), "Speed: " + Double.toString(this.speed));
     }
 
@@ -430,6 +438,7 @@ public class Hero extends EntityLiving {
         this.drawHealthBar();
         this.drawBombsBar();
         this.drawCoinsBar();
+        this.drawKeyBar();
         this.drawTearRangeHUD();
         this.drawTearReloadSpeedHUD();
         this.drawTearDamageHUD();

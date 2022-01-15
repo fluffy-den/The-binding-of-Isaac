@@ -33,18 +33,20 @@ public abstract class EntityDoor extends Entity {
 
     /**
      * Permet de savoir si la portes proche du heros est ouverte
+     * 
      * @param h Le heros
      * @return True si la porte est ouverte, false sinon
      */
     public boolean onHeroAdjacency(Hero h) {
-        if (this.isKeyLocked) {
-            if(h.remKey()){
-                this.isKeyLocked = false;
-                this.isOpened = true;
-            }
-        }
         if (this.isOpened) {
             return true;
+        } else {
+            if (this.isKeyLocked) {
+                if (h.remKey()) {
+                    this.isKeyLocked = false;
+                    this.isOpened = true;
+                }
+            }
         }
         return false;
     }
