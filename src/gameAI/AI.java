@@ -77,7 +77,7 @@ public class AI {
      */
     private Vector2 aggroPos(EntityMonster ctrl, Hero h, GameRoom room) {
         if (ctrl.isFlying())
-            return (ctrl.getPos().subVector(h.getPos())); // Une IA aggro fonce sur le joueur
+            return ((h.getPos().subVector(ctrl.getPos()))); // Une IA aggro fonce sur le joueur
 
         // Méthode A*
         List<Vector2> n = AIPathing.generatePath(ctrl, h, room);

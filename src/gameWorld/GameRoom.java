@@ -389,6 +389,7 @@ public class GameRoom {
         this.updateCheatActions(h);
         h.updateCheatActions();
         this.drawBackground();
+        this.updateAndDrawTerrain(h);
         this.updateHeroMovementActions(h);
         this.updateHeroTearActions(h);
         this.updateAndDrawHeroItems(h);
@@ -396,7 +397,6 @@ public class GameRoom {
         this.updateAndDrawTraps(h);
         this.updateAndDrawMonsters(h);
         h.update();
-        this.updateAndDrawTerrain(h);
         this.updateAndDrawHeroProjectiles();
         this.updateAndDrawMonsterProjectiles(h);
         h.draw();
@@ -645,7 +645,7 @@ public class GameRoom {
     /**
      * Remplace un item par une clé
      */
-    public void addKey(){
+    public void addKey() {
         Vector2 vec = new Vector2(this.itemList.getFirst().getPos());
         this.itemList.removeFirst();
         this.itemList.addFirst(new ItemKey(vec));

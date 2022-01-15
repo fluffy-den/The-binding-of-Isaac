@@ -25,7 +25,7 @@ public class MonsterFly extends EntityMonster {
         super(pos,
                 SIZE,
                 SPEED,
-                false,
+                true,
                 HP,
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,

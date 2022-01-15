@@ -174,16 +174,8 @@ public class AIPathing {
             o.remove(q);
             q.generateSuccessors(grid, to);
             for (Node n : q.successors) {
-                if (q.g < n.g) {
-                    boolean contains = false;
-                    for (Node k : o) {
-                        if (n.x == k.x && n.y == k.y) {
-                            contains = true;
-                            break;
-                        }
-                    }
-                    if (!contains)
-                        o.add(n);
+                if (q.g < n.g && !o.contains(n)) {
+                    o.add(n);
                 }
             }
             c.add(q);
