@@ -420,7 +420,7 @@ public class GameRoom {
      * 
      */
     public static int getTileXIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
-        int x = (int) Math.ceil((p.getX() - MIN_XPOS) / TILE_SIZE.getX());
+        int x = (int) ((p.getX() - MIN_XPOS) / TILE_SIZE.getX());
         if (x < 0)
             x = 0;
         else if (x > 8)
@@ -434,7 +434,7 @@ public class GameRoom {
      * @return
      */
     public static int getTileYIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
-        int y = (int) Math.ceil((p.getY() - MIN_YPOS) / TILE_SIZE.getY());
+        int y = (int) ((p.getY() - MIN_YPOS) / TILE_SIZE.getY());
         if (y < 0)
             y = 0;
         else if (y > 8)
