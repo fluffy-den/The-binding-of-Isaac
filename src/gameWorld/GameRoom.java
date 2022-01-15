@@ -88,30 +88,28 @@ public class GameRoom {
                 this.projListHero.remove(i);
                 --i;
             } else {
-                for (EntityMonster m : this.monsterList) {
-                    if (e.isAdjacent(m)) {
+                for (int j = 0; j < this.monsterList.size() + 1; j++) {
+                    EntityMonster m;
+                    if (j < this.monsterList.size()) {
+                        m = this.monsterList.get(j);
+                    } else {
+                        m = this.boss;
+                    }
+                    if (m != null && e.isAdjacent(m)) {
                         e.onHitLivingObject(m);
                         this.projListHero.remove(i);
+                        j = this.monsterList.size() + 2;
                         --i;
                         if (!m.isLiving()) {
-                            lootMob(m);
-                            this.monsterList.remove(m);
-                            break;
+                            dropLoot(m);
+                            if (m == this.boss) {
+                                this.boss = null;
+                            } else {
+                                this.monsterList.remove(m);
+                            }
                         } else {
                             m.updateAndDraw();
                         }
-                    }
-                }
-                if (e.isAdjacent(this.boss)) { // Boss
-                    e.onHitLivingObject(this.boss);
-                    this.projListHero.remove(i);
-                    --i;
-                    if (!this.boss.isLiving()) {
-                        lootMob(this.boss);
-                        this.monsterList.remove(this.boss);
-                        break;
-                    } else {
-                        this.boss.updateAndDraw();
                     }
                 }
                 e.updateAndDraw();
@@ -188,7 +186,7 @@ public class GameRoom {
         /// Les portes ne fonctionnent que sur le heor
         boolean tmpS = DoorSkin; // Dis si le skin de la porte à été changé
         for (EntityDoor t : this.doorList) {
-            if (monsterList.isEmpty()) {
+            if (monsterList.isEmpty() && this.boss == null) {
                 if (tmpS) {
                     if (t.getImgPath() == "images/ClosedDoor.png")
                         t.setImgPath("images/OpenedDoor.png");
@@ -286,7 +284,7 @@ public class GameRoom {
                 while (j < this.terrainList.size()) {
                     EntityTerrain t = this.terrainList.get(j);
                     if (t.isAdjacent(e)) {
-                        this.itemList.addAll(t.dropLoot());
+                        dropLoot(t);
                         this.terrainList.remove(j);
                         --j;
                     }
@@ -368,10 +366,10 @@ public class GameRoom {
         /// Tue tous les monstres
         if (StdDraw.isKeyPressed(Controls.cheatKillAll)) {
             for (EntityMonster m : this.monsterList) {
-                lootMob(m);
+                dropLoot(m);
             }
             if (this.boss != null) {
-                lootMob(this.boss);
+                dropLoot(this.boss);
                 this.boss = null;
             }
             this.monsterList.clear();
@@ -389,7 +387,7 @@ public class GameRoom {
         while (i < this.monsterList.size()) {
             EntityMonster m = this.monsterList.get(i);
             if (!m.isLiving()) {
-                lootMob(m);
+                dropLoot(m);
                 this.monsterList.remove(i);
                 --i;
             }
@@ -413,7 +411,7 @@ public class GameRoom {
             return;
         }
         if (!this.boss.isLiving()) {
-            lootMob(this.boss);
+            dropLoot(this.boss);
             this.boss = null;
             return;
         }
@@ -657,7 +655,7 @@ public class GameRoom {
      * @param vec Coordonnées de la mort
      * @param nb  Nombre d'items en fonctione du monstre
      */
-    public void lootMob(EntityMonster m) {
+    public void dropLoot(Entity m) {
         Random random = new Random();
         int nb; // Nombre d'items à poser
         Vector2 vec = new Vector2(m.getPos()); // position du monster
