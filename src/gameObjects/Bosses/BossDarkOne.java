@@ -1,5 +1,7 @@
 package gameObjects.Bosses;
 
+import gameAI.AI;
+
 import gameObjects.Entities.EntityBoss;
 
 import gameWorld.GameRoom;
@@ -22,7 +24,8 @@ public class BossDarkOne extends EntityBoss {
      * 
      */
     public BossDarkOne(Vector2 pos) {
-        super(pos, SIZE, SPEED, true, HP, MELEE_DAMAGE, MELEE_EFFECT_POWER, MELEE_RELOAD_SPEED, IMGPATH);
+        super(pos, SIZE, SPEED, true, HP, MELEE_DAMAGE, MELEE_EFFECT_POWER, MELEE_RELOAD_SPEED, IMGPATH,
+                new AI(pos, GameRoom.TILE_SIZE.euclidianNorm() * 5, true));
     }
 
 }

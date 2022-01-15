@@ -14,7 +14,7 @@ import libraries.Vector2;
 
 import resources.Utils;
 
-public abstract class AI {
+public class AI {
     private Vector2 nextPos;
     private double aggroRange;
     private boolean enableAggro;
@@ -23,8 +23,8 @@ public abstract class AI {
     /**
      * Construit l'objet IA. Permet de contrôler le comportement des monstres.
      */
-    public AI(EntityMonster ctrl, double aggroRange, boolean enableAggro) {
-        this.nextPos = ctrl.getPos();
+    public AI(Vector2 startPos, double aggroRange, boolean enableAggro) {
+        this.nextPos = startPos;
         this.aggroRange = aggroRange;
         this.enableAggro = enableAggro;
     }
@@ -59,11 +59,10 @@ public abstract class AI {
      * @return Prochaine position du monstre.
      */
     private Vector2 randomPos(EntityMonster ctrl, GameRoom room) {
-        Random rand = new Random();
         Vector2 pos;
         do {
-            pos = new Vector2(rand.nextDouble(GameRoom.MIN_XPOS, GameRoom.MAX_XPOS),
-                    rand.nextDouble(GameRoom.MIN_YPOS, GameRoom.MAX_YPOS));
+            pos = new Vector2(Utils.randomDouble(GameRoom.MIN_XPOS, GameRoom.MAX_XPOS),
+                    Utils.randomDouble(GameRoom.MIN_YPOS, GameRoom.MAX_YPOS));
         } while (!GameRoom.isPlaceCorrect(pos, ctrl.getSize(), room.getTerrainList()));
         return pos;
     }
@@ -82,7 +81,10 @@ public abstract class AI {
 
         // Méthode A*
         List<Vector2> n = AIPathing.generatePath(ctrl, h, room);
-        return (ctrl.getPos().subVector(n.get(1)));
+        if (n == null || n.isEmpty())
+            return new Vector2();
+        else
+            return (ctrl.getPos().subVector(n.get(1)));
     }
 
     /**

@@ -1,5 +1,7 @@
 package gameObjects.Monsters;
 
+import gameAI.AI;
+
 import gameObjects.Entities.EntityMonster;
 import gameWorld.GameRoom;
 
@@ -28,6 +30,7 @@ public class MonsterSpider extends EntityMonster {
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,
                 MELEE_RELOAD_SPEED,
-                IMGPATH);
+                IMGPATH,
+                new AI(pos, GameRoom.TILE_SIZE.euclidianNorm() * 5, true));
     }
 }

@@ -2,10 +2,13 @@ package gameObjects.Entities;
 
 import java.util.ArrayList;
 
+import gameAI.AI;
+
 import gameObjects.Hero;
 import gameObjects.Projectiles.MonsterProjectile;
-import gameWorld.Game;
 
+import gameWorld.Game;
+import gameWorld.GameRoom;
 import libraries.Vector2;
 
 public abstract class EntityMonster extends EntityLiving {
@@ -13,6 +16,7 @@ public abstract class EntityMonster extends EntityLiving {
     protected double meleeEffectPower;
     protected double meleeReloadSpeed;
     private long lastMeleeReloadFrame;
+    private AI monsterAI;
 
     /**
      * @brief
@@ -26,7 +30,7 @@ public abstract class EntityMonster extends EntityLiving {
      * @param imgPath
      */
     public EntityMonster(Vector2 pos, Vector2 size, double speed, boolean flying, int health, int meleeDamage,
-            double meleeEffectPower, double meleeReloadSpeed, String imgPath) {
+            double meleeEffectPower, double meleeReloadSpeed, String imgPath, AI ai) {
         super(pos,
                 size,
                 new Vector2(),
@@ -38,6 +42,7 @@ public abstract class EntityMonster extends EntityLiving {
         this.meleeEffectPower = meleeEffectPower;
         this.meleeReloadSpeed = meleeReloadSpeed;
         this.lastMeleeReloadFrame = 0;
+        this.monsterAI = ai;
     }
 
     /**
@@ -67,5 +72,23 @@ public abstract class EntityMonster extends EntityLiving {
     public ArrayList<EntityItem> dropLoot() {
         // TODO: @cypri3 Loot de chaques monstres
         return null;
+    }
+
+    // IA
+    /**
+     * 
+     */
+    public void updateAI(EntityBoss b, Hero h, GameRoom room) {
+        this.dir = this.monsterAI.nextDir(b, this, h, room);
+    }
+
+    // Damage
+    /**
+     * 
+     */
+    @Override
+    public void addDamage(int damage) {
+        this.health -= damage;
+        this.monsterAI.onHit();
     }
 }

@@ -23,6 +23,7 @@ import java.util.Random;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
+    protected EntityBoss boss; // @cypri3 TODO -> Si un boss tu le met ici pls x3
     protected LinkedList<Tear> projListHero;
     protected LinkedList<MonsterProjectile> projListMonster;
     protected LinkedList<EntityItem> itemList;
@@ -52,6 +53,7 @@ public class GameRoom {
      */
     public GameRoom() {
         this.monsterList = new LinkedList<EntityMonster>();
+        this.boss = null;
         this.projListHero = new LinkedList<Tear>();
         this.projListMonster = new LinkedList<MonsterProjectile>();
         this.itemList = new LinkedList<EntityItem>();
@@ -170,7 +172,7 @@ public class GameRoom {
      */
     public String updateAndDrawDoors(Hero h) {
         /// Les portes ne fonctionnent que sur le heor
-        boolean tmpS = DoorSkin; //Dis si le skin de la porte à été changé
+        boolean tmpS = DoorSkin; // Dis si le skin de la porte à été changé
         for (EntityDoor t : this.doorList) {
             if (monsterList.isEmpty()) {
                 if (tmpS) {
@@ -180,7 +182,7 @@ public class GameRoom {
                 }
                 if (t.isAdjacent(h)) {
                     if (t.onHeroAdjacency(h)) {
-                        if(t.getImgPath() == "images/KeyLockedDoor.png"){
+                        if (t.getImgPath() == "images/KeyLockedDoor.png") {
                             t.setImgPath("images/OpenedDoor.png");
                         }
                         Vector2 vec = new Vector2(t.getPos());
@@ -377,6 +379,7 @@ public class GameRoom {
                 }
             }
             m.updateAndDraw();
+            m.updateAI(this.boss, h, this);
             ++i;
         }
     }
@@ -416,9 +419,13 @@ public class GameRoom {
     /**
      * 
      */
-    public static int getTileXIndex(Vector2 p) {
-        double x = p.getX() - MIN_XPOS;
-        return (int) Math.ceil(x / TILE_SIZE.getX());
+    public static int getTileXIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
+        int x = (int) Math.ceil((p.getX() - MIN_XPOS) / TILE_SIZE.getX());
+        if (x < 0)
+            x = 0;
+        else if (x > 8)
+            x = 8;
+        return x;
     }
 
     /**
@@ -426,9 +433,13 @@ public class GameRoom {
      * @param e
      * @return
      */
-    public static int getTileYIndex(Vector2 p) {
-        double y = p.getY() - MIN_YPOS;
-        return (int) Math.ceil(y / TILE_SIZE.getY());
+    public static int getTileYIndex(Vector2 p) { // TODO: @cypri3 cette fonction ne marche pas
+        int y = (int) Math.ceil((p.getY() - MIN_YPOS) / TILE_SIZE.getY());
+        if (y < 0)
+            y = 0;
+        else if (y > 8)
+            y = 8;
+        return y;
     }
 
     /**

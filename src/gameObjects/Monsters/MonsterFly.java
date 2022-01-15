@@ -1,7 +1,10 @@
 package gameObjects.Monsters;
 
+import gameAI.AI;
+
 import gameObjects.Entities.EntityMonster;
 import gameWorld.GameRoom;
+
 import libraries.Vector2;
 
 public class MonsterFly extends EntityMonster {
@@ -22,11 +25,12 @@ public class MonsterFly extends EntityMonster {
         super(pos,
                 SIZE,
                 SPEED,
-                true,
+                false,
                 HP,
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,
                 MELEE_RELOAD_SPEED,
-                IMGPATH);
+                IMGPATH,
+                new AI(pos, GameRoom.TILE_SIZE.euclidianNorm() * 5, true));
     }
 }

@@ -1,5 +1,7 @@
 package gameObjects.Monsters;
 
+import gameAI.AI;
+
 import gameObjects.Entities.EntityMonster;
 
 import gameWorld.GameRoom;
@@ -21,6 +23,15 @@ public class MonsterDeathHead extends EntityMonster {
      * @param pos
      */
     public MonsterDeathHead(Vector2 pos) {
-        super(pos, SIZE, SPEED, false, HP, MELEE_DAMAGE, MELEE_EFFECT_POWER, MELEE_RELOAD_SPEED, IMGPATH);
+        super(pos,
+                SIZE,
+                SPEED,
+                false,
+                HP,
+                MELEE_DAMAGE,
+                MELEE_EFFECT_POWER,
+                MELEE_RELOAD_SPEED,
+                IMGPATH,
+                new AI(pos, GameRoom.TILE_SIZE.euclidianNorm() * 5, true));
     }
 }
