@@ -95,7 +95,7 @@ public class AI {
                 this.nextPos = GameRoom.getPositionFromTile(
                         GameRoom.getTileXIndex(this.nextPos),
                         GameRoom.getTileYIndex(this.nextPos));
-            } while (!m.isFlying() || GameRoom.isPlaceCorrect(
+            } while (GameRoom.isPlaceCorrect(
                     this.nextPos,
                     m.getSize(),
                     r.getTerrainList()));
@@ -130,7 +130,7 @@ public class AI {
                 this.nextPos = GameRoom.getPositionFromTile(
                         GameRoom.getTileXIndex(this.nextPos),
                         GameRoom.getTileYIndex(this.nextPos));
-            } while (!m.isFlying() || GameRoom.isPlaceCorrect(
+            } while (GameRoom.isPlaceCorrect(
                     this.nextPos,
                     m.getSize(),
                     r.getTerrainList()));
