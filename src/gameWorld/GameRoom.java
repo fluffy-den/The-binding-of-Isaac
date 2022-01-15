@@ -64,6 +64,7 @@ public class GameRoom {
         this.terrainList = new LinkedList<EntityTerrain>();
         this.imgPath = DEFAULT_BACKGROUND;
         this.bombReloadSpeed = new GameCounter(0.25);
+        this.boss = null;
     }
 
     /// Dessin et mise à jour
@@ -87,14 +88,25 @@ public class GameRoom {
                 this.projListHero.remove(i);
                 --i;
             } else {
-                for (EntityMonster m : this.monsterList) {
-                    if (e.isAdjacent(m)) {
+                for (int j = 0; j < this.monsterList.size() + 1; j++) {
+                    EntityMonster m;
+                    if (j < this.monsterList.size()) {
+                        m = this.monsterList.get(j);
+                    } else {
+                        m = this.boss;
+                    }
+                    if (m != null && e.isAdjacent(m)) {
                         e.onHitLivingObject(m);
                         this.projListHero.remove(i);
+                        j = this.monsterList.size() + 2;
                         --i;
                         if (!m.isLiving()) {
-                            this.monsterList.remove(m);
-                            break;
+                            dropLoot(m);
+                            if (m == this.boss) {
+                                this.boss = null;
+                            } else {
+                                this.monsterList.remove(m);
+                            }
                         } else {
                             m.updateAndDraw();
                         }
@@ -174,7 +186,7 @@ public class GameRoom {
         /// Les portes ne fonctionnent que sur le heor
         boolean tmpS = DoorSkin; // Dis si le skin de la porte à été changé
         for (EntityDoor t : this.doorList) {
-            if (monsterList.isEmpty()) {
+            if (monsterList.isEmpty() && this.boss == null) {
                 if (tmpS) {
                     if (t.getImgPath() == "images/ClosedDoor.png")
                         t.setImgPath("images/OpenedDoor.png");
@@ -272,7 +284,7 @@ public class GameRoom {
                 while (j < this.terrainList.size()) {
                     EntityTerrain t = this.terrainList.get(j);
                     if (t.isAdjacent(e)) {
-                        this.itemList.addAll(t.dropLoot());
+                        dropLoot(t);
                         this.terrainList.remove(j);
                         --j;
                     }
@@ -353,6 +365,13 @@ public class GameRoom {
     public void updateCheatActions(Hero h) {
         /// Tue tous les monstres
         if (StdDraw.isKeyPressed(Controls.cheatKillAll)) {
+            for (EntityMonster m : this.monsterList) {
+                dropLoot(m);
+            }
+            if (this.boss != null) {
+                dropLoot(this.boss);
+                this.boss = null;
+            }
             this.monsterList.clear();
         }
     }
@@ -368,8 +387,7 @@ public class GameRoom {
         while (i < this.monsterList.size()) {
             EntityMonster m = this.monsterList.get(i);
             if (!m.isLiving()) {
-                lootMob(monsterList.get(i).getPos(), 3);
-                System.out.println("monsterList.get(i).getPos()");
+                dropLoot(m);
                 this.monsterList.remove(i);
                 --i;
             }
@@ -384,6 +402,28 @@ public class GameRoom {
             m.updateAI(this.boss, h, this);
             ++i;
         }
+
+    }
+
+    public void updateAndDrawBoss(Hero h) {
+        /// Boss
+        if (this.boss == null) {
+            return;
+        }
+        if (!this.boss.isLiving()) {
+            dropLoot(this.boss);
+            this.boss = null;
+            return;
+        }
+        if (this.boss.isAdjacent(h)) {
+            this.boss.onMonsterHeroAdjacency(h);
+            ArrayList<MonsterProjectile> pList = this.boss.fireProjectiles(h);
+            if (pList != null) {
+                this.projListMonster.addAll(pList);
+            }
+        }
+        this.boss.updateAndDraw();
+        this.boss.updateAI(this.boss, h, this);
     }
 
     public void updateAndDraw(Hero h) {
@@ -397,6 +437,7 @@ public class GameRoom {
         this.updateHeroBombsActions(h);
         this.updateAndDrawTraps(h);
         this.updateAndDrawMonsters(h);
+        this.updateAndDrawBoss(h);
         h.update();
         this.updateAndDrawHeroProjectiles();
         this.updateAndDrawMonsterProjectiles(h);
@@ -496,19 +537,19 @@ public class GameRoom {
         Vector2 p = getPositionFromTile(4, 4);
         switch (BossLevel) {
             case 0:
-                this.monsterList.add(new BossDarkOne(p));
+                this.boss = new BossDarkOne(p);
                 break;
             case 1:
-                this.monsterList.add(new BossDukeOfFlies(p));
+                this.boss = new BossDukeOfFlies(p);
                 break;
             case 2:
-                this.monsterList.add(new BossMegaFaty(p));
+                this.boss = new BossMegaFaty(p);
                 break;
             case 3:
-                this.monsterList.add(new BossTheHusk(p));
+                this.boss = new BossTheHusk(p);
                 break;
             case 4:
-                this.monsterList.add(new BossSatan(p));
+                this.boss = new BossSatan(p);
                 break;
             default:
                 break;
@@ -614,16 +655,44 @@ public class GameRoom {
      * @param vec Coordonnées de la mort
      * @param nb  Nombre d'items en fonctione du monstre
      */
-    public void lootMob(Vector2 vec, int nb) {
+    public void dropLoot(Entity m) {
         Random random = new Random();
-        System.out.println(" vec" + vec);
+        int nb; // Nombre d'items à poser
+        Vector2 vec = new Vector2(m.getPos()); // position du monster
+        boolean chance = false; // Si le joueur est chanceux, il gagnera des milliers de coins en tuant un boss
+
+        if (boss == m) { // si l'adrese mémoire est égale
+            if (50 == random.nextInt(51)) {
+                nb = 30;
+                chance = true;
+            } else {
+                nb = 5;
+            }
+        } else {
+            nb = random.nextInt(3);
+        }
+
         for (int i = 0; i < nb; i++) {
             int x = random.nextInt(11);
             int y = random.nextInt(11);
             Vector2 rdm = new Vector2(vec);
-            rdm.addX((x - 5) * 0.002);
-            rdm.addY((y - 5) * 0.002);
-            itemList.add(choixItem(vec));
+            rdm.addX((x - 5) * 0.02);
+            rdm.addY((y - 5) * 0.02);
+            if (chance) {
+                switch (random.nextInt(3)) {
+                    case 0:
+                        itemList.add(new ItemNickel(rdm));
+                        break;
+                    case 1:
+                        itemList.add(new ItemDime(rdm));
+                        break;
+                    case 2:
+                        itemList.add(new ItemPenny(rdm));
+                        break;
+                }
+            } else {
+                itemList.add(choixItem(rdm));
+            }
         }
     }
 
@@ -638,14 +707,16 @@ public class GameRoom {
                     e = new ItemHalfRedHeart(p); // Régénération de 0.5 coeur
                     break;
                 case 3:
-                    e = new ItemHeart(p); // Régénération complette + don de 1 coeur
+                    e = new ItemBomb(p); // Régénération complette + don de 1 coeur
                     break;
+                case 4:
+                    e = new ItemRedHeart(p);
                 default:
                     e = new ItemNickel(p);
                     break;
             }
         } else {
-            int rdm2 = random.nextInt(8);
+            int rdm2 = random.nextInt(10);
             switch (rdm2) {
                 case 0:
                     e = new ItemBloodOfTheMartyr(p);
@@ -657,19 +728,26 @@ public class GameRoom {
                     e = new ItemLunch(p);
                     break;
                 case 3:
-                    e = new ItemRedHeart(p);
-                    break;
-                case 4:
                     e = new ItemCricketHead(p);
                     break;
-                case 5:
-                    e = new ItemStigmata(p);
+                case 4, 5:
+                    e = new ItemHeart(p);
                     break;
                 case 6:
-                    e = new ItemMagicMushroom(p);
+                    e = new ItemStigmata(p);
                     break;
                 case 7:
+                    e = new ItemMagicMushroom(p);
+                    break;
+                case 8:
                     e = new ItemPentagram(p);
+                    break;
+
+                case 9:
+                    e = new ItemPenny(p);
+                    break;
+                case 10:
+                    e = new ItemDime(p);
                     break;
 
             }
