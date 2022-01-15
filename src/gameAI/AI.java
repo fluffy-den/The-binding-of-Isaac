@@ -58,7 +58,8 @@ public class AI {
                 for (Vector2 p : pL) {
                     if (Utils.isAdjacent(
                             p,
-                            new Vector2(GameRoom.TILE_SIZE.getX() * 0.9, GameRoom.TILE_SIZE.getY() * 0.9),
+                            new Vector2(GameRoom.TILE_SIZE.getX() * AI_NODE_SCALAR,
+                                    GameRoom.TILE_SIZE.getY() * AI_NODE_SCALAR),
                             m.getPos(),
                             m.getSize()))
                         continue;
@@ -88,7 +89,7 @@ public class AI {
                 m.getPos(),
                 m.getSize(),
                 this.nextPos,
-                new Vector2(GameRoom.TILE_SIZE.getX() * 0.9, GameRoom.TILE_SIZE.getY() * 0.9))) {
+                new Vector2(GameRoom.TILE_SIZE.getX() * AI_NODE_SCALAR, GameRoom.TILE_SIZE.getY() * AI_NODE_SCALAR))) {
 
             // Génération d'une nouvelle position aléatoire autour du boss
             // Angle
@@ -120,7 +121,7 @@ public class AI {
                 m.getPos(),
                 m.getSize(),
                 this.nextPos,
-                new Vector2(GameRoom.TILE_SIZE.getX() * 0.9, GameRoom.TILE_SIZE.getY() * 0.9))) {
+                new Vector2(GameRoom.TILE_SIZE.getX() * AI_NODE_SCALAR, GameRoom.TILE_SIZE.getY() * AI_NODE_SCALAR))) {
 
             // Génération d'une nouvelle position aléatoire
             this.nextPos = new Vector2(
