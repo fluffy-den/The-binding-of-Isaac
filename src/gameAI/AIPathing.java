@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import gameObjects.Entities.Entity;
 import gameObjects.Entities.EntityTerrain;
-
+import gameWorld.Game;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -32,33 +32,19 @@ public class AIPathing {
      *    entre eux.
      */
     private static class Node implements Comparable<Node> {
-        public LinkedList<Node> successors;
         public Node parent;
-        public double g;
-        public double f;
+        public double g = Double.MAX_VALUE;
+        public double f = Double.MAX_VALUE;
         public int x;
         public int y;
 
         /// Constructeur
-        /**
-         * @brief Contient toutes les informations nécessaires à la
-         *
-         * @param x      La position x de l'objet sur la grille de jeu.
-         * @param y      La position y de l'objet sur la grille de jeu.
-         * @param h      La valeur heuristique de ce noeud.
-         * @param parent Le parent du noeud (peut-être nul)
-         */
-        public Node(int x, int y, double h, Node parent) {
-            this.successors = new LinkedList<Node>();
+        public Node(int x, int y, double g, double f, Node p) {
+            this.parent = p;
+            this.g = g;
+            this.f = f;
             this.x = x;
             this.y = y;
-            if (parent != null) {
-                this.g = this.toVector2().distance(parent.toVector2()) + parent.g;
-            } else {
-                this.g = 0;
-            }
-            this.f = h + g;
-            this.parent = parent;
         }
 
         /**
@@ -75,56 +61,6 @@ public class AIPathing {
         }
 
         /**
-         * @brief Fonction de génération des "successeurs" de this. On appelle
-         *        successeur tout noeud adjacent qui n'est pas un obstacle.
-         * 
-         * @param grid   Une grille representant les cases où this peut se déplacer.
-         *               (true
-         *               si obstacle, false sinon)
-         * @param Entity Vers quel objet on veut se déplacer.
-         */
-        public void generateSuccessors(boolean[][] grid, PriorityQueue<Node> o, Entity to) {
-            // Génération des voisins de q
-            // i
-            int imin = this.x - 1;
-            int imax = this.x + 1;
-            if (imin < 0) {
-                imin = this.x;
-            } else if (imax > 8) {
-                imax = this.x;
-            }
-
-            // j
-            int jmin = this.y - 1;
-            int jmax = this.y + 1;
-            if (jmin < 0) {
-                jmin = this.y;
-            } else if (jmax > 8) {
-                jmax = this.y;
-            }
-
-            // Itération
-            for (int i = imin; i <= imax; ++i) {
-                for (int j = jmin; j <= jmax; ++j) {
-                    if ((grid[i][j] == false) && ((i != this.x) || (j != this.y))) {
-                        boolean alreadyExist = false;
-                        for (Node k : o) {
-                            if (k.x == i && k.y == j) {
-                                alreadyExist = true;
-                                break;
-                            }
-                        }
-
-                        if (!alreadyExist) {
-                            this.successors.add(new Node(i, j,
-                                    GameRoom.getPositionFromTile(i, j).distance(to.getPos()), this));
-                        }
-                    }
-                }
-            }
-        }
-
-        /**
          * @brief Fonction qui convertit la position (x, y) de this en vecteur.
          * 
          * @return GameRoom.getPositionFromTile(x, y)
@@ -132,6 +68,61 @@ public class AIPathing {
         public Vector2 toVector2() {
             return GameRoom.getPositionFromTile(this.x, this.y);
         }
+    }
+
+    private static class Edge {
+        public int x;
+        public int y;
+
+        /// Constructeur
+        /**
+         * 
+         * @param x
+         * @param y
+         */
+        public Edge(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        /**
+         * 
+         * @return
+         */
+        public Vector2 toVector2() {
+            return new Vector2((double) this.x, (double) this.y);
+        }
+
+    }
+
+    private static double calculateDistance(int x1, int y1, int x2, int y2) {
+        return Math
+                .abs(Math.sqrt((Math.pow(x1, 2) + Math.pow(y1, 2))) - Math.sqrt((Math.pow(x2, 2)) + Math.pow(y2, 2)));
+    }
+
+    private static List<Edge> neighorsOf(boolean[][] g, Node n) {
+        LinkedList<Edge> l = new LinkedList<Edge>();
+
+        int imin = n.x - 1;
+        if (imin - 1 < 0)
+            imin = 0;
+        int imax = n.x + 1;
+        if (imax + 1 > GameRoom.NUM_OF_TILES - 1)
+            imax = GameRoom.NUM_OF_TILES - 1;
+        int jmin = n.y - 1;
+        if (jmin - 1 < 0)
+            jmin = 0;
+        int jmax = n.y + 1;
+        if (jmax + 1 > GameRoom.NUM_OF_TILES - 1)
+            jmax = GameRoom.NUM_OF_TILES - 1;
+        for (int i = imin; i <= imax; ++i) {
+            for (int j = jmin; j <= jmax; ++j) {
+                if ((g[i][j] == false) && (i != n.x || j != n.y))
+                    l.add(new Edge(i, j));
+            }
+        }
+
+        return l;
     }
 
     /**
@@ -147,6 +138,9 @@ public class AIPathing {
             list.addFirst(p.toVector2());
             p = p.parent;
         }
+
+        //
+
         return list;
     }
 
@@ -164,35 +158,61 @@ public class AIPathing {
         // https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
         // Initialisation
         PriorityQueue<Node> o = new PriorityQueue<Node>();
-        PriorityQueue<Node> c = new PriorityQueue<Node>();
-
-        o.add(new Node(GameRoom.getTileXIndex(from.getPos()),
+        LinkedList<Node> c = new LinkedList<Node>();
+        o.add(new Node(
+                GameRoom.getTileXIndex(from.getPos()),
                 GameRoom.getTileYIndex(from.getPos()),
-                from.getPos().distance(to.getPos()),
+                0,
+                calculateDistance(GameRoom.getTileXIndex(from.getPos()), GameRoom.getTileYIndex(from.getPos()),
+                        GameRoom.getTileXIndex(to.getPos()), GameRoom.getTileYIndex(to.getPos())),
                 null));
-
-        // Iteration
         while (!o.isEmpty()) {
-            Node q = o.peek();
-
-            // q == to ?
-            if (q.x == GameRoom.getTileXIndex(to.getPos()) && q.y == GameRoom.getTileXIndex(to.getPos())) {
-                return reconstructPath(q);
+            Node m = o.peek();
+            if (m.x == GameRoom.getTileXIndex(to.getPos()) || m.y == GameRoom.getTileYIndex(to.getPos())) {
+                return reconstructPath(m);
             }
+            o.remove(m);
+            c.add(m);
 
-            // Successeurs
-            o.remove(q);
-            o.remove(null);
-            q.generateSuccessors(grid, o, to);
-            for (Node n : q.successors) {
-                if (n != null && q.g < n.g) {
-                    o.add(n);
+            // Generate Neighbors
+            List<Edge> neighbors = neighorsOf(grid, m);
+            for (Edge n : neighbors) {
+                Node nc = null;
+                for (Node k : c) {
+                    if (k.x == n.x && k.y == n.y) {
+                        nc = k;
+                        break;
+                    }
+                }
+
+                double cost = m.g + calculateDistance(m.x, m.y, n.x, n.y);
+
+                Node no = null;
+                for (Node k : o) {
+                    if (k.x == n.x && k.y == n.y) {
+                        no = k;
+                        break;
+                    }
+                }
+
+                if (no != null && cost < no.g) {
+                    o.remove(no);
+                }
+
+                if (nc != null && cost < nc.g) {
+                    c.remove(nc);
+                }
+
+                if (no == null && nc == null) {
+                    double f = cost + calculateDistance(n.x, n.y, // f = g + h
+                            GameRoom.getTileXIndex(to.getPos()),
+                            GameRoom.getTileYIndex(to.getPos()));
+                    o.add(new Node(n.x, n.y, cost, f, m));
+
                 }
             }
-            c.add(q);
         }
 
-        // Fin
         return null;
     }
 
