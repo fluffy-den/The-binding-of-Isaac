@@ -14,6 +14,10 @@ import libraries.Vector2;
 import resources.Utils;
 
 public class AI {
+    public static final double AI_NODE_SCALAR = 0.75;
+    public static final double AI_RANDOM_UPDATE_TIME = 0.055;
+    public static final double AI_ESCORT_UPDATE_TIME = 0.025;
+
     private GameCounter counterPos;
     private Vector2 nextPos;
     private double aggroRange;
@@ -165,10 +169,12 @@ public class AI {
 
         // IA: Accompagnement (Un boss est présent)
         if (b != null && b != m) {
+            this.counterPos.setStep(AI_ESCORT_UPDATE_TIME);
             return escortDir(b, m, r);
         }
 
         // IA: Random
+        this.counterPos.setStep(AI_RANDOM_UPDATE_TIME);
         return randomDir(m, h, r);
     }
 
