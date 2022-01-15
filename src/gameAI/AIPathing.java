@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import gameObjects.Entities.Entity;
 import gameObjects.Entities.EntityTerrain;
-import gameWorld.Game;
+
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -53,10 +53,8 @@ public class AIPathing {
             this.y = y;
             if (parent != null) {
                 this.g = this.toVector2().distance(parent.toVector2()) + parent.g;
-                this.f = h + g;
             } else {
-                this.g = Double.MAX_VALUE;
-                this.f = Double.MAX_VALUE;
+                this.g = 0;
             }
             this.f = h + g;
             this.parent = parent;
@@ -91,7 +89,7 @@ public class AIPathing {
             int imax = this.x + 1;
             if (imin < 0) {
                 imin = this.x;
-            } else if (imax > 9) {
+            } else if (imax > 8) {
                 imax = this.x;
             }
 
@@ -100,14 +98,14 @@ public class AIPathing {
             int jmax = this.y + 1;
             if (jmin < 0) {
                 jmin = this.y;
-            } else if (jmax > 9) {
+            } else if (jmax > 8) {
                 jmax = this.y;
             }
 
             // Itération
-            for (int i = imin; i < imax; ++i) {
-                for (int j = jmin; j < jmax; ++j) {
-                    if (!grid[i][j] && i != this.x && j != this.y) {
+            for (int i = imin; i <= imax; ++i) {
+                for (int j = jmin; j <= jmax; ++j) {
+                    if ((grid[i][j] == false) && ((i != this.x) || (j != this.y))) {
                         this.successors.add(new Node(i, j,
                                 GameRoom.getPositionFromTile(i, j).distance(to.getPos()), this));
                     }
@@ -138,6 +136,8 @@ public class AIPathing {
             list.addFirst(p.toVector2());
             p = p.parent;
         }
+        if (list.isEmpty())
+            list.addFirst(end.toVector2());
         return list;
     }
 
@@ -151,7 +151,7 @@ public class AIPathing {
      * @param room La salle actuelle du jeu.
      * @return Le dernier noeud.
      */
-    private static Node shortestPath(boolean[][] grid, Entity from, Entity to, GameRoom room) {
+    private static List<Vector2> shortestPath(boolean[][] grid, Entity from, Entity to, GameRoom room) {
         // https://en.wikipedia.org/wiki/A*_search_algorithm#Pseudocode
         // Initialisation
         PriorityQueue<Node> o = new PriorityQueue<Node>();
@@ -164,28 +164,26 @@ public class AIPathing {
         // Iteration
         while (!o.isEmpty()) {
             Node q = o.peek();
+
+            // q == to ?
+            if (q.x == GameRoom.getTileXIndex(to.getPos()) && q.y == GameRoom.getTileXIndex(to.getPos())) {
+                return reconstructPath(q);
+            }
+
+            // Successeurs
             o.remove(q);
             q.generateSuccessors(grid, to);
             for (Node n : q.successors) {
-                if (n.x == to.getPos().getX() && n.y == to.getPos().getY()) {
-                    return n;
-                }
-
-                boolean skipped = false;
-                for (Node k : o) {
-                    if (k.x == n.x && k.y == n.y && k.f < n.f) {
-                        skipped = true;
-                        break;
-                    }
-                }
-                if (!skipped) {
-                    for (Node k : c) {
-                        if (k.x == n.y && k.y == n.y && k.f < n.f) {
+                if (q.g < n.g) {
+                    boolean contains = false;
+                    for (Node k : o) {
+                        if (n.x == k.x && n.y == k.y) {
+                            contains = true;
                             break;
-                        } else {
-                            o.add(k);
                         }
                     }
+                    if (!contains)
+                        o.add(n);
                 }
             }
             c.add(q);
@@ -212,11 +210,6 @@ public class AIPathing {
         }
 
         // Construction du chemin le plus court
-        Node end = shortestPath(grid, from, to, room);
-        if (end == null)
-            return null;
-
-        // Conversion en une liste
-        return reconstructPath(end);
+        return shortestPath(grid, from, to, room);
     }
 }
