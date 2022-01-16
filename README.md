@@ -40,7 +40,7 @@
  
  
  
- La partie suivante traite de choix de développement et artistiques du jeu, des spoils peuvent êtres présents
+ La partie suivante traite des choix de développement et artistiques du jeu, des spoils peuvent êtres présents
  
  
  
@@ -93,7 +93,7 @@
     Pour les Boss:
   
   Les items :
-    Une multitude l'items à étée clée avec des caractéristiques spécifiques pour chacuns (Attention, il y a un malus dans le jeu !)
+    Une multitude l'items à été crée avec des caractéristiques spécifiques pour chacuns (Attention, il y a un malus dans le jeu !)
     Les caractéristiques de chacuns de ses items sont à retrouver dans le code pour ne pas surchager cette descition.
     Les effets ne sont pas aléatoirs.
     
