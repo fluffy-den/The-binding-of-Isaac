@@ -1,5 +1,7 @@
 package resources;
 
+import java.util.Random;
+
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -44,6 +46,18 @@ public class Utils {
          * @return
          */
         public static double randomDouble(double lower, double upper) {
-                return lower + Math.random() * ((upper - lower) + 1.00);
+                Random random = new Random();
+                return random.nextDouble(upper + 1.0 - lower) + lower;
+        }
+
+        /**
+         * 
+         * @param lower
+         * @param upper
+         * @return
+         */
+        public static int randomInt(int lower, int upper) {
+                Random random = new Random();
+                return random.nextInt(upper + 1 - lower) + lower;
         }
 }

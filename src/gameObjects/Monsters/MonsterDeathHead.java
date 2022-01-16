@@ -21,10 +21,10 @@ public class MonsterDeathHead extends EntityMonster {
         public static final double SPEED = 0.002;
         public static final double MELEE_RELOAD_SPEED = 0.040;
         public static final double RELOAD_SPEED = 0.010;
-        public static final double FIRING_MAX_ANGLE = 20;
-        public static final double FIRING_MIN_ANGLE = 5;
         public static final double MELEE_EFFECT_POWER = 5.;
         public static final double AGGRO_RANGE = GameRoom.TILE_DIST * 0.00;
+        public static final int FIRING_MAX_ANGLE = 15;
+        public static final int FIRING_MIN_ANGLE = 3;
         public static final int MELEE_DAMAGE = 1;
         public static final int HP = 12;
         public static final String IMGPATH = "images/DeathHead.png";
@@ -59,30 +59,43 @@ public class MonsterDeathHead extends EntityMonster {
                         List<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
 
                         // #1. Tir plus à gauche
-                        Vector2 dir = h.getPos().subVector(this.getPos());
-                        double angle = Utils.randomDouble(FIRING_MAX_ANGLE, FIRING_MIN_ANGLE);
+                        Vector2 firedir = h.getPos().subVector(this.getPos());
+                        double angle = Math.toRadians(Utils.randomInt(FIRING_MIN_ANGLE, FIRING_MAX_ANGLE));
+
+                        double PI = 3.141592653;
+                        angle = angle * PI / 180;
 
                         pL.add(new MonsterLightProjectile(
                                         this.pos,
                                         new Vector2(
-                                                        dir.getX() * Math.cos(angle),
-                                                        dir.getY() * Math.sin(angle))));
+                                                        firedir.getX() + firedir.getX()
+                                                                        * Math.cos(angle),
+                                                        firedir.getY() + firedir.getY()
+                                                                        * Math.sin(angle))));
 
                         // #2. Tir milieu
-                        angle = Utils.randomDouble(FIRING_MIN_ANGLE, -FIRING_MIN_ANGLE);
+                        angle = Math.toRadians(Utils.randomInt(-FIRING_MIN_ANGLE, FIRING_MIN_ANGLE));
+                        angle = angle * PI / 180;
+
                         pL.add(new MonsterLightProjectile(
                                         this.pos,
                                         new Vector2(
-                                                        dir.getX() * Math.cos(angle),
-                                                        dir.getY() * Math.sin(angle))));
+                                                        firedir.getX() + firedir.getX()
+                                                                        * Math.cos(angle),
+                                                        firedir.getY() + firedir.getY()
+                                                                        * Math.sin(angle))));
 
                         // #3. Tir droite
-                        angle = Utils.randomDouble(-FIRING_MIN_ANGLE, -FIRING_MAX_ANGLE);
+                        angle = Math.toRadians(Utils.randomInt(-FIRING_MAX_ANGLE, -FIRING_MIN_ANGLE));
                         pL.add(new MonsterLightProjectile(
                                         this.pos,
                                         new Vector2(
-                                                        dir.getX() * Math.cos(angle),
-                                                        dir.getY() * Math.sin(angle))));
+                                                        firedir.getX() + firedir.getX()
+                                                                        * Math.cos(angle),
+                                                        firedir.getY() + firedir.getY()
+                                                                        * Math.sin(angle))));
+
+                        // TODO: Bug angle inexact???
 
                         return pL;
                 }
