@@ -31,6 +31,7 @@
    - K pour tuer l'intégralité des monstres d'une salle
    - P pour que les larmes du hero tue les monstres en un coup
    - O pour donner 10 pièces au hero
+   - TAB pour un adminMode => Très utile pour la correction
  
  NB: Les touches (hors cheat) sont rappelées du début du jeu
  
@@ -173,9 +174,9 @@
       
       - Une GameRoom : C'est une salle de jeu avec tous ses attributs
  
- 
- 
- 
+ Pour la partie graphique, nous avons choisi d'y consacrer une petite partie de temps afin d'obtenir un jeu relativement agréable pour les yeux.
+ Même si nous aurions pu ajouter quelques fonctionnalités à la place, il nous parraisait cohérent de rendre un travail mélant esthétisme, 
+ créativité et technique.
  
  
  
