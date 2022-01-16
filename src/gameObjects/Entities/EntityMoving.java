@@ -1,5 +1,7 @@
 package gameObjects.Entities;
 
+import java.lang.annotation.Retention;
+
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -36,6 +38,25 @@ public abstract class EntityMoving extends Entity {
      */
     public Vector2 getDir() {
         return this.dir;
+    }
+
+    /**
+     * 
+     * @param v1
+     * @param v2
+     * @param angle
+     * @return
+     */
+    public Vector2 generateDir(Vector2 v1, Vector2 v2, double angle) {
+        double dist = v2.distance(v1);
+        Vector2 ndir = v2.subVector(v1);
+        angle += Math.acos(ndir.getX() / dist);
+        double dy = v2.getY() - v1.getY();
+        if (dy < 0)
+            angle = -angle;
+        return new Vector2(
+                Math.cos(angle),
+                Math.sin(angle));
     }
 
     /**
