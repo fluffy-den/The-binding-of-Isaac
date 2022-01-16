@@ -36,7 +36,7 @@ public class EntityBoss extends EntityMonster {
      * 
      * @return
      */
-    public List<EntityMonster> spawnMonsters() {
+    public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
         return null;
     }
 };

@@ -5,6 +5,7 @@ import gameAI.AI;
 import gameObjects.Hero;
 import gameObjects.Entities.EntityBoss;
 import gameObjects.Entities.EntityMonster;
+import gameObjects.Entities.EntityTerrain;
 import gameObjects.Monsters.MonsterFly;
 import gameObjects.Projectiles.MonsterProjectile;
 import gameWorld.GameCounter;
@@ -14,9 +15,8 @@ import gameWorld.GameRoom;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.management.QueryExp;
-
 import libraries.Vector2;
+import resources.Utils;
 
 public class BossDukeOfFlies extends EntityBoss {
     public static final Vector2 SIZE = GameRoom.TILE_SIZE.scalarMultiplication(1);
@@ -27,7 +27,7 @@ public class BossDukeOfFlies extends EntityBoss {
     public static final double RELOAD_SPEED1 = 0.035;
     public static final double RELOAD_SPEED2 = 0.022;
     public static final double RAFALE_RELOAD_SPEED = 0.029;
-    public static final double MONSTER_SPAWN_SPEED = 0.002; // 15s
+    public static final double MONSTER_SPAWN_SPEED = 0.001; // 15s
     public static final int NUM_OF_MONSTERS1 = 3;
     public static final int NUM_OF_MONSTERS2 = 2;
     public static final int MELEE_DAMAGE = 1;
@@ -48,7 +48,7 @@ public class BossDukeOfFlies extends EntityBoss {
                 pos,
                 SIZE,
                 SPEED,
-                true,
+                false,
                 HP,
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,
@@ -82,7 +82,7 @@ public class BossDukeOfFlies extends EntityBoss {
      * 
      * @return
      */
-    public List<EntityMonster> spawnMonsters() {
+    public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
         // <= 75% HP Spawn 3 mouches qui suivent le boss
         if (this.health / HP < 0.75) {
             // Mis à jour de l'état des monstres
@@ -96,16 +96,22 @@ public class BossDukeOfFlies extends EntityBoss {
                 ++i;
             }
 
-            // <= 50% En spawn 2 de plus
             if (this.mobRespawnCounter.isFinished()) {
                 int toSpawn = NUM_OF_MONSTERS1;
+
+                // <= 50% En spawn 2 de plus
                 if (this.health / HP < 0.50)
                     toSpawn += NUM_OF_MONSTERS2;
                 toSpawn -= this.monsters.size();
 
                 LinkedList<EntityMonster> spawned = new LinkedList<EntityMonster>();
-                for (int k = 0; k < toSpawn; ++i) {
-                    spawned.add(new MonsterFly(this.pos));
+                for (int k = 0; k < toSpawn; ++k) {
+                    // On spawn autour du boss
+                    double dist = MonsterFly.SIZE.distance(SIZE);
+                    double angle = Math.toRadians(Utils.randomInt(0, 359));
+                    spawned.add(new MonsterFly(new Vector2(
+                            this.getPos().getX() + dist * Math.cos(angle),
+                            this.getPos().getY() + dist * Math.sin(angle))));
                 }
                 this.monsters.addAll(spawned);
                 return spawned;
@@ -124,6 +130,7 @@ public class BossDukeOfFlies extends EntityBoss {
         super.addDamage(damage);
 
         // <= 5% HP devient aggro
-        this.monsterAI.setAggroRange(1.0);
+        if (HP / this.health < 0.05)
+            this.monsterAI.setAggroRange(1.0);
     }
 }

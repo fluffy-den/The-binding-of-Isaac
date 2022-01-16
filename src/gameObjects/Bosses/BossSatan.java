@@ -5,6 +5,7 @@ import java.util.List;
 
 import gameAI.AI;
 
+import gameObjects.Entities.EntityTerrain;
 import gameObjects.Entities.EntityMonster;
 import gameObjects.Monsters.MonsterDeathHead;
 import gameObjects.Entities.EntityBoss;
@@ -13,6 +14,7 @@ import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
+import resources.Utils;
 
 /**
  * 
@@ -23,7 +25,7 @@ public class BossSatan extends EntityBoss {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
-    public static final double MONSTER_SPAWN_SPEED = 0.002;
+    public static final double MONSTER_SPAWN_SPEED = 0.001;
     public static final int NUM_OF_DEATHHEADS = 3;
     public static final int MELEE_DAMAGE = 1;
     public static final int HP = 250;
@@ -55,7 +57,7 @@ public class BossSatan extends EntityBoss {
     /**
      * 
      */
-    public List<EntityMonster> spawnMonsters() {
+    public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
         // <= 75% HP Spawn 3 têtes
         if (this.health / HP < 0.75) {
             // Mis à jour de l'état des monstres
@@ -73,8 +75,13 @@ public class BossSatan extends EntityBoss {
             LinkedList<EntityMonster> spawned = new LinkedList<EntityMonster>();
             if (this.spawnCounter.isFinished()) {
                 int toSpawn = NUM_OF_DEATHHEADS - this.deathheads.size();
-                for (int k = 0; k < toSpawn; ++i) {
-                    spawned.add(new MonsterDeathHead(this.pos));
+                for (int k = 0; k < toSpawn; ++k) {
+                    // On spawn autour du boss
+                    double dist = MonsterDeathHead.SIZE.distance(SIZE);
+                    double angle = Math.toRadians(Utils.randomInt(0, 359));
+                    spawned.add(new MonsterDeathHead(new Vector2(
+                            this.getPos().getX() + dist * Math.cos(angle),
+                            this.getPos().getY() + dist * Math.sin(angle))));
                 }
                 this.deathheads.addAll(spawned);
                 return spawned;

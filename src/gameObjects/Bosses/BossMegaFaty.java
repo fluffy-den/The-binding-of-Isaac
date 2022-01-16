@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import gameAI.AI;
 
 import gameObjects.Entities.EntityMonster;
+import gameObjects.Entities.EntityTerrain;
 import gameObjects.Monsters.MonsterConjoinedFaty;
 import gameObjects.Monsters.MonsterFaty;
 import gameObjects.Entities.EntityBoss;
@@ -14,6 +15,7 @@ import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
+import resources.Utils;
 
 /**
  * 
@@ -24,7 +26,7 @@ public class BossMegaFaty extends EntityBoss {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
-    public static final double MONSTER_SPAWN_SPEED = 0.002;
+    public static final double MONSTER_SPAWN_SPEED = 0.001;
     public static final int NUM_OF_FATIES = 2;
     public static final int NUM_OF_CONJOINED = 1;
     public static final int MELEE_DAMAGE = 1;
@@ -44,7 +46,7 @@ public class BossMegaFaty extends EntityBoss {
                 pos,
                 SIZE,
                 SPEED,
-                true,
+                false,
                 HP,
                 MELEE_DAMAGE,
                 MELEE_EFFECT_POWER,
@@ -61,7 +63,7 @@ public class BossMegaFaty extends EntityBoss {
     /**
      * 
      */
-    public List<EntityMonster> spawnMonsters() {
+    public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
         boolean timerFinished = this.spawnCounter.isFinished();
         LinkedList<EntityMonster> spawned = null;
 
@@ -82,8 +84,17 @@ public class BossMegaFaty extends EntityBoss {
             if (timerFinished) {
                 spawned = new LinkedList<EntityMonster>();
                 int toSpawn = NUM_OF_FATIES - this.faties.size();
-                for (int k = 0; k < toSpawn; ++i) {
-                    spawned.add(new MonsterFaty(this.pos));
+                for (int k = 0; k < toSpawn; ++k) {
+                    // On spawn autour du boss
+                    double dist = MonsterFaty.SIZE.distance(SIZE);
+                    Vector2 mpos;
+                    do {
+                        double angle = Math.toRadians(Utils.randomInt(0, 359));
+                        mpos = new Vector2(
+                                this.getPos().getX() + dist * Math.cos(angle),
+                                this.getPos().getY() + dist * Math.sin(angle));
+                    } while (GameRoom.isPlaceCorrect(mpos, MonsterFaty.SIZE, terrainList));
+                    spawned.add(new MonsterFaty(mpos));
                 }
                 this.faties.addAll(spawned);
             }
@@ -97,6 +108,14 @@ public class BossMegaFaty extends EntityBoss {
             // Le temps de respawn est finit?
             if (timerFinished) {
                 if (this.conjoined == null) {
+                    double dist = MonsterConjoinedFaty.SIZE.distance(SIZE);
+                    Vector2 mpos;
+                    do {
+                        double angle = Math.toRadians(Utils.randomInt(0, 359));
+                        mpos = new Vector2(
+                                this.getPos().getX() + dist * Math.cos(angle),
+                                this.getPos().getY() + dist * Math.sin(angle));
+                    } while (GameRoom.isPlaceCorrect(mpos, MonsterConjoinedFaty.SIZE, terrainList));
                     this.conjoined = new MonsterConjoinedFaty(this.pos);
                     spawned.add(this.conjoined);
                 }
