@@ -441,6 +441,12 @@ public class GameRoom {
                 this.boss = null;
             }
             this.monsterList.clear();
+        } else if (StdDraw.isKeyPressed(Controls.cheatGiveAll)) {
+            h.addCoins(1000);
+            h.setMaxHPs(60);
+            h.addKey(1000);
+            h.addBomb(1000);
+            h.addHPs(60);
         }
     }
 

@@ -102,6 +102,10 @@ public class Hero extends EntityLiving {
         ++this.nKeys;
     }
 
+    public void addKey(int i) {
+        this.nKeys += i;
+    }
+
     /**
      * @brief Fonction qui verifie si le joueur possede au moins une clef et la
      *        supprime si c'est le cas
@@ -134,6 +138,10 @@ public class Hero extends EntityLiving {
     public int addMaxHPs(int health) {
         this.maxHPs += health;
         return this.maxHPs;
+    }
+
+    public void setMaxHPs(int health){
+        this.maxHPs = health;
     }
 
     /**
@@ -273,19 +281,27 @@ public class Hero extends EntityLiving {
 
     // Bombs
     /**
-     * 
-     * @return
+     * Donne le nombre de bombe
+     * @return nb bombes
      */
     public int getBombCount() {
         return this.nBombs;
     }
 
     /**
-     * 
+     * Ajoute 1 bombe au hero
      */
     public int addBomb() {
         this.nBombs++;
         return this.nBombs;
+    }
+
+    /**
+     * Ajoute un nombre de bombe au hero
+     * @param i nb de bombe
+     */
+    public void addBomb(int i) {
+        this.nBombs += i;
     }
 
     /**
