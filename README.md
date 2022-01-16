@@ -4,6 +4,9 @@
  NOE Louis-Quentin
  JULES Cyprien
  
+ Pour executer le jeu :
+ squelette > src > gameEntry > game => run game
+ 
  
  Les commandes en jeu :
  
