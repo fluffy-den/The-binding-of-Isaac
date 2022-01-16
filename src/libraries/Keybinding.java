@@ -9,7 +9,7 @@ public class Keybinding {
 	 * Get the keycode of the special keys. Useful for interacting with StdDraw.
 	 * 
 	 * @param key
-	 * @return
+	 * @return keycode
 	 */
 	public static int keycodeOf(SpecialKeys key) {
 		switch (key) {

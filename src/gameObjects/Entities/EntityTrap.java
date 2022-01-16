@@ -26,8 +26,8 @@ public abstract class EntityTrap extends Entity {
     }
 
     /**
-     * 
-     * @param h
+     * Fait des dégats au joueur si les conditions sont remplies
+     * @param h joueur
      */
     public void onHeroAdjacency(Hero h) {
         if (this.counter.isFinished()) {

@@ -12,13 +12,13 @@ import libraries.Vector2;
 public class Utils {
 
         /**
-         * @brief
+         * @brief Dis si les vecteurs son adjacents
          * 
          * @param xp
          * @param xs
          * @param yp
          * @param ys
-         * @return
+         * @return True si adjacent, false sinon
          */
         public static boolean isAdjacent(Vector2 xp, Vector2 xs, Vector2 yp, Vector2 ys) {
                 double authorizedOverlap = GameRoom.TILE_SIZE.getX() / 1000;
@@ -39,11 +39,12 @@ public class Utils {
         }
 
         /**
-         * @brief
+         * @brief Renvoie un double aléatoire entre
+         *        deux bornes
          * 
-         * @param lower
-         * @param upper
-         * @return
+         * @param lower borne inférieur
+         * @param upper borne supérieur
+         * @return double aléatoire
          */
         public static double randomDouble(double lower, double upper) {
                 Random random = new Random();
@@ -51,10 +52,12 @@ public class Utils {
         }
 
         /**
+         * @brief Renvoie un entier aléatoire entre
+         *        deux bornes
          * 
-         * @param lower
-         * @param upper
-         * @return
+         * @param lower borne inférieur
+         * @param upperborne supérieur
+         * @return entier aléatoire
          */
         public static int randomInt(int lower, int upper) {
                 Random random = new Random();

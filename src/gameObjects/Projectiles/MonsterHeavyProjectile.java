@@ -15,9 +15,10 @@ public class MonsterHeavyProjectile extends MonsterProjectile {
     public static final String IMGPATH = "images/MonsterBall.png";
 
     /**
+     * Créé un projectil lourd
      * 
-     * @param pos
-     * @param dir
+     * @param pos Position
+     * @param dir Direction
      */
     public MonsterHeavyProjectile(Vector2 pos, Vector2 dir) {
         super(pos, SIZE, dir, SPEED, DAMAGE, RANGE, IMGPATH);

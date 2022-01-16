@@ -35,7 +35,8 @@ public class MonsterBlicker extends EntityMonster {
     private GameCounter reloadCounter;
 
     /**
-     * 
+     * Créé un nouveau blicker
+     * @param pos Position
      */
     public MonsterBlicker(Vector2 pos) {
         super(
@@ -54,7 +55,10 @@ public class MonsterBlicker extends EntityMonster {
     }
 
     /**
+     * @brief Tire les projectils du blicker
      * 
+     * @param hero Hero
+     * @return Liste des projectils
      */
     public List<MonsterProjectile> fireProjectiles(Hero h) {
         if (this.reloadCounter.isFinished()) {

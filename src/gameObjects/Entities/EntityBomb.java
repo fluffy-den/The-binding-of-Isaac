@@ -18,7 +18,7 @@ public class EntityBomb extends Entity {
     private int range;
 
     /**
-     * 
+     *  Crée une bombe
      * @param pos
      * @param range
      * @param damage
@@ -40,8 +40,8 @@ public class EntityBomb extends Entity {
     }
 
     /**
-     * 
-     * @return
+     * Création du explosion
+     * @return une entitée explosion
      */
     public EntityExplosion explode() {
         // On cree une nouvelle entite pour pouvoir l'afficher le temps voulu

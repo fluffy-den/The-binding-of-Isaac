@@ -12,7 +12,12 @@ public class Tear extends EntityProjectile {
     public static final String IMGPATH = "images/Tear.png";
 
     /**
-     * 
+     * Créé un larme
+     * @param pos Position de départ
+     * @param dir Direction de la larme
+     * @param speed Vitesse de la larme
+     * @param damage Degats de la larme
+     * @param range Portée de la larme
      */
     public Tear(Vector2 pos, Vector2 dir, double speed, int damage, double range) {
         super(pos,

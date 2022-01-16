@@ -60,8 +60,8 @@ public abstract class EntityMonster extends EntityLiving {
     }
 
     /**
-     * 
-     * @param h
+     * Fait des dégats au heros si le cooldown est passé
+     * @param h le hero
      */
     public void onMonsterHeroAdjacency(Hero h) {
         long elapsed = Game.getImageNum() - this.lastMeleeReloadFrame;
@@ -81,12 +81,11 @@ public abstract class EntityMonster extends EntityLiving {
     }
 
     public void updateParabite(Hero h){
-
     }
 
     // IA
     /**
-     * 
+     * Met à jours l'IA
      */
     public void updateAI(EntityBoss b, Hero h, GameRoom room) {
         this.dir = this.monsterAI.nextDir(b, this, h, room);
