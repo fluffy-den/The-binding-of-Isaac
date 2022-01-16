@@ -15,8 +15,8 @@ public class MonsterFaty extends EntityMonster {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.50;
-    public static final int MELEE_DAMAGE = 4;
-    public static final int HP = 12;
+    public static final int MELEE_DAMAGE = 3;
+    public static final int HP = 20;
     public static final String IMGPATH = "images/Faty.png";
 
     /**

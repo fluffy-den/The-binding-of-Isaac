@@ -1,6 +1,7 @@
 package gameObjects.Entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import gameAI.AI;
 
@@ -33,7 +34,8 @@ public abstract class EntityMonster extends EntityLiving {
      */
     public EntityMonster(Vector2 pos, Vector2 size, double speed, boolean flying, int health, int meleeDamage,
             double meleeEffectPower, double meleeReloadSpeed, String imgPath, AI ai) {
-        super(pos,
+        super(
+                pos,
                 size,
                 new Vector2(),
                 speed,
@@ -75,9 +77,10 @@ public abstract class EntityMonster extends EntityLiving {
      * 
      * @return
      */
-    public ArrayList<MonsterProjectile> fireProjectiles(Hero h) {
+    public List<MonsterProjectile> fireProjectiles(Hero h) {
         return null;
     }
+
     // IA
     /**
      * 
