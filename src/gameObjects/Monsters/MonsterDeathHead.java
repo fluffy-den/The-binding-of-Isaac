@@ -3,7 +3,6 @@ package gameObjects.Monsters;
 import gameAI.AI;
 
 import java.util.List;
-import java.util.Vector;
 import java.util.LinkedList;
 
 import gameObjects.Hero;

@@ -17,7 +17,6 @@ import resources.Controls;
 import resources.Utils;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Font;
@@ -909,13 +908,13 @@ public class GameRoom {
     // Fait Clés
     // FAIT Trapes Level
     // FAIT HUD Mob => overright du draw ?
-    // TODO Bombe timer
+    // FAIT Bombe timer
     // Esater egg On écrase la mere à la fin
 
     /// TODO: Fluffy
-    // TODO: IA (Berserk, Bounding, Random)
-    // TODO: 6. Quelques boss (7 premiers du jeu)
+    // FAIT: IA (Berserk, Bounding, Random)
+    // TODO: 6. Quelques boss (4 premiers du jeu)
     // TODO: 7. Quelques monstres
-    // TODO: IA
-    // TODO: Tire des mobs
+    // FAIT: IA
+    // FAIT: Tirs des mobs
 }
