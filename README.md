@@ -106,9 +106,10 @@
     Beaucoup de monstres et boss ont étés crées mais l'IA reste la partie la plus impréssionante.
     
     Pour l'IA:
-      Un gros travail à été réaliser sur l'intelligence artificielle. Nous avons choisi de créer 3 "types" d'IA différentes.
+      Le gros du travail a été réalisé sur l'intelligence artificielle. Nous avons choisi de créer 3 "types" d'IA différentes.
       Voici un petit descriptif de leurs différentes caractéritiques :
       Toutes les IA prennent en compte les obstacles afin de se déplacer efficacement sur un carte.
+      En effet, nous utilisons l'algorithme de recherche dans les graphes A* afin de calculer efficacement le chemin le plus court et tout en évitant les obstacles.
       
       L'IA "random" ou aléatoire :
        - Permet de faire avancer un monstre aléatoirement dans une salle lorsque le hero n'est pas à la portée du monste
@@ -124,7 +125,7 @@
       - Lors de sa mort par une larme ou une bombe, le monstre "pose" des items au sol.
     
     Pour les Boss:
-      - Implémentation de 5 boss avec des comportements variés (attaque et déplacement)
+      - Implémentation de 3 boss avec des comportements variés (attaque et déplacement)
       - Lors de sa mort par une larme ou une bombe, le boss "pose" des items au sol (+ easter egg).
   
   Les items :

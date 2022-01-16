@@ -88,6 +88,7 @@ public class GameRoom {
 
     /**
      * Met à jours et affiches les projectils par rapport au heros
+     * 
      * @param h heros
      */
     public void updateAndDrawHeroProjectiles() {
@@ -240,7 +241,11 @@ public class GameRoom {
                                 if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
                                     return ("top");
                                 } else {// 0.14
-                                    if (vec.getY() == 0.14 && StdDraw.isKeyPressed(Controls.goDown)) { // Il est important de mettre 0.14 pour éviter les bug de TP
+                                    if (vec.getY() == 0.14 && StdDraw.isKeyPressed(Controls.goDown)) { // Il est
+                                                                                                       // important de
+                                                                                                       // mettre 0.14
+                                                                                                       // pour éviter
+                                                                                                       // les bug de TP
                                         return "bottom";
                                     }
                                 }
@@ -273,6 +278,7 @@ public class GameRoom {
 
     /**
      * Met à jours et affiches le terrain par rapport au heros
+     * 
      * @param h heros
      */
     public void updateAndDrawTerrain(Hero h) {
@@ -296,8 +302,9 @@ public class GameRoom {
     }
 
     /**
-     * Met à jours et affiches les bombes par rapport au heros 
+     * Met à jours et affiches les bombes par rapport au heros
      * (et monstres / obstacles)
+     * 
      * @param h heros
      */
     public void updateHeroBombsActions(Hero h) {
@@ -371,6 +378,7 @@ public class GameRoom {
 
     /**
      * Met à jours la position du heros
+     * 
      * @param h heros
      */
     public void updateHeroMovementActions(Hero h) {
@@ -391,6 +399,7 @@ public class GameRoom {
 
     /**
      * Met à jours et affiches les larmes du heros
+     * 
      * @param h heros
      */
     public void updateHeroTearActions(Hero h) {
@@ -437,6 +446,7 @@ public class GameRoom {
 
     /**
      * Met à jours et affiches les monstres par rapport au heros
+     * 
      * @param h heros
      */
     public void updateAndDrawMonsters(Hero h) {
@@ -465,6 +475,7 @@ public class GameRoom {
 
     /**
      * Met à jours et affiches le boss par rapport au heros
+     * 
      * @param h heros
      */
     public void updateAndDrawBoss(Hero h) {
@@ -523,6 +534,7 @@ public class GameRoom {
 
     /**
      * Donne la position par rapport à la carte 9 * 9
+     * 
      * @param p Position du vecteur
      * @return coordonnée x de la case
      */
@@ -537,6 +549,7 @@ public class GameRoom {
 
     /**
      * Donne la position par rapport à la carte 9 * 9
+     * 
      * @param p Position du vecteur
      * @return coordonnée y de la case
      */
@@ -621,18 +634,12 @@ public class GameRoom {
         Vector2 p = getPositionFromTile(4, 4);
         switch (BossLevel) {
             case 0:
-                this.boss = new BossDarkOne(p);
-                break;
-            case 1:
                 this.boss = new BossDukeOfFlies(p);
                 break;
-            case 2:
+            case 1:
                 this.boss = new BossMegaFaty(p);
                 break;
-            case 3:
-                this.boss = new BossTheHusk(p);
-                break;
-            case 4:
+            case 2:
                 this.boss = new BossSatan(p);
                 break;
             default:
@@ -791,7 +798,7 @@ public class GameRoom {
     public EntityMonster choixMonstre(Vector2 p) {
         Random random = new Random();
         EntityMonster e;
-        //TODO version finalerandom.nextInt(2 + (4 * this.difficulty))
+        // TODO version finalerandom.nextInt(2 + (4 * this.difficulty))
         switch (6) {
             case 0:
                 e = new MonsterSpider(p); // lvl 0
@@ -829,6 +836,7 @@ public class GameRoom {
 
     /**
      * Choisit un item aléatoirement
+     * 
      * @param p La position du futur item
      * @return L'item
      */
@@ -892,6 +900,7 @@ public class GameRoom {
 
     /**
      * Ajoute un item achetable sur carte
+     * 
      * @param p Coordonnées de l'item
      */
     public void shopableItems(Vector2 p) {
@@ -939,6 +948,7 @@ public class GameRoom {
 
     /**
      * Change la texture de la carte
+     * 
      * @param s
      */
     public void setBackground(String s) {
@@ -948,6 +958,7 @@ public class GameRoom {
     /**
      * Change la difficulté de la carte
      * (Utilise pour les tpyes de monstres)
+     * 
      * @param d La difficulté
      */
     public void setDifficulty(int d) {

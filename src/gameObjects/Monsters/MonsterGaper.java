@@ -21,7 +21,7 @@ public class MonsterGaper extends EntityMonster {
     public static final double SPEED = 0.002;
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double RELOAD_SPEED = 0.005;
-    public static final double RAFALE_RELOAD_SPEED = 0.1;
+    public static final double RAFALE_RELOAD_SPEED = 0.05;
     public static final double FIRING_MAX_ANGLE = 10;
     public static final double FIRING_MIN_ANGLE = -10;
     public static final double MELEE_EFFECT_POWER = 5.;
@@ -59,7 +59,7 @@ public class MonsterGaper extends EntityMonster {
      */
     public List<MonsterProjectile> fireProjectiles(Hero h) {
         // Tirre 3 balles en rafale
-        if (this.reloadCounter.diffToLastTP() <= 1.00 - this.rafaleCounter.getStep()) {
+        if (this.reloadCounter.diffToLastTP() >= 1.00 - this.rafaleCounter.getStep() * 3.) {
             if (this.rafaleCounter.isFinished()) {
                 List<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
                 Vector2 dir = h.getPos().subVector(this.getPos());

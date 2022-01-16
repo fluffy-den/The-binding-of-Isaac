@@ -20,7 +20,7 @@ public class MonsterDeathHead extends EntityMonster {
                         .vectorMultiplication(new Vector2(1.0, 0.7));
         public static final double SPEED = 0.002;
         public static final double MELEE_RELOAD_SPEED = 0.040;
-        public static final double RELOAD_SPEED = 0.10;
+        public static final double RELOAD_SPEED = 0.01;
         public static final double MELEE_EFFECT_POWER = 5.;
         public static final double AGGRO_RANGE = GameRoom.TILE_DIST * 0.00;
         public static final int FIRING_MAX_ANGLE = 7;
