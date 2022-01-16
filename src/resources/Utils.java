@@ -44,6 +44,6 @@ public class Utils {
          * @return
          */
         public static double randomDouble(double lower, double upper) {
-                return Math.random() * (upper - lower);
+                return lower + Math.random() * ((upper - lower) + 1.00);
         }
 }
