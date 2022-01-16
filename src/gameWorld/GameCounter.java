@@ -1,5 +1,7 @@
 package gameWorld;
 
+import resources.DisplaySettings;
+
 public class GameCounter {
     private long lasttp;
     private double tpstep;
@@ -28,6 +30,14 @@ public class GameCounter {
         }
 
         return false;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    public double diffToLastTP() {
+        return (double) (Game.getImageNum() - lasttp) / (double) DisplaySettings.FRAME_PER_SECOND;
     }
 
     /**

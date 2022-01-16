@@ -25,7 +25,7 @@ public class MonsterBlicker extends EntityMonster {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double RELOAD_SPEED = 0.040;
     public static final double FIRING_MAX_ANGLE = 5;
-    public static final double FIRING_MIN_ANGLE = 5;
+    public static final double FIRING_MIN_ANGLE = -5;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = GameRoom.TILE_DIST * 3.00;
     public static final int MELEE_DAMAGE = 1;
