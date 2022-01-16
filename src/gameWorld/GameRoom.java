@@ -448,7 +448,7 @@ public class GameRoom {
             }
             if (m.isAdjacent(h)) {
                 m.onMonsterHeroAdjacency(h);
-                ArrayList<MonsterProjectile> pList = m.fireProjectiles(h);
+                List<MonsterProjectile> pList = m.fireProjectiles(h);
                 if (pList != null) {
                     this.projListMonster.addAll(pList);
                 }
@@ -472,7 +472,7 @@ public class GameRoom {
         }
         if (this.boss.isAdjacent(h)) {
             this.boss.onMonsterHeroAdjacency(h);
-            ArrayList<MonsterProjectile> pList = this.boss.fireProjectiles(h);
+            List<MonsterProjectile> pList = this.boss.fireProjectiles(h);
             if (pList != null) {
                 this.projListMonster.addAll(pList);
             }
