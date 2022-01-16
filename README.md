@@ -71,9 +71,9 @@
       
   La construction des dongeon : (Tous faits aléatoirement)
     
-    Nous avons choisit de réaliser 5 niveaux distincts comprenant chacun un boss différent.
+    Nous avons choisit de réaliser 3 niveaux distincts comprenant chacun un boss différent.
     La progression étant linéaire, un joueur ne peux pas choisir un niveau en particulier, il doit affronter tous les boss.
-      NB: En utilisant les touches de tricher, nous pouvez fini le jeu en 3 à 4 minutes maximum (voir 30s dans les meilleurs cas)
+      NB: En utilisant les touches de tricher, nous pouvez fini le jeu en 1 à 2 minutes maximum (voir 30s dans les meilleurs cas)
     Les dongeons sont crées aléatoirement mais les boss sont placés dans un ordre précis (du au caractéristiques de chaque boss)
     Un dongeon est composée d'UNE salle de boss et d'UN shop exactement, il peuvent être situées nimporte ou sur la carte, même au spawn.
     Les dongeons sont composés d'une multitude de salles "classiques"
