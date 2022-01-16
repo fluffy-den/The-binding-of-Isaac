@@ -27,7 +27,8 @@ public class GameLevel {
     public GameLevel(int nbRooms, int difficulty, Hero hero) {
         this.hero = hero;
         this.level = new ArrayList<GameMap>();
-        level.add(new GameMap(difficulty, 0, 4, 0, new Vector2(0, 0), difficulty)); //Les deux difficulty n'ont pas le même rôle
+        level.add(new GameMap(difficulty, 0, 4, 0, new Vector2(0, 0), difficulty)); // Les deux difficulty n'ont pas le
+                                                                                    // même rôle
         creatingClassicRoom(1, 76, 15, level.get(0).getCo(), difficulty);
         this.currentCord = level.get(0).getCo();
         delUselessDoors();
@@ -41,6 +42,10 @@ public class GameLevel {
                 m.GetRoom().setBackground("images/Start.png");
             }
             getSpeRoom(new Vector2(0, 0)).setBackground("images/StartExplain.png");
+        } else if (difficulty == 1) {
+            for (GameMap m : this.level) {
+                m.GetRoom().setBackground("images/LastBackGround.png");
+            }
         }
     }
 
