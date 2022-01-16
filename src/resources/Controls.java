@@ -31,5 +31,6 @@ public class Controls {
 	public static int cheatKillAll = Keybinding.keycodeOf('k');
 	public static int cheatOneShot = Keybinding.keycodeOf('p');
 	public static int cheatGold = Keybinding.keycodeOf('o');
+	public static int cheatGiveAll = Keybinding.keycodeOf(Keybinding.SpecialKeys.TAB);
 
 }
