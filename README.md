@@ -182,10 +182,4 @@
  Même si nous aurions pu ajouter quelques fonctionnalités à la place, il nous paraissait cohérent de rendre un travail mêlant esthétisme, 
  créativité et technique.
  
- 
- 
- 
- 
- 
- 
- 
+ Toutes les images qui n'étaient pas dans le projet de base sont issues du site spriters-resource.com.
