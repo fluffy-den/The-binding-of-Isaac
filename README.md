@@ -50,7 +50,7 @@
  - La diversité des comportements (des monstres, boss et items)
  - L'optimisation coté FPS
 
- LES POINTS FAIBLES DDE CETTE VERSION DU JEU :
+ LES POINTS FAIBLES DE CETTE VERSION DU JEU :
  - Redondance du gameplay
  - Pas d'histoire
  - Graphismes peu variés
@@ -71,8 +71,8 @@
  
  
  
- Choix sur la programation du jeu :
-      
+ Choix sur la programmation du jeu :
+    
   La construction des donjon : (Tous faits aléatoirement)
     
     Nous avons choisi de réaliser 3 niveaux distincts comprenant chacun un boss différent.

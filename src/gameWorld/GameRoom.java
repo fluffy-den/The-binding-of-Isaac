@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Font;
-import java.lang.constant.DynamicCallSiteDesc;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
@@ -973,43 +972,4 @@ public class GameRoom {
     public void setDifficulty(int d) {
         this.difficulty = d;
     }
-
-    /// TODO: Cyp3
-    // FAIT: 1. Une grille (X, Y) où l'on peut placer, monstres, items (ArrayList?)
-    // FAIT: 2. Fonction qui convertie une grille en une salle
-    // : -> IA: Berserk (suit tout le temps le joueur)
-    // : -> IA: Random (direction aléatoire tout le temps)
-    // : -> IA:
-    // Système de chemins en fonction de la grille (class Pathing?)
-    // [I] [M] [I] [I]
-    // [I] [R] [R] [I]
-    // [I] [I] [X] [I]
-    // [ ] [ ] [ ] [ ]
-    // - Rapide
-    // - Distance M - X dépends de constantes (minimales=1) et (maximales=choix)
-
-    // Vérifier que toutes les portes sont reliés S1(L <=> R)S2
-
-    // FAIT: 6. Classe qui génère un niveau entier, dont la difficulté augmente en
-    // fonction des niveaux
-    // : -> Retrouve sa maman fin, c'est un objet
-    // : -> Sinon lui roule dessus -> c'est la fin aussi
-    // : -> Easter Egg, maman morte -> Fin
-    // : -> Nombre de salle maximum en fonction de la difficulté
-    // FAIT: 3. Portes
-    // FAIT loots moob
-    // FAIT Images
-    // FAIT Shop
-    // Fait Clés
-    // FAIT Trapes Level
-    // FAIT HUD Mob => overright du draw ?
-    // FAIT Bombe timer
-    // Esater egg On écrase la mere à la fin
-
-    /// TODO: Fluffy
-    // FAIT: IA (Berserk, Bounding, Random)
-    // FAIT: 6. Quelques boss (7 premiers du jeu)
-    // FAIT: 7. Quelques monstres
-    // FAIT: IA
-    // FAIT: Tire des mobs
 }

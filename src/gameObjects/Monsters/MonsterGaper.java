@@ -13,7 +13,6 @@ import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
-import resources.DisplaySettings;
 import resources.Utils;
 
 public class MonsterGaper extends EntityMonster {

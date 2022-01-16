@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import libraries.Vector2;
-import resources.DisplaySettings;
 import resources.Utils;
 
 public class BossDukeOfFlies extends EntityBoss {

@@ -9,9 +9,7 @@ import gameObjects.Entities.EntityMonster;
 import gameObjects.Entities.EntityTerrain;
 import gameObjects.Monsters.MonsterConjoinedFaty;
 import gameObjects.Monsters.MonsterFaty;
-import gameObjects.Monsters.MonsterParabite;
 import gameObjects.Projectiles.MonsterHeavyProjectile;
-import gameObjects.Projectiles.MonsterLightProjectile;
 import gameObjects.Projectiles.MonsterProjectile;
 import gameObjects.Entities.EntityBoss;
 import gameObjects.Hero;
@@ -175,7 +173,7 @@ public class BossMegaFaty extends EntityBoss {
                     Vector2 mpos = new Vector2(
                             this.getPos().getX() + dist * Math.cos(angle),
                             this.getPos().getY() + dist * Math.sin(angle));
-                    this.conjoined = new MonsterConjoinedFaty(this.pos);
+                    this.conjoined = new MonsterConjoinedFaty(mpos);
                     spawned.add(this.conjoined);
                 }
             }

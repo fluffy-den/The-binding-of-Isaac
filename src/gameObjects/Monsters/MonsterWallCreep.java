@@ -3,18 +3,15 @@ package gameObjects.Monsters;
 import gameAI.AI;
 
 import java.util.List;
-import java.util.LinkedList;
 
 import gameObjects.Hero;
 import gameObjects.Entities.EntityMonster;
-import gameObjects.Projectiles.MonsterHeavyProjectile;
 import gameObjects.Projectiles.MonsterLightProjectile;
 import gameObjects.Projectiles.MonsterProjectile;
 import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
-import resources.Utils;
 
 /**
  * 

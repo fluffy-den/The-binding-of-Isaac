@@ -1,7 +1,5 @@
 package gameObjects.Entities;
 
-import java.lang.annotation.Retention;
-
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
