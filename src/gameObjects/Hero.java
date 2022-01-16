@@ -145,7 +145,7 @@ public class Hero extends EntityLiving {
     }
 
     /**
-     * 
+     *  Cheat TAB
      * @param health
      * @return
      */

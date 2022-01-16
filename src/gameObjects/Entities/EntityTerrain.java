@@ -13,7 +13,8 @@ public abstract class EntityTerrain extends Entity {
     }
 
     /**
-     * 
+     * Si une entitée est dans un obstacle, elle en sort
+     * @see onAjacency
      */
     public void onLivingAdjacency(EntityLiving living) {
         // On ignore les entités volantes

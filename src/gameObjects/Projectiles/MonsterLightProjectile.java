@@ -22,9 +22,10 @@ public class MonsterLightProjectile extends MonsterProjectile {
     public static final String IMGPATH = "images/MonsterBall.png";
 
     /**
+     * Créé un projectil léger
      * 
-     * @param pos
-     * @param dir
+     * @param pos Position
+     * @param dir Direction
      */
     public MonsterLightProjectile(Vector2 pos, Vector2 dir) {
 
@@ -32,7 +33,11 @@ public class MonsterLightProjectile extends MonsterProjectile {
     }
 
     /**
-     * 
+     * Créé un cercle de projectils legers
+     * @param pos Position du centre du cercle
+     * @param h Hero
+     * @param n Nombre de projectils
+     * @return Liste des projectils
      */
     public static List<MonsterProjectile> generateProjectilesInCircle(Vector2 pos, Hero h, int n) {
         int a = 360 / n;

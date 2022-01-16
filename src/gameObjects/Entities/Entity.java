@@ -97,7 +97,7 @@ public abstract class Entity {
 
     // Dessin
     /**
-     * 
+     * Affiche l'entitée
      */
     public void draw() {
         StdDraw.picture(getPos().getX(), getPos().getY(), getImgPath(), getSize().getX(), getSize().getY(),

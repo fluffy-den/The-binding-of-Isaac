@@ -19,8 +19,8 @@ public class GameCounter {
 
     /// Methodes
     /**
-     * 
-     * @return
+     * Dis si le temps est écoulé ou non
+     * @return True si le temps est fini false sinon
      */
     public boolean isFinished() {
         long current = Game.getImageNum();
