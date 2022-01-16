@@ -38,6 +38,24 @@
  
  
  
+ Voici un autocritique de notre jeu qui nous semble importante à faire:
+ 
+ LES POINTS FORTS DE CETTE VERSION DU JEU :
+ - L'intelligence artificielle des monstres (IA)
+ - La génération aléatoire compexe
+ - La diversitée des comportements (des monstres, boss et items)
+ - L'optimisation coté FPS
+
+ LES POINTS FAIBLES DDE CETTE VERSION DU JEU :
+ - Redondance du gameplay
+ - Pas d'histoire
+ - Graphismes peu variés
+ 
+ 
+ 
+ 
+ 
+ 
  
  
  La partie suivante traite des choix de développement et artistiques du jeu, des spoils peuvent êtres présents
@@ -86,24 +104,41 @@
   
   Les monstres et boss et IA:
     Beaucoup de monstres et boss ont étés crées mais l'IA reste la partie la plus impréssionante.
-    Pour l'IA:
     
+    Pour l'IA:
+      Un gros travail à été réaliser sur l'intelligence artificielle. Nous avons choisi de créer 3 "types" d'IA différentes.
+      Voici un petit descriptif de leurs différentes caractéritiques :
+      Toutes les IA prennent en compte les obstacles afin de se déplacer efficacement sur un carte.
+      
+      L'IA "random" ou aléatoire :
+       - Permet de faire avancer un monstre aléatoirement dans une salle lorsque le hero n'est pas à la portée du monste
+       
+      L'IA "aggro" ou agressive :
+       - Permet de faire avancer un monstre vers le joueur en prenant le chemin le plus approprié
+    
+      L'IA "escort" ou accompagnatrice :
+       - Permet de faire avancer un monstre autour d'un autre monstre "alpha"
+      
     Pour les Monstres:
+      - Implémentation de 10 monstres avec des comportements variés (attaque et déplacement)
+      - Lors de sa mort par une larme ou une bombe, le monstre "pose" des items au sol.
     
     Pour les Boss:
+      - Implémentation de 5 boss avec des comportements variés (attaque et déplacement)
+      - Lors de sa mort par une larme ou une bombe, le boss "pose" des items au sol (+ easter egg).
   
   Les items :
     Une multitude l'items à été crée avec des caractéristiques spécifiques pour chacuns (Attention, il y a un malus dans le jeu !)
     Les caractéristiques de chacuns de ses items sont à retrouver dans le code pour ne pas surchager cette descition.
     Les effets ne sont pas aléatoirs.
-    
-    Le taux d'apparition d'items est volontairement très très imortant pour permettre de tous les utiliser à la correction.
+    NB :Le taux d'apparition d'items est volontairement très très imortant pour permettre de tous les utiliser à la correction.
     
     Items principeaux:
     - Les bombes : Permettent d'exploser les obstacles, font des dégats au hero et aux monstres
     - Les items de soins : Redonne des vies au heros
     - Les items pasifs : Donne un bonus / malus au hero pour le reste de l'aventure
     - Les pièces : Permettent d'acheter des items au shop (touche entrée)
+    - Les 11 autres items sont à découvrir en jeu !
   
   Les obstacles :
     - Les pièges : Il peuvent faire des dégats aux joueur toutes les x secondes.
@@ -116,7 +151,16 @@
     - Les portes fermées à clé : S'ouvrent si le jouer à une clé et restent ouverte jusqu'à la fin du jeu.
       Ces portes ont aussi une texture spéciale
     
-  Le HUD:
+  Le HUD (heads-up display) :
+    Nous avons affichés différentes caractéristiques à savoir :
+    - Le nombre de pièces
+    - Le nombre de vies
+    - Le nombre de clés
+    - Le nombre de bombes
+    - La portée des larmes
+    - Le temps de recharge des larmes
+    - Les dégats des larmes
+    - La vitesse de dplacement du hero
   
   Pour vous repérer dans le code et comprendre la construction: (avant de lire les commentaires du code)
     
