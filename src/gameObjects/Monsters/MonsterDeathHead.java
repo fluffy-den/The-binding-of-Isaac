@@ -62,19 +62,19 @@ public class MonsterDeathHead extends EntityMonster {
                         double angle = Math.toRadians(Utils.randomInt(FIRING_MIN_ANGLE, FIRING_MAX_ANGLE));
                         pL.add(new MonsterLightProjectile(
                                         this.pos,
-                                        this.generateDir(this.getPos(), h.getPos(), angle)));
+                                        generateDir(this.getPos(), h.getPos(), Math.toRadians(angle))));
 
                         // #2. Tir milieu
                         angle = Math.toRadians(Utils.randomInt(-FIRING_MIN_ANGLE, FIRING_MIN_ANGLE));
                         pL.add(new MonsterLightProjectile(
                                         this.pos,
-                                        this.generateDir(this.getPos(), h.getPos(), angle)));
+                                        generateDir(this.getPos(), h.getPos(), Math.toRadians(angle))));
 
                         // #3. Tir droite
                         angle = Math.toRadians(Utils.randomInt(-FIRING_MAX_ANGLE, -FIRING_MIN_ANGLE));
                         pL.add(new MonsterLightProjectile(
                                         this.pos,
-                                        this.generateDir(this.getPos(), h.getPos(), angle)));
+                                        generateDir(this.getPos(), h.getPos(), Math.toRadians(angle))));
 
                         return pL;
                 }

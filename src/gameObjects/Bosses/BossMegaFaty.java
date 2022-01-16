@@ -9,7 +9,12 @@ import gameObjects.Entities.EntityMonster;
 import gameObjects.Entities.EntityTerrain;
 import gameObjects.Monsters.MonsterConjoinedFaty;
 import gameObjects.Monsters.MonsterFaty;
+import gameObjects.Monsters.MonsterParabite;
+import gameObjects.Projectiles.MonsterHeavyProjectile;
+import gameObjects.Projectiles.MonsterLightProjectile;
+import gameObjects.Projectiles.MonsterProjectile;
 import gameObjects.Entities.EntityBoss;
+import gameObjects.Hero;
 
 import gameWorld.GameCounter;
 import gameWorld.GameRoom;
@@ -27,15 +32,26 @@ public class BossMegaFaty extends EntityBoss {
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
     public static final double MONSTER_SPAWN_SPEED = 0.001;
+    public static final double RELOAD_SPEED1 = 0.005;
+    public static final double RELOAD_SPEED2 = 0.01;
+    public static final double RAFALE_RELOAD_SPEED = 0.05;
     public static final int NUM_OF_FATIES = 2;
     public static final int NUM_OF_CONJOINED = 1;
-    public static final int MELEE_DAMAGE = 1;
+    public static final int RAFALE1_SIZE = 6;
+    public static final int RAFALE1_COUNT = 4;
+    public static final int RAFALE2_SIZE = 2;
+    public static final int FIRING_ANGLE = 5;
+    public static final int MELEE_DAMAGE = 6;
     public static final int HP = 200;
     public static final String IMGPATH = "images/MegaFaty.png";
 
     private LinkedList<EntityMonster> faties;
     private EntityMonster conjoined;
     private GameCounter spawnCounter;
+    private GameCounter fire1Counter;
+    private GameCounter rafale1Counter;
+    private GameCounter fire2Counter;
+    private int rafale1Num;
 
     /**
      * 
@@ -57,18 +73,64 @@ public class BossMegaFaty extends EntityBoss {
         this.faties = new LinkedList<EntityMonster>();
         this.conjoined = null;
         this.spawnCounter = new GameCounter(MONSTER_SPAWN_SPEED);
+        this.fire1Counter = new GameCounter(RELOAD_SPEED1);
+        this.rafale1Counter = new GameCounter(RAFALE_RELOAD_SPEED);
+        this.fire2Counter = new GameCounter(RELOAD_SPEED2);
+    }
+
+    /// Projectiles
+    /**
+     * 
+     */
+    public List<MonsterProjectile> fireProjectiles(Hero h) {
+        double healthratio = (double) this.health / (double) HP;
+
+        // <= 100% HP Tire en cercle sur le joueur
+        LinkedList<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
+        if (this.fire1Counter.isFinished() || (rafale1Num != 0 && this.rafale1Counter.isFinished())) {
+            for (int i = -RAFALE1_SIZE / 2; i < RAFALE1_SIZE / 2; ++i) {
+                pL.add(new MonsterHeavyProjectile(
+                        this.pos,
+                        MonsterHeavyProjectile.generateDir(
+                                this.pos,
+                                h.getPos(),
+                                Math.toRadians(Utils.randomInt(
+                                        (i - 1) * FIRING_ANGLE, (i + 1) * FIRING_ANGLE)))));
+            }
+            rafale1Num++;
+            if (this.rafale1Num > RAFALE1_COUNT)
+                this.rafale1Num = 0;
+        }
+
+        // <= 35% Tirre de manière aléatoire des heaby balls
+        if (healthratio < 0.35) {
+            for (int i = 0; i < RAFALE2_SIZE; ++i) {
+                pL.add(new MonsterHeavyProjectile(
+                        this.pos,
+                        MonsterHeavyProjectile.generateDir(
+                                this.pos,
+                                h.getPos(),
+                                Math.toRadians(Utils.randomInt(
+                                        0, 359)))));
+            }
+        }
+
+        return pL;
+
     }
 
     /// Monsters
     /**
      * 
      */
+    @Override
     public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
         boolean timerFinished = this.spawnCounter.isFinished();
         LinkedList<EntityMonster> spawned = null;
 
         // <= 75% HP Spawn 2 Faty
-        if (this.health / HP < 0.75) {
+        double healthratio = (double) this.health / (double) HP;
+        if (healthratio < 0.75) {
             // Mis à jour de l'état des monstres
             int i = 0;
             while (i < this.faties.size()) {
@@ -88,12 +150,10 @@ public class BossMegaFaty extends EntityBoss {
                     // On spawn autour du boss
                     double dist = MonsterFaty.SIZE.distance(SIZE);
                     Vector2 mpos;
-                    do {
-                        double angle = Math.toRadians(Utils.randomInt(0, 359));
-                        mpos = new Vector2(
-                                this.getPos().getX() + dist * Math.cos(angle),
-                                this.getPos().getY() + dist * Math.sin(angle));
-                    } while (GameRoom.isPlaceCorrect(mpos, MonsterFaty.SIZE, terrainList));
+                    double angle = Math.toRadians(Utils.randomInt(0, 359));
+                    mpos = new Vector2(
+                            this.getPos().getX() + dist * Math.cos(angle),
+                            this.getPos().getY() + dist * Math.sin(angle));
                     spawned.add(new MonsterFaty(mpos));
                 }
                 this.faties.addAll(spawned);
@@ -101,7 +161,7 @@ public class BossMegaFaty extends EntityBoss {
         }
 
         // <= 50% HP Spawn a conjoined Faty
-        if (this.health / HP < 0.50) {
+        if (healthratio < 0.50) {
             if (this.conjoined != null && !this.conjoined.isLiving())
                 this.conjoined = null;
 
@@ -123,5 +183,19 @@ public class BossMegaFaty extends EntityBoss {
         }
 
         return spawned;
+    }
+
+    /**
+     * 
+     */
+    /// Damage Event
+    @Override
+    public void addDamage(int damage) {
+        super.addDamage(damage);
+
+        // <= 10% HP devient aggro
+        double healthratio = (double) this.health / (double) HP;
+        if (healthratio < 0.10)
+            this.monsterAI.setAggroRange(1.0);
     }
 }

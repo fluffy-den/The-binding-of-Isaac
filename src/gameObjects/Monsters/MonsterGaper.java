@@ -13,6 +13,7 @@ import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
+import resources.DisplaySettings;
 import resources.Utils;
 
 public class MonsterGaper extends EntityMonster {
@@ -22,16 +23,19 @@ public class MonsterGaper extends EntityMonster {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double RELOAD_SPEED = 0.005;
     public static final double RAFALE_RELOAD_SPEED = 0.05;
-    public static final double FIRING_MAX_ANGLE = 10;
-    public static final double FIRING_MIN_ANGLE = -10;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
+    public static final int FIRING_MAX_ANGLE = 10;
+    public static final int FIRING_MIN_ANGLE = -10;
+    public static final int RAFALE_SIZE = 3;
+    public static final int RAFALE_COUNT = 3;
     public static final int MELEE_DAMAGE = 4;
     public static final int HP = 12;
     public static final String IMGPATH = "images/Gaper.png";
 
     private GameCounter reloadCounter;
     private GameCounter rafaleCounter;
+    int rafaleNum = 0;
 
     /**
      * 
@@ -59,18 +63,17 @@ public class MonsterGaper extends EntityMonster {
      */
     public List<MonsterProjectile> fireProjectiles(Hero h) {
         // Tirre 3 balles en rafale
-        if (this.reloadCounter.diffToLastTP() >= 1.00 - this.rafaleCounter.getStep() * 3.) {
-            if (this.rafaleCounter.isFinished()) {
-                List<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
-                Vector2 dir = h.getPos().subVector(this.getPos());
-                double angle = Math.toRadians(Utils.randomDouble(FIRING_MIN_ANGLE, FIRING_MAX_ANGLE));
+        if (this.reloadCounter.isFinished() || (this.rafaleNum != 0 && this.rafaleCounter.isFinished())) {
+            LinkedList<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
+            for (int i = 0; i < RAFALE_SIZE; ++i) {
                 pL.add(new MonsterLightProjectile(
                         this.pos,
-                        new Vector2(
-                                dir.getX() * Math.cos(angle),
-                                dir.getY() * Math.sin(angle))));
-                return pL;
+                        generateDir(this.pos, h.getPos(), Utils.randomInt(FIRING_MIN_ANGLE, FIRING_MAX_ANGLE))));
             }
+            this.rafaleNum++;
+            if (this.rafaleNum > RAFALE_COUNT)
+                this.rafaleNum = 0;
+            return pL;
         }
 
         return null;

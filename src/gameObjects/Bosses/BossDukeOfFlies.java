@@ -7,6 +7,8 @@ import gameObjects.Entities.EntityBoss;
 import gameObjects.Entities.EntityMonster;
 import gameObjects.Entities.EntityTerrain;
 import gameObjects.Monsters.MonsterFly;
+import gameObjects.Projectiles.MonsterHeavyProjectile;
+import gameObjects.Projectiles.MonsterLightProjectile;
 import gameObjects.Projectiles.MonsterProjectile;
 import gameWorld.GameCounter;
 
@@ -16,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import libraries.Vector2;
+import resources.DisplaySettings;
 import resources.Utils;
 
 public class BossDukeOfFlies extends EntityBoss {
@@ -24,13 +27,16 @@ public class BossDukeOfFlies extends EntityBoss {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
-    public static final double RELOAD_SPEED1 = 0.035;
-    public static final double RELOAD_SPEED2 = 0.022;
+    public static final double RELOAD_SPEED1 = 0.025;
+    public static final double RELOAD_SPEED2 = 0.003;
     public static final double RAFALE_RELOAD_SPEED = 0.029;
     public static final double MONSTER_SPAWN_SPEED = 0.001; // 15s
+    public static final int RAFALE_COUNT = 3;
+    public static final int RAFALE_SIZE = 3;
+    public static final int MAX_FIRE_ANGLE = 20;
     public static final int NUM_OF_MONSTERS1 = 3;
     public static final int NUM_OF_MONSTERS2 = 2;
-    public static final int MELEE_DAMAGE = 1;
+    public static final int MELEE_DAMAGE = 4;
     public static final int HP = 150;
     public static final String IMGPATH = "images/TheDukeOfFlies.png";
 
@@ -38,6 +44,7 @@ public class BossDukeOfFlies extends EntityBoss {
     private GameCounter fireInCircleCounter;
     private GameCounter fireDirectCounter;
     private GameCounter rafaleCounter;
+    private int rafaleNum;
     private GameCounter mobRespawnCounter; // 15s
 
     /**
@@ -60,6 +67,7 @@ public class BossDukeOfFlies extends EntityBoss {
         this.fireInCircleCounter = new GameCounter(RELOAD_SPEED1);
         this.fireDirectCounter = new GameCounter(RELOAD_SPEED2);
         this.rafaleCounter = new GameCounter(RAFALE_RELOAD_SPEED);
+        this.rafaleNum = 0;
         this.mobRespawnCounter = new GameCounter(MONSTER_SPAWN_SPEED);
     }
 
@@ -67,14 +75,45 @@ public class BossDukeOfFlies extends EntityBoss {
     /**
      * 
      */
+    @Override
     public List<MonsterProjectile> fireProjectiles(Hero h) {
         // <= 100% HP Tire en cercle
+        LinkedList<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
+        if (this.fireInCircleCounter.isFinished())
+            pL.addAll(MonsterLightProjectile.generateProjectilesInCircle(this.pos, h, 12));
+
+        double healthratio = (double) this.health / (double) HP;
 
         // <= 75%-50% < HP Tire 3 gros projectile en arc de cercle
+        if (healthratio < 0.75 && healthratio >= 0.50 && this.fireDirectCounter.isFinished()) {
+            for (int i = 0; i < RAFALE_SIZE; ++i) {
+                pL.add(new MonsterHeavyProjectile(
+                        this.pos,
+                        MonsterHeavyProjectile.generateDir(
+                                this.pos,
+                                h.getPos(),
+                                Math.toRadians(Utils.randomInt(-MAX_FIRE_ANGLE, MAX_FIRE_ANGLE)))));
+            }
+        }
 
         // <= 50% HP Tire 3 gros projectile en rafale de 3
+        if (healthratio < 0.50) {
+            if (this.fireDirectCounter.isFinished() || (this.rafaleNum != 0 && this.rafaleCounter.isFinished())) {
+                for (int i = 0; i < RAFALE_SIZE; ++i) {
+                    pL.add(new MonsterHeavyProjectile(
+                            this.pos,
+                            MonsterHeavyProjectile.generateDir(
+                                    this.pos,
+                                    h.getPos(),
+                                    Math.toRadians(Utils.randomInt(-MAX_FIRE_ANGLE, MAX_FIRE_ANGLE)))));
+                }
+                this.rafaleNum++;
+                if (this.rafaleNum > RAFALE_COUNT)
+                    this.rafaleNum = 0;
+            }
+        }
 
-        return null;
+        return pL;
     }
 
     /// Monsters
@@ -82,9 +121,11 @@ public class BossDukeOfFlies extends EntityBoss {
      * 
      * @return
      */
+    @Override
     public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
+        double healthratio = (double) this.health / (double) HP;
         // <= 75% HP Spawn 3 mouches qui suivent le boss
-        if (this.health / HP < 0.75) {
+        if (this.health / HP < healthratio) {
             // Mis à jour de l'état des monstres
             int i = 0;
             while (i < this.monsters.size()) {
@@ -100,7 +141,7 @@ public class BossDukeOfFlies extends EntityBoss {
                 int toSpawn = NUM_OF_MONSTERS1;
 
                 // <= 50% En spawn 2 de plus
-                if (this.health / HP < 0.50)
+                if (this.health / HP < healthratio)
                     toSpawn += NUM_OF_MONSTERS2;
                 toSpawn -= this.monsters.size();
 
@@ -130,7 +171,8 @@ public class BossDukeOfFlies extends EntityBoss {
         super.addDamage(damage);
 
         // <= 5% HP devient aggro
-        if (HP / this.health < 0.05)
+        double healthratio = (double) this.health / (double) HP;
+        if (healthratio < 0.05)
             this.monsterAI.setAggroRange(1.0);
     }
 }

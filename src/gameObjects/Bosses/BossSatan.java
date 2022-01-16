@@ -27,7 +27,7 @@ public class BossSatan extends EntityBoss {
     public static final double AGGRO_RANGE = 0.00;
     public static final double MONSTER_SPAWN_SPEED = 0.001;
     public static final int NUM_OF_DEATHHEADS = 3;
-    public static final int MELEE_DAMAGE = 1;
+    public static final int MELEE_DAMAGE = 8;
     public static final int HP = 250;
     public static final String IMGPATH = "images/Satan.png";
 
@@ -59,7 +59,8 @@ public class BossSatan extends EntityBoss {
      */
     public List<EntityMonster> spawnMonsters(List<EntityTerrain> terrainList) {
         // <= 75% HP Spawn 3 têtes
-        if (this.health / HP < 0.75) {
+        double healthratio = (double) this.health / (double) HP;
+        if (healthratio / HP < 0.75) {
             // Mis à jour de l'état des monstres
             int i = 0;
             while (i < this.deathheads.size()) {
@@ -88,5 +89,18 @@ public class BossSatan extends EntityBoss {
             }
         }
         return null;
+    }
+
+    /**
+     * 
+     */
+    /// Damage Event
+    public void addDamage(int damage) {
+        super.addDamage(damage);
+
+        // <= 10% HP devient aggro
+        double healthratio = (double) this.health / (double) HP;
+        if (healthratio <= 0.15)
+            this.monsterAI.setAggroRange(1.0);
     }
 }
