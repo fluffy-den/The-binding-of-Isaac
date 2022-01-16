@@ -791,7 +791,8 @@ public class GameRoom {
     public EntityMonster choixMonstre(Vector2 p) {
         Random random = new Random();
         EntityMonster e;
-        switch (random.nextInt(2 + (4 * this.difficulty))) {
+        //TODO version finalerandom.nextInt(2 + (4 * this.difficulty))
+        switch (6) {
             case 0:
                 e = new MonsterSpider(p); // lvl 0
                 break;
