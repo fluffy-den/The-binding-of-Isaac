@@ -495,6 +495,10 @@ public class GameRoom {
         if (pList != null) {
             this.projListMonster.addAll(pList);
         }
+        List<EntityMonster> mList = this.boss.spawnMonsters(this.terrainList);
+        if (mList != null) {
+            this.monsterList.addAll(mList);
+        }
         this.boss.updateAndDraw();
         this.boss.updateAI(this.boss, h, this);
     }
