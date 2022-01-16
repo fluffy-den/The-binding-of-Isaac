@@ -69,6 +69,9 @@
       Même si l'idée d'une telle salle est une méchanique très intéressante.
     Le contenue d'une salle "classique" est générer aléatoirement, à savoir les monstres, les portes, les items, les obstacles,
     ainsi que les positions de ces derniers.
+    Plus les salles sont éloignées du spawn, plus la difficulté augmente.
+    PLus le joueur "monte dans les niveaux" et plus la variété de monstreres sera grande.
+      NB: Les nouveux monstres ont de nouvelles caractéristiques et sont "plus forts".
     
   Nous avons choisit de séparer les salles en 3 catégories :
     - Les spawn avec pour le premier les commandes au sol puis des pentagrames pour les suivantes (Sans obstacles)
