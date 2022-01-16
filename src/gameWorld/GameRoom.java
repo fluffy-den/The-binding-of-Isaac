@@ -670,12 +670,7 @@ public class GameRoom {
                             // developpeur
                             break;
                         case "M": // Fly or Spider
-                            int rdm = random.nextInt(2);
-                            if (rdm == 0) {
-                                this.monsterList.add(new MonsterSpider(p));
-                            } else {
-                                this.monsterList.add(new MonsterFly(p));
-                            }
+                            this.monsterList.add(choixMonstre(p));
                             break;
                         case "I": // Item
                             this.itemList.add(choixItem(p));
@@ -775,6 +770,44 @@ public class GameRoom {
                 itemList.add(choixItem(rdm));
             }
         }
+    }
+
+    public EntityMonster choixMonstre(Vector2 p) {
+        Random random = new Random();
+        EntityMonster e;
+        switch (random.nextInt(11)) {
+            case 0:
+                e = new MonsterFaty(p);
+                break;
+            case 1:
+                e = new MonsterFly(p);
+                break;
+            case 2:
+                e = new MonsterBlicker(p);
+                break;
+            case 3:
+                e = new MonsterConjoinedFaty(p);
+                break;
+            case 4:
+                e = new MonsterDeathHead(p);
+                break;
+            case 5:
+                e = new MonsterSpider(p);
+                break;
+            case 6:
+                e = new MonsterParabite(p);
+                break;
+            case 7:
+                e = new MonsterGaper(p);
+                break;
+            case 8:
+                e = new MonsterWizoob(p);
+                break;
+            default:
+                e = new MonsterWallCreep(p);
+                break;
+        }
+        return e;
     }
 
     public EntityItem choixItem(Vector2 p) {
@@ -908,13 +941,13 @@ public class GameRoom {
     // Fait Clés
     // FAIT Trapes Level
     // FAIT HUD Mob => overright du draw ?
-    // FAIT Bombe timer
+    // TODO Bombe timer
     // Esater egg On écrase la mere à la fin
 
     /// TODO: Fluffy
-    // FAIT: IA (Berserk, Bounding, Random)
-    // TODO: 6. Quelques boss (4 premiers du jeu)
+    // TODO: IA (Berserk, Bounding, Random)
+    // TODO: 6. Quelques boss (7 premiers du jeu)
     // TODO: 7. Quelques monstres
-    // FAIT: IA
-    // FAIT: Tirs des mobs
+    // TODO: IA
+    // TODO: Tire des mobs
 }
