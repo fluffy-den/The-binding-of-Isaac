@@ -116,6 +116,7 @@
     - Les portes fermées à clé : S'ouvrent si le jouer à une clé et restent ouverte jusqu'à la fin du jeu.
       Ces portes ont aussi une texture spéciale
     
+  Le HUD:
   
   Pour vous repérer dans le code et comprendre la construction: (avant de lire les commentaires du code)
     
