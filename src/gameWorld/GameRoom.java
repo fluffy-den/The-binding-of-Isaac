@@ -240,7 +240,7 @@ public class GameRoom {
                                 if (vec.getY() == 0.86 && StdDraw.isKeyPressed(Controls.goUp)) {
                                     return ("top");
                                 } else {// 0.14
-                                    if (StdDraw.isKeyPressed(Controls.goDown)) {
+                                    if (vec.getY() == 0.14 && StdDraw.isKeyPressed(Controls.goDown)) { // Il est important de mettre 0.14 pour éviter les bug de TP
                                         return "bottom";
                                     }
                                 }
@@ -248,7 +248,7 @@ public class GameRoom {
                                 if (vec.getX() == 0.1 && StdDraw.isKeyPressed(Controls.goLeft)) {
                                     return "left";
                                 } else {// 0.9
-                                    if (StdDraw.isKeyPressed(Controls.goRight)) {
+                                    if (vec.getX() == 0.9 && StdDraw.isKeyPressed(Controls.goRight)) {
                                         return "right";
                                     }
                                 }
