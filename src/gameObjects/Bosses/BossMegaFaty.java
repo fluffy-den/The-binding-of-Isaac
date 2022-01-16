@@ -32,9 +32,9 @@ public class BossMegaFaty extends EntityBoss {
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
     public static final double MONSTER_SPAWN_SPEED = 0.001;
-    public static final double RELOAD_SPEED1 = 0.001;
-    public static final double RELOAD_SPEED2 = 0.01;
-    public static final double RAFALE_RELOAD_SPEED = 0.001;
+    public static final double RELOAD_SPEED1 = 0.004;
+    public static final double RELOAD_SPEED2 = 0.08;
+    public static final double RAFALE_RELOAD_SPEED = 0.01;
     public static final int NUM_OF_FATIES = 2;
     public static final int NUM_OF_CONJOINED = 1;
     public static final int RAFALE1_SIZE = 6;

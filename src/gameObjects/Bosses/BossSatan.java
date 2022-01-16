@@ -31,16 +31,16 @@ public class BossSatan extends EntityBoss {
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
     public static final double MONSTER_SPAWN_SPEED = 0.001;
-    public static final double RELOAD_SPEED1 = 0.013;
-    public static final double RELOAD_SPEED2 = 0.003;
-    public static final double RAFALE_SPEED2 = 0.025;
-    public static final double RELOAD_SPEED3 = 0.008;
+    public static final double RELOAD_SPEED1 = 0.020;
+    public static final double RELOAD_SPEED2 = 0.005;
+    public static final double RAFALE_SPEED2 = 0.020;
+    public static final double RELOAD_SPEED3 = 0.080;
     public static final int NUM_OF_DEATHHEADS = 3;
     public static final int SIZE_OF_RAFALE2 = 3;
     public static final int COUNT_OF_RAFALE2 = 3;
     public static final int ANGLE_OF_SHOTS2 = 10;
     public static final int MELEE_DAMAGE = 8;
-    public static final int NUM_OF_SHOTS3 = 2;
+    public static final int NUM_OF_SHOTS3 = 4;
     public static final int HP = 250;
     public static final String IMGPATH = "images/Satan.png";
 
@@ -92,7 +92,7 @@ public class BossSatan extends EntityBoss {
             pL.addAll(MonsterLightProjectile.generateProjectilesInCircle(
                     this.pos,
                     h,
-                    8));
+                    16));
         }
 
         // 2. Fire 3 big balls of 3
@@ -112,7 +112,7 @@ public class BossSatan extends EntityBoss {
             }
         }
 
-        // 3. Fire 2 big balls in random position
+        // 3. Fire 4 big balls in random position
         if (healthratio <= 0.45) {
             if (this.reloadCounter3.isFinished()) {
                 for (int i = 0; i < NUM_OF_SHOTS3; ++i) {
