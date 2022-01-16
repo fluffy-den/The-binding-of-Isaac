@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Font;
+import java.lang.constant.DynamicCallSiteDesc;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
@@ -37,6 +38,7 @@ public class GameRoom {
     private boolean DoorSkin = true; // Dit le un changement de skin à été fait
     private boolean isShop;
     private boolean isSpawn;
+    private int difficulty;
 
     public static final double MIN_XPOS = 0.113;
     public static final double MAX_XPOS = 0.887;
@@ -52,7 +54,7 @@ public class GameRoom {
 
     /// Constructeur
     /**
-     * 
+     * Initialise une GameRoom
      */
     public GameRoom() {
         this.monsterList = new LinkedList<EntityMonster>();
@@ -72,7 +74,7 @@ public class GameRoom {
 
     /// Dessin et mise à jour
     /**
-     * 
+     * Affiche les textures au sol
      */
     public void drawBackground() {
         /// Sol
@@ -85,7 +87,8 @@ public class GameRoom {
     }
 
     /**
-     * 
+     * Met à jours et affiches les projectils par rapport au heros
+     * @param h heros
      */
     public void updateAndDrawHeroProjectiles() {
         /// Projectiles du joueur
@@ -269,8 +272,8 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param h
+     * Met à jours et affiches le terrain par rapport au heros
+     * @param h heros
      */
     public void updateAndDrawTerrain(Hero h) {
         /// Collision
@@ -293,8 +296,9 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param h
+     * Met à jours et affiches les bombes par rapport au heros 
+     * (et monstres / obstacles)
+     * @param h heros
      */
     public void updateHeroBombsActions(Hero h) {
         // Drop bomb
@@ -366,8 +370,8 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param h
+     * Met à jours la position du heros
+     * @param h heros
      */
     public void updateHeroMovementActions(Hero h) {
         // Déplacement d'Isaac
@@ -386,7 +390,8 @@ public class GameRoom {
     }
 
     /**
-     * 
+     * Met à jours et affiches les larmes du heros
+     * @param h heros
      */
     public void updateHeroTearActions(Hero h) {
         // Tirs d'Isaac
@@ -431,9 +436,8 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param h
-     *
+     * Met à jours et affiches les monstres par rapport au heros
+     * @param h heros
      */
     public void updateAndDrawMonsters(Hero h) {
         /// Monstres
@@ -459,6 +463,10 @@ public class GameRoom {
 
     }
 
+    /**
+     * Met à jours et affiches le boss par rapport au heros
+     * @param h heros
+     */
     public void updateAndDrawBoss(Hero h) {
         /// Boss
         if (this.boss == null) {
@@ -514,7 +522,9 @@ public class GameRoom {
     }
 
     /**
-     * 
+     * Donne la position par rapport à la carte 9 * 9
+     * @param p Position du vecteur
+     * @return coordonnée x de la case
      */
     public static int getTileXIndex(Vector2 p) {
         int x = (int) ((p.getX() - MIN_XPOS) / TILE_SIZE.getX());
@@ -526,9 +536,9 @@ public class GameRoom {
     }
 
     /**
-     * 
-     * @param e
-     * @return
+     * Donne la position par rapport à la carte 9 * 9
+     * @param p Position du vecteur
+     * @return coordonnée y de la case
      */
     public static int getTileYIndex(Vector2 p) {
         int y = (int) ((p.getY() - MIN_YPOS) / TILE_SIZE.getY());
@@ -772,44 +782,55 @@ public class GameRoom {
         }
     }
 
+    /**
+     * CHoix d'un mosntre aléatoire
+     * 
+     * @param p La position du future monstre
+     * @return Le monstre
+     */
     public EntityMonster choixMonstre(Vector2 p) {
         Random random = new Random();
         EntityMonster e;
-        switch (random.nextInt(11)) {
+        switch (random.nextInt(2 + (4 * this.difficulty))) {
             case 0:
-                e = new MonsterFaty(p);
+                e = new MonsterSpider(p); // lvl 0
                 break;
             case 1:
-                e = new MonsterFly(p);
+                e = new MonsterFly(p); // lvl 0
                 break;
-            case 2:
-                e = new MonsterBlicker(p);
+            case 2, 3:
+                e = new MonsterBlicker(p); // lvl 1
                 break;
-            case 3:
-                e = new MonsterConjoinedFaty(p);
+            case 4, 5:
+                e = new MonsterConjoinedFaty(p); // lvl 1
                 break;
-            case 4:
-                e = new MonsterDeathHead(p);
+            case 6, 7:
+                e = new MonsterDeathHead(p); // lvl 2
                 break;
-            case 5:
-                e = new MonsterSpider(p);
+            case 8, 9:
+                e = new MonsterFaty(p); // lvl 2
                 break;
-            case 6:
-                e = new MonsterParabite(p);
+            case 10, 11:
+                e = new MonsterParabite(p); // lvl 3
                 break;
-            case 7:
-                e = new MonsterGaper(p);
+            case 12, 13:
+                e = new MonsterGaper(p); // lvl 3
                 break;
-            case 8:
-                e = new MonsterWizoob(p);
+            case 14, 16:
+                e = new MonsterWizoob(p); // lvl 4
                 break;
             default:
-                e = new MonsterWallCreep(p);
+                e = new MonsterWallCreep(p); // lvl 4
                 break;
         }
         return e;
     }
 
+    /**
+     * Choisit un item aléatoirement
+     * @param p La position du futur item
+     * @return L'item
+     */
     public EntityItem choixItem(Vector2 p) {
         EntityItem e = new ItemNickel(p);
         Random random = new Random();
@@ -868,6 +889,10 @@ public class GameRoom {
         return e;
     }
 
+    /**
+     * Ajoute un item achetable sur carte
+     * @param p Coordonnées de l'item
+     */
     public void shopableItems(Vector2 p) {
         Random random = new Random();
         EntityItem e = new ItemNickel(p);
@@ -901,6 +926,9 @@ public class GameRoom {
         this.itemList.add(e);
     }
 
+    /**
+     * Place les 3 items à vendre
+     */
     public void marketMaker() {
         shopableItems(getPositionFromTile(2, 3));
         shopableItems(getPositionFromTile(4, 3));
@@ -908,8 +936,21 @@ public class GameRoom {
 
     }
 
+    /**
+     * Change la texture de la carte
+     * @param s
+     */
     public void setBackground(String s) {
         this.imgPath = s;
+    }
+
+    /**
+     * Change la difficulté de la carte
+     * (Utilise pour les tpyes de monstres)
+     * @param d La difficulté
+     */
+    public void setDifficulty(int d) {
+        this.difficulty = d;
     }
 
     /// TODO: Cyp3
@@ -941,13 +982,13 @@ public class GameRoom {
     // Fait Clés
     // FAIT Trapes Level
     // FAIT HUD Mob => overright du draw ?
-    // TODO Bombe timer
+    // FAIT Bombe timer
     // Esater egg On écrase la mere à la fin
 
     /// TODO: Fluffy
-    // TODO: IA (Berserk, Bounding, Random)
-    // TODO: 6. Quelques boss (7 premiers du jeu)
-    // TODO: 7. Quelques monstres
-    // TODO: IA
-    // TODO: Tire des mobs
+    // FAIT: IA (Berserk, Bounding, Random)
+    // FAIT: 6. Quelques boss (7 premiers du jeu)
+    // FAIT: 7. Quelques monstres
+    // FAIT: IA
+    // FAIT: Tire des mobs
 }

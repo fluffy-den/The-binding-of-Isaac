@@ -3,7 +3,7 @@ package gameWorld;
 import libraries.Vector2;
 
 public class GameMap {
-    public GameRoom curent;
+    public GameRoom current;
     public Vector2 co;
 
     /**
@@ -14,10 +14,12 @@ public class GameMap {
      * @param xydoor     Coordonnées de la porte d'entrée Nord 04, Ouest 36, Est 44,
      *                   Sud 76
      * @param nbdoor     Nombre de portes à ajouter sur une grille
+     * @param bossDifficulty Permet d'associer une difficulté à un boss
      */
-    public GameMap(int difficulty, int type, int xydoor, int nbdoor, Vector2 co) {
-        curent = new GameRoom();
-        curent.generateGameRoom(difficulty, type, xydoor, nbdoor);
+    public GameMap(int difficulty, int type, int xydoor, int nbdoor, Vector2 co, int bossDifficulty) {
+        current = new GameRoom();
+        current.setDifficulty(bossDifficulty);
+        current.generateGameRoom(difficulty, type, xydoor, nbdoor);
         this.co = co;
     }
 
@@ -31,9 +33,9 @@ public class GameMap {
     public void PositionDoors(int xydoor, int nbDoor) {
         Vector2[] coDoor = new Vector2[nbDoor];
         int tmp = 0;
-        for (int i = 0; i < curent.doorList.size(); i++) {
-            if (curent.doorList.get(i).getPos() != GameRoom.getPositionFromTile(xydoor / 9, xydoor % 9)) {
-                coDoor[tmp] = curent.doorList.get(i).getPos();
+        for (int i = 0; i < current.doorList.size(); i++) {
+            if (current.doorList.get(i).getPos() != GameRoom.getPositionFromTile(xydoor / 9, xydoor % 9)) {
+                coDoor[tmp] = current.doorList.get(i).getPos();
                 tmp++;
             }
         }
@@ -44,6 +46,6 @@ public class GameMap {
     }
 
     public GameRoom GetRoom() {
-        return this.curent;
+        return this.current;
     }
 }

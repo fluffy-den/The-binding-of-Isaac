@@ -27,8 +27,8 @@ public class GameLevel {
     public GameLevel(int nbRooms, int difficulty, Hero hero) {
         this.hero = hero;
         this.level = new ArrayList<GameMap>();
-        level.add(new GameMap(difficulty, 0, 4, 0, new Vector2(0, 0)));
-        creatingClassicRoom(1, 76, 15, level.get(0).getCo());
+        level.add(new GameMap(difficulty, 0, 4, 0, new Vector2(0, 0), difficulty)); //Les deux difficulty n'ont pas le même rôle
+        creatingClassicRoom(1, 76, 15, level.get(0).getCo(), difficulty);
         this.currentCord = level.get(0).getCo();
         delUselessDoors();
         this.currentRoom = getSpeRoom(this.currentCord);
@@ -80,12 +80,14 @@ public class GameLevel {
      * Création d'une sale de jeu dite "classique"
      * En opposion aux salles de boss / shop / spawn
      * 
-     * @param difficulty  difficulté de la salle
-     * @param EntrancePos Coordonnées de la porte d'entrée
-     * @param nbRoomRest  Nombre maxium de salles qui peuvent être crées
-     * @param MotherPos   Coordonnées de la salle précédente sur le level
+     * @param difficulty     Difficulté de la salle
+     * @param EntrancePos    Coordonnées de la porte d'entrée
+     * @param nbRoomRest     Nombre maxium de salles qui peuvent être crées
+     * @param MotherPos      Coordonnées de la salle précédente sur le level
+     * @param BossDifficulty Niveau du boss actuel
      */
-    public void creatingClassicRoom(int difficulty, int EntrancePos, int nbRoomRest, Vector2 MotherPos) {
+    public void creatingClassicRoom(int difficulty, int EntrancePos, int nbRoomRest, Vector2 MotherPos,
+            int bossDifficulty) {
         Random random = new Random();
         int d = random.nextInt(2); // increase difficulty
         int nbD;
@@ -115,12 +117,12 @@ public class GameLevel {
         if (getSpeRoom(pos) != null) {
             return;
         }
-        GameMap map = new GameMap(difficulty + d, 1, EntrancePos, nbD, pos);
+        GameMap map = new GameMap(difficulty + d, 1, EntrancePos, nbD, pos, bossDifficulty);
         level.add(map);
         if (nbD > 0) {
             for (int i = 0; i < nbD; i++) {
                 creatingClassicRoom(difficulty + d, posToInt(map.GetRoom().doorList.get(i).getPos()), nbRoomRest / nbD,
-                        pos);
+                        pos, bossDifficulty);
             }
         }
     }
@@ -258,7 +260,8 @@ public class GameLevel {
             Vector2 pos = new Vector2(this.level.get(i).getCo());
             pos.addX(1);
             if (getSpeRoom(pos) == null) {
-                this.level.add(new GameMap(bossLevel, type, 36, 0, pos));
+                this.level.add(new GameMap(bossLevel, type, 36, 0, pos, bossLevel)); // Les deux bossLevel n'ont pas la
+                                                                                     // même fonction
                 d.setPos(new Vector2(0.9, 0.5));
                 d.setRotation(270);
                 this.level.get(i).GetRoom().doorList.add(d);
@@ -266,7 +269,7 @@ public class GameLevel {
             } else {
                 pos.addX(-2);
                 if (getSpeRoom(pos) == null) {
-                    this.level.add(new GameMap(bossLevel, type, 44, 0, pos));
+                    this.level.add(new GameMap(bossLevel, type, 44, 0, pos, bossLevel));
                     d.setPos(new Vector2(0.1, 0.5));
                     d.setRotation(90);
                     this.level.get(i).GetRoom().doorList.add(d);
@@ -275,13 +278,13 @@ public class GameLevel {
                     pos.addX(1);
                     pos.addY(1);
                     if (getSpeRoom(pos) == null) {
-                        this.level.add(new GameMap(bossLevel, type, 76, 0, pos));
+                        this.level.add(new GameMap(bossLevel, type, 76, 0, pos, bossLevel));
                         this.level.get(i).GetRoom().doorList.add(d);
                         b = true;
                     } else {
                         pos.addY(-2);
                         if (getSpeRoom(pos) == null) {
-                            this.level.add(new GameMap(bossLevel, type, 4, 0, pos));
+                            this.level.add(new GameMap(bossLevel, type, 4, 0, pos, bossLevel));
                             d.setPos(new Vector2(0.5, 0.14));
                             d.setRotation(180);
                             this.level.get(i).GetRoom().doorList.add(d);

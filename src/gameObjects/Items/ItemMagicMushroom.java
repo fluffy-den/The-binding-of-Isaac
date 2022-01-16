@@ -12,7 +12,7 @@ import libraries.Vector2;
  */
 public class ItemMagicMushroom extends EntityItem {
     public static final Vector2 SIZE = GameRoom.TILE_SIZE.scalarMultiplication(0.5);
-    public static final int BUFFOF_MAXHEALTH = 2;
+    public static final int BUFFOF_MAXHEALTH = 1;
     public static final int BUFFOF_DAMAGE = 1;
     public static final int BUFFOF_HEALTH = Integer.MAX_VALUE;
     public static final double BUFFOF_RANGE = 0.05;
