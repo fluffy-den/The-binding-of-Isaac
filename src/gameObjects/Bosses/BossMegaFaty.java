@@ -32,9 +32,9 @@ public class BossMegaFaty extends EntityBoss {
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
     public static final double MONSTER_SPAWN_SPEED = 0.001;
-    public static final double RELOAD_SPEED1 = 0.005;
+    public static final double RELOAD_SPEED1 = 0.001;
     public static final double RELOAD_SPEED2 = 0.01;
-    public static final double RAFALE_RELOAD_SPEED = 0.05;
+    public static final double RAFALE_RELOAD_SPEED = 0.001;
     public static final int NUM_OF_FATIES = 2;
     public static final int NUM_OF_CONJOINED = 1;
     public static final int RAFALE1_SIZE = 6;
@@ -73,6 +73,7 @@ public class BossMegaFaty extends EntityBoss {
         this.faties = new LinkedList<EntityMonster>();
         this.conjoined = null;
         this.spawnCounter = new GameCounter(MONSTER_SPAWN_SPEED);
+        this.rafale1Num = 0;
         this.fire1Counter = new GameCounter(RELOAD_SPEED1);
         this.rafale1Counter = new GameCounter(RAFALE_RELOAD_SPEED);
         this.fire2Counter = new GameCounter(RELOAD_SPEED2);
@@ -97,21 +98,22 @@ public class BossMegaFaty extends EntityBoss {
                                 Math.toRadians(Utils.randomInt(
                                         (i - 1) * FIRING_ANGLE, (i + 1) * FIRING_ANGLE)))));
             }
-            rafale1Num++;
+            ++rafale1Num;
             if (this.rafale1Num > RAFALE1_COUNT)
                 this.rafale1Num = 0;
         }
 
         // <= 35% Tirre de manière aléatoire des heaby balls
         if (healthratio < 0.35) {
-            for (int i = 0; i < RAFALE2_SIZE; ++i) {
-                pL.add(new MonsterHeavyProjectile(
-                        this.pos,
-                        MonsterHeavyProjectile.generateDir(
-                                this.pos,
-                                h.getPos(),
-                                Math.toRadians(Utils.randomInt(
-                                        0, 359)))));
+            if (this.fire2Counter.isFinished()) {
+                for (int i = 0; i < RAFALE2_SIZE; ++i) {
+                    double angle = Math.toRadians(Utils.randomInt(0, 359));
+                    pL.add(new MonsterHeavyProjectile(
+                            this.pos,
+                            new Vector2(
+                                    Math.cos(angle),
+                                    Math.sin(angle))));
+                }
             }
         }
 
@@ -169,13 +171,10 @@ public class BossMegaFaty extends EntityBoss {
             if (timerFinished) {
                 if (this.conjoined == null) {
                     double dist = MonsterConjoinedFaty.SIZE.distance(SIZE);
-                    Vector2 mpos;
-                    do {
-                        double angle = Math.toRadians(Utils.randomInt(0, 359));
-                        mpos = new Vector2(
-                                this.getPos().getX() + dist * Math.cos(angle),
-                                this.getPos().getY() + dist * Math.sin(angle));
-                    } while (GameRoom.isPlaceCorrect(mpos, MonsterConjoinedFaty.SIZE, terrainList));
+                    double angle = Math.toRadians(Utils.randomInt(0, 359));
+                    Vector2 mpos = new Vector2(
+                            this.getPos().getX() + dist * Math.cos(angle),
+                            this.getPos().getY() + dist * Math.sin(angle));
                     this.conjoined = new MonsterConjoinedFaty(this.pos);
                     spawned.add(this.conjoined);
                 }

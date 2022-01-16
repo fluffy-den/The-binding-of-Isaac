@@ -107,7 +107,7 @@ public class BossDukeOfFlies extends EntityBoss {
                                     h.getPos(),
                                     Math.toRadians(Utils.randomInt(-MAX_FIRE_ANGLE, MAX_FIRE_ANGLE)))));
                 }
-                this.rafaleNum++;
+                ++this.rafaleNum;
                 if (this.rafaleNum > RAFALE_COUNT)
                     this.rafaleNum = 0;
             }

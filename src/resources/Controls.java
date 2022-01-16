@@ -9,10 +9,10 @@ public class Controls {
 	public static int goRight = Keybinding.keycodeOf('d');
 	public static int goLeft = Keybinding.keycodeOf('q');
 
-	// Touche: Changer de niveau 
+	// Touche: Changer de niveau
 	public static int space = Keybinding.keycodeOf(Keybinding.SpecialKeys.SPACE);
 
-	// Touche: Aceter un objet
+	// Touche: Acheter un objet
 	public static int enter = Keybinding.keycodeOf(Keybinding.SpecialKeys.RETURN);
 
 	// Touches: Tirs des larmes d'ISAAC
