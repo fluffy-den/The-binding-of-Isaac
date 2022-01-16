@@ -47,7 +47,7 @@ public abstract class EntityMoving extends Entity {
      * @param angle
      * @return
      */
-    public Vector2 generateDir(Vector2 v1, Vector2 v2, double angle) {
+    public static Vector2 generateDir(Vector2 v1, Vector2 v2, double angle) {
         double dist = v2.distance(v1);
         Vector2 ndir = v2.subVector(v1);
         angle += Math.acos(ndir.getX() / dist);

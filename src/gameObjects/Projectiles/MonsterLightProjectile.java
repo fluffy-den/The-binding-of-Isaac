@@ -1,5 +1,12 @@
 package gameObjects.Projectiles;
 
+import java.util.List;
+
+import gameObjects.Hero;
+import gameObjects.Entities.EntityMoving;
+
+import java.util.LinkedList;
+
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -22,5 +29,19 @@ public class MonsterLightProjectile extends MonsterProjectile {
     public MonsterLightProjectile(Vector2 pos, Vector2 dir) {
 
         super(pos, SIZE, dir, SPEED, DAMAGE, RANGE, IMGPATH);
+    }
+
+    /**
+     * 
+     */
+    public static List<MonsterProjectile> generateProjectilesInCircle(Vector2 pos, Hero h, int n) {
+        int a = 360 / n;
+        List<MonsterProjectile> pL = new LinkedList<MonsterProjectile>();
+        for (int i = 0; i < n; ++i) {
+            pL.add(new MonsterLightProjectile(
+                    pos,
+                    EntityMoving.generateDir(pos, h.getPos(), a * i)));
+        }
+        return pL;
     }
 }

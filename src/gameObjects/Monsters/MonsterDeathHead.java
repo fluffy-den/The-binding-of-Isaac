@@ -78,7 +78,6 @@ public class MonsterDeathHead extends EntityMonster {
 
                         return pL;
                 }
-
                 return null;
         }
 }

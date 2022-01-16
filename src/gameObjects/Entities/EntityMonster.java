@@ -18,7 +18,7 @@ public abstract class EntityMonster extends EntityLiving {
     protected double meleeEffectPower;
     protected double meleeReloadSpeed;
     private long lastMeleeReloadFrame;
-    private AI monsterAI;
+    protected AI monsterAI;
 
     /**
      * @brief
@@ -98,7 +98,7 @@ public abstract class EntityMonster extends EntityLiving {
      */
     @Override
     public void addDamage(int damage) {
-        this.health -= damage;
+        super.addDamage(damage);
         this.monsterAI.onHit();
     }
 }

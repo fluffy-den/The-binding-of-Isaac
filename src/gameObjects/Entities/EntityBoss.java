@@ -3,7 +3,7 @@ package gameObjects.Entities;
 import libraries.Vector2;
 import libraries.StdDraw;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import gameAI.AI;
 
@@ -36,7 +36,7 @@ public class EntityBoss extends EntityMonster {
      * 
      * @return
      */
-    public ArrayList<EntityMonster> spawnMonsters() {
+    public List<EntityMonster> spawnMonsters() {
         return null;
     }
 };
