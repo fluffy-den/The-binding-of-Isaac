@@ -20,7 +20,7 @@ public class MonsterDeathHead extends EntityMonster {
                         .vectorMultiplication(new Vector2(1.0, 0.7));
         public static final double SPEED = 0.002;
         public static final double MELEE_RELOAD_SPEED = 0.040;
-        public static final double RELOAD_SPEED = 0.010;
+        public static final double RELOAD_SPEED = 0.10;
         public static final double MELEE_EFFECT_POWER = 5.;
         public static final double AGGRO_RANGE = GameRoom.TILE_DIST * 0.00;
         public static final int FIRING_MAX_ANGLE = 15;
@@ -81,9 +81,9 @@ public class MonsterDeathHead extends EntityMonster {
                                         this.pos,
                                         new Vector2(
                                                         firedir.getX() + firedir.getX()
-                                                                        * Math.cos(angle),
+                                                                        * Math.cos(angle+1),
                                                         firedir.getY() + firedir.getY()
-                                                                        * Math.sin(angle))));
+                                                                        * Math.sin(angle+1))));
 
                         // #3. Tir droite
                         angle = Math.toRadians(Utils.randomInt(-FIRING_MAX_ANGLE, -FIRING_MIN_ANGLE));
@@ -91,9 +91,9 @@ public class MonsterDeathHead extends EntityMonster {
                                         this.pos,
                                         new Vector2(
                                                         firedir.getX() + firedir.getX()
-                                                                        * Math.cos(angle),
+                                                                        * Math.cos(angle + 2),
                                                         firedir.getY() + firedir.getY()
-                                                                        * Math.sin(angle))));
+                                                                        * Math.sin(angle + 2))));
 
                         // TODO: Bug angle inexact???
 
