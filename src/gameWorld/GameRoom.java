@@ -491,6 +491,7 @@ public class GameRoom {
             return;
         }
         if (!this.boss.isLiving()) {
+            this.doorList.add(new ExitDoor(new Vector2(0.5, 0.5)));
             dropLoot(this.boss);
             this.boss = null;
             return;
