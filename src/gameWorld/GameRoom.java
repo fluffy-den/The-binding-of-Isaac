@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.Random;
 import java.awt.Font;
+import java.lang.constant.DynamicCallSiteDesc;
 
 public class GameRoom {
     protected LinkedList<EntityMonster> monsterList;
@@ -37,6 +38,7 @@ public class GameRoom {
     private boolean DoorSkin = true; // Dit le un changement de skin à été fait
     private boolean isShop;
     private boolean isSpawn;
+    private int difficulty;
 
     public static final double MIN_XPOS = 0.113;
     public static final double MAX_XPOS = 0.887;
@@ -772,39 +774,45 @@ public class GameRoom {
         }
     }
 
+    /**
+     * CHoix d'un mosntre aléatoire
+     * 
+     * @param p La position du future monstre
+     * @return Le monstre
+     */
     public EntityMonster choixMonstre(Vector2 p) {
         Random random = new Random();
         EntityMonster e;
-        switch (random.nextInt(11)) {
+        switch (random.nextInt(2 + (2 * this.difficulty))) {
             case 0:
-                e = new MonsterFaty(p);
+                e = new MonsterSpider(p); // lvl 0
                 break;
             case 1:
-                e = new MonsterFly(p);
+                e = new MonsterFly(p); // lvl 0
                 break;
             case 2:
-                e = new MonsterBlicker(p);
+                e = new MonsterBlicker(p); // lvl 1
                 break;
             case 3:
-                e = new MonsterConjoinedFaty(p);
+                e = new MonsterConjoinedFaty(p); // lvl 1
                 break;
             case 4:
-                e = new MonsterDeathHead(p);
+                e = new MonsterDeathHead(p); // lvl 2
                 break;
             case 5:
-                e = new MonsterSpider(p);
+                e = new MonsterFaty(p); // lvl 2
                 break;
             case 6:
-                e = new MonsterParabite(p);
+                e = new MonsterParabite(p); // lvl 3
                 break;
             case 7:
-                e = new MonsterGaper(p);
+                e = new MonsterGaper(p); // lvl 3
                 break;
             case 8:
-                e = new MonsterWizoob(p);
+                e = new MonsterWizoob(p); // lvl 4
                 break;
             default:
-                e = new MonsterWallCreep(p);
+                e = new MonsterWallCreep(p); // lvl 4
                 break;
         }
         return e;
@@ -910,6 +918,10 @@ public class GameRoom {
 
     public void setBackground(String s) {
         this.imgPath = s;
+    }
+
+    public void setDifficulty(int d) {
+        this.difficulty = d;
     }
 
     /// TODO: Cyp3
