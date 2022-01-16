@@ -1,9 +1,15 @@
 package gameObjects.Bosses;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import gameAI.AI;
 
+import gameObjects.Entities.EntityMonster;
+import gameObjects.Monsters.MonsterDeathHead;
 import gameObjects.Entities.EntityBoss;
 
+import gameWorld.GameCounter;
 import gameWorld.GameRoom;
 
 import libraries.Vector2;
@@ -17,9 +23,14 @@ public class BossSatan extends EntityBoss {
     public static final double MELEE_RELOAD_SPEED = 0.040;
     public static final double MELEE_EFFECT_POWER = 5.;
     public static final double AGGRO_RANGE = 0.00;
+    public static final double MONSTER_SPAWN_SPEED = 0.002;
+    public static final int NUM_OF_DEATHHEADS = 3;
     public static final int MELEE_DAMAGE = 1;
     public static final int HP = 250;
     public static final String IMGPATH = "images/Satan.png";
+
+    private LinkedList<EntityMonster> deathheads;
+    private GameCounter spawnCounter;
 
     /**
      * 
@@ -36,5 +47,39 @@ public class BossSatan extends EntityBoss {
                 MELEE_RELOAD_SPEED,
                 IMGPATH,
                 new AI(pos, AGGRO_RANGE));
+
+        this.deathheads = new LinkedList<EntityMonster>();
+        this.spawnCounter = new GameCounter(MONSTER_SPAWN_SPEED);
+    }
+
+    /**
+     * 
+     */
+    public List<EntityMonster> spawnMonsters() {
+        // <= 75% HP Spawn 3 têtes
+        if (this.health / HP < 0.75) {
+            // Mis à jour de l'état des monstres
+            int i = 0;
+            while (i < this.deathheads.size()) {
+                EntityMonster m = this.deathheads.get(i);
+                if (!m.isLiving()) {
+                    this.deathheads.remove(i);
+                    --i;
+                }
+                ++i;
+            }
+
+            // Le temps de respawn est finit?
+            LinkedList<EntityMonster> spawned = new LinkedList<EntityMonster>();
+            if (this.spawnCounter.isFinished()) {
+                int toSpawn = NUM_OF_DEATHHEADS - this.deathheads.size();
+                for (int k = 0; k < toSpawn; ++i) {
+                    spawned.add(new MonsterDeathHead(this.pos));
+                }
+                this.deathheads.addAll(spawned);
+                return spawned;
+            }
+        }
+        return null;
     }
 }
