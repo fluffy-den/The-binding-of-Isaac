@@ -466,6 +466,7 @@ public class GameRoom {
             if (pList != null) {
                 this.projListMonster.addAll(pList);
             }
+            m.updateParabite(h);
             m.updateAndDraw();
             m.updateAI(this.boss, h, this);
             ++i;
@@ -639,10 +640,8 @@ public class GameRoom {
             case 1:
                 this.boss = new BossMegaFaty(p);
                 break;
-            case 2:
-                this.boss = new BossSatan(p);
-                break;
             default:
+                this.boss = new BossSatan(p);
                 break;
         }
     }
@@ -798,37 +797,36 @@ public class GameRoom {
     public EntityMonster choixMonstre(Vector2 p) {
         Random random = new Random();
         EntityMonster e;
-        // TODO version finalerandom.nextInt(2 + (4 * this.difficulty))
-        switch (6) {
+        switch (random.nextInt(4 + (4 * this.difficulty))) {
             case 0:
                 e = new MonsterSpider(p); // lvl 0
                 break;
             case 1:
                 e = new MonsterFly(p); // lvl 0
                 break;
-            case 2, 3:
-                e = new MonsterBlicker(p); // lvl 1
+            case 2:
+                e = new MonsterBlicker(p); // lvl 0
                 break;
-            case 4, 5:
-                e = new MonsterConjoinedFaty(p); // lvl 1
+            case 3:
+                e = new MonsterConjoinedFaty(p); // lvl 0
                 break;
-            case 6, 7:
-                e = new MonsterDeathHead(p); // lvl 2
+            case 4:
+                e = new MonsterDeathHead(p); // lvl 1
                 break;
-            case 8, 9:
-                e = new MonsterFaty(p); // lvl 2
+            case 5:
+                e = new MonsterFaty(p); // lvl 1
                 break;
-            case 10, 11:
-                e = new MonsterParabite(p); // lvl 3
+            case 6:
+                e = new MonsterParabite(p); // lvl 1
                 break;
-            case 12, 13:
-                e = new MonsterGaper(p); // lvl 3
+            case 7:
+                e = new MonsterGaper(p); // lvl 2
                 break;
-            case 14, 16:
-                e = new MonsterWizoob(p); // lvl 4
+            case 8:
+                e = new MonsterWizoob(p); // lvl 2
                 break;
             default:
-                e = new MonsterWallCreep(p); // lvl 4
+                e = new MonsterWallCreep(p); // lvl 2
                 break;
         }
         return e;

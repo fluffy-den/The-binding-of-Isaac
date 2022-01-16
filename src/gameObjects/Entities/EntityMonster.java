@@ -80,6 +80,10 @@ public abstract class EntityMonster extends EntityLiving {
         return null;
     }
 
+    public void updateParabite(Hero h){
+
+    }
+
     // IA
     /**
      * 

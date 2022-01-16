@@ -32,7 +32,7 @@ public class Game {
 
         Hero hero = new Hero();
         LEVEL = new GameLevel(10, 0, hero);
-        int lvl = 1; // 5 niveau (car 5 boss)
+        int lvl = 1; // 3 niveau (car 3 boss)
         // Boucle du jeu
         while (STATE == GameState.RUNNING) {
             Timer.beginTimer();
@@ -43,7 +43,7 @@ public class Game {
                 LEVEL = new GameLevel(10, lvl, hero);
                 lvl++;
             }
-            if(lvl == 6){
+            if(lvl == 4){
                 STATE = GameState.WIN;
             }
 
